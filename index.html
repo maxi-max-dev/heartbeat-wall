@@ -194,6 +194,53 @@
   #ecg{width:100%;height:96px;display:block}
   .ecg-caption{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--text-faint);margin-top:4px}
 
+  /* ================= 今日电表 + 成就 ================= */
+  .meter-card{
+    background:linear-gradient(180deg,#241a10,#1a120a);
+    border:3px solid var(--outline);border-radius:12px;padding:14px 16px;
+    box-shadow:inset 0 0 26px rgba(0,0,0,.42), 0 4px 18px var(--shadow);
+    position:relative;overflow:hidden;
+  }
+  .meter-card::before{
+    content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+    background:repeating-linear-gradient(180deg,transparent 0 3px,rgba(0,0,0,.12) 3px 4px);
+  }
+  .meter-readout{display:flex;align-items:baseline;gap:8px;position:relative;flex-wrap:wrap}
+  .meter-bolt{font-size:20px}
+  .meter-num{
+    font-size:clamp(30px,8vw,46px);font-weight:800;letter-spacing:.02em;
+    color:#ffd27a;text-shadow:0 0 12px rgba(255,190,90,.55);
+    font-variant-numeric:tabular-nums;line-height:1;
+  }
+  .meter-unit{font-size:13px;color:var(--text-faint)}
+  .meter-cap{margin-left:auto;font-size:12px;color:var(--text-dim);font-weight:600}
+  .meter-sub{font-size:12px;color:var(--text-dim);margin-top:7px;position:relative}
+  .meter-bar{
+    display:flex;height:12px;margin-top:9px;border-radius:6px;overflow:hidden;
+    border:1px solid var(--outline);position:relative;background:#120b06;
+  }
+  .meter-seg{height:100%;transition:width .5s ease}
+  .meter-seg.fresh{background:linear-gradient(90deg,#ff9d5c,#e8b84b)}
+  .meter-seg.cache{background:linear-gradient(90deg,#4a6a8a,#385070)}
+  .meter-legend{display:flex;gap:14px;margin-top:7px;font-size:11px;color:var(--text-faint);position:relative;flex-wrap:wrap}
+  .meter-legend .lg{display:inline-flex;align-items:center;gap:5px}
+  .meter-legend i{width:9px;height:9px;border-radius:2px;display:inline-block}
+  .meter-legend i.fresh{background:#ff9d5c}
+  .meter-legend i.cache{background:#4a6a8a}
+  .meter-scope{
+    font-size:11.5px;color:var(--text-faint);margin-top:10px;position:relative;
+    border-top:1px dashed rgba(138,117,97,.3);padding-top:8px;
+  }
+  .ach-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .ach-chip{
+    display:inline-flex;align-items:center;gap:7px;
+    background:var(--wood);border:1px solid var(--border);border-radius:999px;
+    padding:6px 12px;font-size:12.5px;color:var(--text-dim);
+  }
+  .ach-chip .ach-icon{font-size:15px}
+  .ach-chip b{color:var(--gold);font-weight:700;font-variant-numeric:tabular-nums}
+  .ach-empty{font-size:12.5px;color:var(--text-faint);padding:4px 2px}
+
   /* ---------- footer ---------- */
   .site-footer{
     text-align:center;color:var(--text-faint);font-size:12.5px;
@@ -239,6 +286,23 @@
       </div>
       <ul class="peek-list" id="peek-list"></ul>
     </div>
+  </section>
+
+  <section aria-label="今日电表">
+    <h2 class="section-title">今日电表</h2>
+    <div class="meter-card">
+      <div class="meter-readout">
+        <span class="meter-bolt" aria-hidden="true">⚡</span>
+        <span class="meter-num" id="energy-num">–</span>
+        <span class="meter-unit">token · 今日耗电</span>
+        <span class="meter-cap" id="energy-cap"></span>
+      </div>
+      <div class="meter-sub" id="energy-sub">电表读数中…</div>
+      <div class="meter-bar" id="energy-bar" aria-hidden="true"></div>
+      <div class="meter-legend" id="energy-legend" aria-hidden="true"></div>
+      <div class="meter-scope" id="energy-scope"></div>
+    </div>
+    <div class="ach-list" id="ach-list"></div>
   </section>
 
   <section aria-label="家庭日志">
@@ -471,7 +535,7 @@
     var WW = 640, WH = 430;
     var scale = 0, cssH = 0;
     var reduced = REDUCED, pageVis = !document.hidden, inView = true, rafId = null;
-    var lastTs = 0, frameCount = 0, lastDrawMode = "none";
+    var lastTs = 0, frameCount = 0, lastDrawMode = "none", simClock = null;
     var actors = [], particles = [];
 
     /* 布局:区块(x,y,w,h) + 工位锚点 desk + 床位锚点 bed */
@@ -505,6 +569,41 @@
       return (h >= 6 && h < 16) ? "day" : (h >= 16 && h < 19) ? "dusk" : "night";
     }
 
+    /* 漫游目标:idle 小人在全屋自由走动。位置=纯氛围,不承载任何事件信息。
+       作息只调制"倾向":夜→更爱回自己房趴着,昼→更爱去公共区/串门/逛菜地。
+       running/mess/sleeping 都不进这套逻辑(各有各的钉法),所以走动永远说不了谎。 */
+    function randIn(z, pad){
+      return [z.x + pad + Math.random() * (z.w - 2*pad),
+              z.y + pad + Math.random() * (z.h - 2*pad)];
+    }
+    function homeTarget(a){ return randIn(ZONES[a.agent], 12); }
+    function commonsTarget(){ return randIn(COMMONS, 18); }
+    function gardenTarget(){ return randIn(GARDEN, 12); }
+    function visitTarget(a){
+      var others = Object.keys(ZONES).filter(function(k){ return k !== a.agent; });
+      var z = ZONES[others[(Math.random() * others.length) | 0]];
+      return randIn(z, 14);
+    }
+    function pickRoamTarget(a, th){
+      var r = Math.random();
+      if (th === "night"){            // 夜:多半回自己房待着
+        if (r < 0.62) return homeTarget(a);
+        if (r < 0.82) return commonsTarget();
+        return visitTarget(a);
+      }
+      if (th === "day"){              // 昼:出来公共区、串门、逛菜地
+        if (r < 0.42) return commonsTarget();
+        if (r < 0.78) return visitTarget(a);
+        if (r < 0.90) return gardenTarget();
+        return homeTarget(a);
+      }
+      // 黄昏:折中
+      if (r < 0.40) return commonsTarget();
+      if (r < 0.66) return visitTarget(a);
+      if (r < 0.86) return homeTarget(a);
+      return gardenTarget();
+    }
+
     function resize(){
       var w = canvas.parentNode.clientWidth;
       if (!w) return;
@@ -533,37 +632,43 @@
         else if (s.cond === "mess"){ a.x = z.desk[0] + 22; a.y = z.desk[1] + 18; }
         else if (s.cond === "resting"){
           var prev = prevByAgent[s.agent];
-          if (prev && prev.cond === "resting"){
-            a.x = prev.x; a.y = prev.y; a.tx = prev.tx; a.ty = prev.ty;
-            a.idleUntil = prev.idleUntil; a.moving = prev.moving;
+          if (prev){
+            /* 从上一帧的位置接着走(哪怕上一帧还在工位干活,也是从工位起身),不瞬移 */
+            a.x = prev.x; a.y = prev.y;
+            if (prev.cond === "resting"){
+              a.tx = prev.tx; a.ty = prev.ty; a.idleUntil = prev.idleUntil; a.moving = prev.moving;
+            }
           } else {
-            var sp = SPOTS[(hashStr(s.agent) + restIdx) % SPOTS.length];
-            a.x = sp[0]; a.y = sp[1];
+            var hs = homeTarget(a);  /* 首次出现:从自己屋里起步,再自由往外逛 */
+            a.x = hs[0]; a.y = hs[1];
           }
           restIdx++;
         }
-        else { a.x = z.bed[0]; a.y = z.bed[1] + 8; }  /* sleeping / tidy 躺床上 */
+        else { a.x = z.bed[0]; a.y = z.bed[1] + 8; }  /* sleeping / tidy 躺自己床上不动 */
         out.push(a);
       });
       actors = out;
     }
 
-    /* 漫步只属于 resting:氛围表达,不宣称事件 */
+    /* 漫步只属于 resting:氛围表达,不宣称事件。目标点全屋自由,作息调制倾向。 */
     function update(dt, now){
+      var th = themeNow();
+      var night = th === "night";
       for (var i = 0; i < actors.length; i++){
         var a = actors[i];
         if (a.cond !== "resting"){ a.moving = false; continue; }
         if (a.tx === null){
           if (now >= a.idleUntil){
-            a.tx = COMMONS.x + 20 + Math.random() * (COMMONS.w - 40);
-            a.ty = COMMONS.y + 24 + Math.random() * (COMMONS.h - 44);
+            var tgt = pickRoamTarget(a, th);
+            a.tx = tgt[0]; a.ty = tgt[1];
           }
         } else {
           var dx = a.tx - a.x, dy = a.ty - a.y, d = Math.sqrt(dx*dx + dy*dy);
-          var step = 22 * dt;
+          var step = (night ? 17 : 22) * dt;   /* 夜里走得慢一点 */
           if (d <= step){
             a.x = a.tx; a.y = a.ty; a.tx = null; a.ty = null;
-            a.idleUntil = now + 2200 + Math.random() * 4200;
+            /* 夜里到站歇更久(更像回家趴着),白天很快又起身逛 */
+            a.idleUntil = now + (night ? 3500 : 1600) + Math.random() * (night ? 6500 : 3600);
             a.moving = false;
           } else {
             a.x += dx / d * step; a.y += dy / d * step;
@@ -871,9 +976,17 @@
       },
       frames: function(){ return frameCount; },
       lastDraw: function(){ return lastDrawMode; },
+      debugStep: function(dtMs){   /* 测试用:面板恒 hidden 时手动推进模拟(用模拟时钟,让 idle 计时正常翻目标) */
+        dtMs = dtMs || 100;
+        if (simClock === null) simClock = performance.now();
+        simClock += dtMs;
+        update(dtMs / 1000, simClock);
+        if (scale) drawFrame(simClock);
+      },
+      world: function(){ return {WW:WW, WH:WH}; },
       actors: function(){
         return actors.map(function(a){
-          return {agent:a.agent, cond:a.cond, x:Math.round(a.x), y:Math.round(a.y)};
+          return {agent:a.agent, cond:a.cond, x:Math.round(a.x), y:Math.round(a.y), moving:a.moving};
         });
       }
     };
@@ -1152,12 +1265,70 @@
       b.textContent = working;
       cap.appendChild(b);
       cap.appendChild(document.createTextNode(" 人在工位上干活"));
-      if (resting > 0) cap.appendChild(document.createTextNode("," + resting + " 人在院子里遛弯"));
+      if (resting > 0) cap.appendChild(document.createTextNode("," + resting + " 人在家里各处溜达"));
     } else if (resting > 0){
-      cap.appendChild(document.createTextNode("工位都空着," + resting + " 人在院子里遛弯"));
+      cap.appendChild(document.createTextNode("工位都空着," + resting + " 人在家里各处溜达"));
     } else {
-      cap.textContent = "全家都睡下了,院子里只有风";
+      cap.textContent = "全家都睡下了,屋里只有风";
     }
+  }
+
+  /* ---------- 电表 + 今日成就(纯 DOM 真值,不依赖任何动画/rAF) ---------- */
+  function trimNum(x){ return x.toFixed(2).replace(/\.?0+$/, ""); }
+  function bigNum(n){
+    n = n || 0;
+    if (n >= 1e8) return trimNum(n / 1e8) + " 亿";
+    if (n >= 1e4) return trimNum(n / 1e4) + " 万";
+    return String(n);
+  }
+  function renderEnergy(energy){
+    var num = el("energy-num"), sub = el("energy-sub"), bar = el("energy-bar"),
+        legend = el("energy-legend"), scope = el("energy-scope"), cap = el("energy-cap");
+    if (!energy){
+      num.textContent = "—";
+      sub.textContent = "电表还没接通,读不到今日电耗";
+      bar.innerHTML = ""; legend.innerHTML = ""; scope.textContent = ""; cap.textContent = "";
+      return;
+    }
+    num.textContent = bigNum(energy.tokens_today);
+    cap.textContent = (energy.sessions_today || 0) + " 场会话";
+    sub.textContent = "净生成 " + bigNum(energy.fresh_today) +
+                      "(其中产出 " + bigNum(energy.output_today) + ") · 缓存复用 " +
+                      bigNum(energy.cache_read_today);
+    var total = energy.tokens_today || 1;
+    var freshPct = Math.max(1, Math.round((energy.fresh_today / total) * 100));
+    var cachePct = Math.max(0, 100 - freshPct);
+    bar.innerHTML = "";
+    var s1 = document.createElement("div");
+    s1.className = "meter-seg fresh"; s1.style.width = freshPct + "%";
+    s1.title = "净生成 " + freshPct + "%";
+    var s2 = document.createElement("div");
+    s2.className = "meter-seg cache"; s2.style.width = cachePct + "%";
+    s2.title = "缓存复用 " + cachePct + "%";
+    bar.appendChild(s1); bar.appendChild(s2);
+    legend.innerHTML = '<span class="lg"><i class="fresh"></i>净生成 ' + freshPct +
+                       '%</span><span class="lg"><i class="cache"></i>缓存复用 ' + cachePct + '%</span>';
+    scope.textContent = "⚡ " + (energy.scope_note || "");
+  }
+  function renderAchievements(list){
+    var box = el("ach-list");
+    box.innerHTML = "";
+    if (!list || !list.length){
+      box.innerHTML = '<div class="ach-empty">今天还没攒下成就,故事正在发生</div>';
+      return;
+    }
+    list.forEach(function(a){
+      var chip = document.createElement("div");
+      chip.className = "ach-chip";
+      var ic = document.createElement("span");
+      ic.className = "ach-icon"; ic.textContent = a.icon || "·";
+      var lb = document.createElement("span");
+      lb.textContent = a.label || "";
+      var vv = document.createElement("b");
+      vv.textContent = a.value || "";
+      chip.appendChild(ic); chip.appendChild(lb); chip.appendChild(vv);
+      box.appendChild(chip);
+    });
   }
 
   /* ---------- 家庭日志 ---------- */
@@ -1333,6 +1504,8 @@
     lu.classList.add("weak");
     setCaption(null, false);
     map.setResidents(null);
+    renderEnergy(null);
+    renderAchievements(null);
     el("ecg-note").textContent = "信号弱";
     el("stream-list").innerHTML =
       '<li class="stream-empty">信号断了一小会儿，听不见家里的心跳 · 先当全家都在打盹，稍后再来敲门</li>';
@@ -1367,6 +1540,10 @@
     setCaption(states, true);   /* 真值同步先写 */
     map.setResidents(states);
     if (state.peekAgent) renderPeek();
+
+    var stats = data.stats || {};
+    renderEnergy(stats.energy);                 /* 电表:纯 DOM,hidden 环境也立即出真值 */
+    renderAchievements(stats.achievements_today);
 
     renderStream(beats, state.first ? null : newKeys);
     renderSunTrack(beats);
@@ -1411,9 +1588,13 @@
     get lastNew(){ return state.lastNewCount; },
     get mapDraw(){ return map.lastDraw(); },
     get actors(){ return map.actors(); },
+    get energy(){ return state.data && state.data.stats && state.data.stats.energy; },
+    get achievements(){ return state.data && state.data.stats && state.data.stats.achievements_today; },
     tick: tickTimes,
     reload: load,
-    step: function(){ ecg.debugStep(); }
+    step: function(){ ecg.debugStep(); },
+    mapStep: function(dt){ map.debugStep(dt); },
+    mapWorld: function(){ return map.world(); }
   };
 })();
 </script>
