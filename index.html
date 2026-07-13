@@ -94,6 +94,8 @@
     position:absolute;top:8px;right:10px;background:none;border:none;color:var(--text-faint);
     font-size:14px;cursor:pointer;padding:2px 6px;
   }
+  .peek-ach{font-size:12.5px;color:var(--gold);margin:2px 0 0;font-weight:600}
+  .peek-ach[hidden]{display:none}
   .peek-list{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:5px}
   .peek-list li{font-size:13px;color:var(--text-dim);display:flex;gap:8px;align-items:baseline}
   .peek-list .stream-time{flex:none}
@@ -284,6 +286,7 @@
         <span class="peek-role" id="peek-role"></span>
         <span class="peek-status" id="peek-status"></span>
       </div>
+      <p class="peek-ach" id="peek-ach" hidden></p>
       <ul class="peek-list" id="peek-list"></ul>
     </div>
   </section>
@@ -527,9 +530,36 @@
             label:(age <= 2700 ? "刚忙完" : "上次忙完"), tsMode:"ts", ts:r.last_beat_at};
   }
 
+  /* ---------- 今日成就 → 房间实物(与 export.py 的 _ACHIEVE_DONE 一一对应,标签是唯一事实源) ---------- */
+  var LABEL_CATEGORY = {
+    "工作坊交付":"造物", "起卦推演":"占卜", "记忆归档":"备份", "打理家务":"管家",
+    "情报回传":"情报", "数据入库":"采集", "巡夜瞭望":"瞭望", "外勤跑腿":"外勤",
+    "巡视牧场":"牧场", "应门值守":"值守"
+  };
+  var CATEGORY_AGENT = {
+    "造物":"泛音", "管家":"Jarvis", "情报":"Watcher", "外勤":"Mobile", "占卜":"MiroFish",
+    "瞭望":"哨兵", "采集":"采集员", "备份":"备份员", "牧场":"牧场主", "值守":"门房"
+  };
+  var AGENT_CATEGORY = {};
+  Object.keys(CATEGORY_AGENT).forEach(function(c){ AGENT_CATEGORY[CATEGORY_AGENT[c]] = c; });
+  function achNum(v){ var m = /(\d+)/.exec(v || ""); return m ? parseInt(m[1], 10) : 0; }
+  /* 供"凑近看"面板用:这位居民今天对应的成就一句话(含门房的心跳牌、泛音的夜灯) */
+  function achSentenceFor(agent){
+    var list = state.data && state.data.stats && state.data.stats.achievements_today;
+    if (!list || !list.length) return "";
+    var cat = AGENT_CATEGORY[agent];
+    var parts = [];
+    list.forEach(function(a){
+      if (a.icon === "❤️" && agent === "门房") parts.push(a.icon + a.label + " " + a.value);
+      else if (a.icon === "🌙" && agent === "泛音") parts.push(a.icon + a.label + " " + a.value);
+      else if (cat && LABEL_CATEGORY[a.label] === cat) parts.push(a.icon + a.label + " " + a.value);
+    });
+    return parts.join(" · ");
+  }
+
   /* ================= 家园俯视图 ================= */
   function MapScene(canvas, onPick){
-    if (!canvas || !canvas.getContext) return {setResidents:function(){},refresh:function(){},remeasure:function(){},setReduced:function(){},frames:function(){return 0;},lastDraw:function(){return "none";},actors:function(){return [];}};
+    if (!canvas || !canvas.getContext) return {setResidents:function(){},setAchievements:function(){},refresh:function(){},remeasure:function(){},setReduced:function(){},frames:function(){return 0;},lastDraw:function(){return "none";},actors:function(){return [];},achState:function(){return {byCategory:{},heart:0,night:null};}};
     var ctx = canvas.getContext("2d");
     var DPR = Math.min(window.devicePixelRatio || 1, 2);
     var WW = 640, WH = 430;
@@ -563,6 +593,125 @@
       "管家":"steam","占卜":"steam","采集":"steam",
       "情报":"ring","瞭望":"ring","值守":"ring","牧场":"dot"
     };
+
+    /* ---------- 今日成就实物:每类一个专属图标 + 摆放锚点,数量=真实数据,封顶留白 ----------
+       锚点全部选在各屋 decorFor() 现有摆设的空白处(见部署前的坐标核对),不与床/桌/固定道具重叠。 */
+    var achByCategory = {}, heartTotal = 0, nightAch = null;
+    var ACH_SPOT = {
+      "MiroFish": {x:98,  y:10, dx:9,  dy:10, cols:4, cap:8, badge:[134,14]},   /* 星象室:星瓶架,右上空墙(角标放右侧,避开工位小人) */
+      "Watcher":  {x:130, y:44, dx:9,  dy:10, cols:3, cap:8},   /* 电波室:纸条堆,右下空地 */
+      "哨兵":     {x:88,  y:40, dx:9,  dy:9,  cols:2, cap:6},   /* 瞭望塔:窄间,居中空档 */
+      "泛音":     {x:94,  y:10, dx:9,  dy:10, cols:3, cap:6, badge:[115,14]},   /* 工作坊:成品堆,右上空墙(角标放右侧,避开工位小人与夜灯) */
+      "备份员":   {x:54,  y:10, dx:11, dy:11, cols:6, cap:8, badge:[118,15]},  /* 档案馆:新到的箱子,顶部空墙(避开房间名标签,角标放右侧) */
+      "采集员":   {x:112, y:44, dx:11, dy:11, cols:3, cap:6},  /* 渔房:渔获,桌右下空地(避开床与工位小人) */
+      "Mobile":   {x:110, y:44, dx:11, dy:9,  cols:4, cap:8},  /* 外勤间:脚印,桌下空地(避开工位) */
+      "门房":     {x:84,  y:30, dx:10, dy:14, cols:2, cap:6},  /* 门厅:登记正字,右墙(避开心跳牌与工位小人) */
+      "Jarvis":   {x:73,  y:76, dx:6,  dy:5,  cols:3, cap:6},  /* 客厅:茶几上的杯子 */
+      "牧场主":   {x:50,  y:8,  dx:12, dy:0,  cols:5, cap:5, badge:[112,4]}  /* 牧场:栅栏顶插旗,沿上沿(角标放最右,避开工位小人) */
+    };
+    function achPropDraw(cat, x, y){
+      switch (cat){
+        case "造物":   /* 完工的零件:小方块+高光 */
+          ctx.fillStyle = "#8a95a0"; ctx.fillRect(x-3, y-3, 6, 6);
+          ctx.fillStyle = "#c9d2da"; ctx.fillRect(x-3, y-3, 3, 3);
+          ctx.fillStyle = "#3a2b1c"; ctx.strokeStyle = "#3a2b1c"; ctx.lineWidth = 1; ctx.strokeRect(x-3.5, y-3.5, 7, 7);
+          break;
+        case "占卜":   /* 星瓶 */
+          ctx.fillStyle = "#4a3a6a"; ctx.fillRect(x-1, y-1, 3, 5);
+          ctx.fillStyle = "rgba(205,175,255,.9)"; ctx.beginPath(); ctx.arc(x+0.5, y-2, 2, 0, 6.2832); ctx.fill();
+          break;
+        case "备份":   /* 小箱子 */
+          ctx.fillStyle = "#7a5a34"; ctx.fillRect(x-4, y-3, 8, 6);
+          ctx.strokeStyle = "#4a3418"; ctx.lineWidth = 1; ctx.strokeRect(x-4, y-3, 8, 6);
+          ctx.fillStyle = "#5a4020"; ctx.fillRect(x-1, y-3, 2, 6);
+          break;
+        case "管家":   /* 茶杯 */
+          ctx.fillStyle = "#e8dcc4"; ctx.fillRect(x-2, y-2, 4, 3);
+          ctx.strokeStyle = "#c9b48e"; ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.arc(x+3, y-0.5, 1.2, 0, 6.2832); ctx.stroke();
+          break;
+        case "情报":   /* 情报纸条 */
+          ctx.fillStyle = "#e8dcc0"; ctx.fillRect(x-3, y-3, 6, 6);
+          ctx.strokeStyle = "rgba(90,70,40,.55)"; ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(x-2, y-1); ctx.lineTo(x+2, y-1); ctx.moveTo(x-2, y+1); ctx.lineTo(x+2, y+1); ctx.stroke();
+          break;
+        case "采集":   /* 渔获 */
+          ctx.fillStyle = "#c9c4b0";
+          ctx.beginPath(); ctx.moveTo(x-4, y); ctx.lineTo(x+2, y-2); ctx.lineTo(x+2, y+2); ctx.closePath(); ctx.fill();
+          ctx.fillRect(x+2, y-1, 3, 2);
+          break;
+        case "瞭望":   /* 巡夜小旗 */
+          ctx.strokeStyle = "#8a7050"; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, y+4); ctx.lineTo(x, y-4); ctx.stroke();
+          ctx.fillStyle = "#9ad0c2"; ctx.beginPath(); ctx.moveTo(x, y-4); ctx.lineTo(x+5, y-2); ctx.lineTo(x, y); ctx.closePath(); ctx.fill();
+          break;
+        case "外勤":   /* 脚印一双 */
+          ctx.fillStyle = "rgba(120,90,60,.7)";
+          ctx.beginPath(); ctx.ellipse(x-2, y, 1.6, 2.6, 0.3, 0, 6.2832); ctx.fill();
+          ctx.beginPath(); ctx.ellipse(x+2, y-2, 1.6, 2.6, -0.3, 0, 6.2832); ctx.fill();
+          break;
+        case "牧场":   /* 栅栏小旗 */
+          ctx.fillStyle = "#6d4a2a"; ctx.fillRect(x-1, y-1, 2, 6);
+          ctx.fillStyle = "#e8d84a"; ctx.fillRect(x-2, y-4, 4, 3);
+          break;
+        case "值守":   /* 登记正字一笔 */
+          ctx.strokeStyle = "rgba(245,225,195,.9)"; ctx.lineWidth = 1.6;
+          ctx.beginPath(); ctx.moveTo(x, y-4); ctx.lineTo(x, y+4); ctx.stroke();
+          break;
+      }
+    }
+    function drawCountBadge(x, y, n){
+      var txt = String(n);
+      ctx.font = "8px sans-serif"; ctx.textAlign = "left";
+      var w = ctx.measureText(txt).width + 6;
+      ctx.fillStyle = "rgba(20,12,6,.75)"; ctx.fillRect(x, y, w, 10);
+      ctx.fillStyle = "#ffe4b8"; ctx.fillText(txt, x + 3, y + 8);
+    }
+    function drawCandle(x, y){    /* 🌙 夜班:泛音窗前的一支蜡烛 */
+      ctx.fillStyle = "#e8dcc0"; ctx.fillRect(x-2, y, 4, 9);
+      ctx.globalCompositeOperation = "lighter";
+      var g = ctx.createRadialGradient(x, y-3, 0, x, y-3, 9);
+      g.addColorStop(0, "rgba(255,210,120,.55)"); g.addColorStop(1, "rgba(255,210,120,0)");
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y-3, 9, 0, 6.2832); ctx.fill();
+      ctx.globalCompositeOperation = "source-over";
+      ctx.fillStyle = "#ffcf6a"; ctx.beginPath(); ctx.ellipse(x, y-3, 1.8, 2.8, 0, 0, 6.2832); ctx.fill();
+    }
+    function drawHeartPlaque(x, y, n){    /* ❤️ 门口的心跳小牌 */
+      ctx.font = "10px sans-serif"; ctx.textAlign = "left";
+      var txt = "❤" + n;
+      var w = ctx.measureText(txt).width + 8;
+      ctx.fillStyle = "rgba(20,12,6,.6)"; ctx.fillRect(x-3, y-9, w, 13);
+      ctx.fillStyle = "#f5a3b3"; ctx.fillText(txt, x, y);
+    }
+    function drawAchProps(agent, z){
+      var cat = AGENT_CATEGORY[agent];
+      var spot = ACH_SPOT[agent];
+      if (cat && spot){
+        var n = achByCategory[cat] || 0;
+        if (n > 0){
+          var shown = Math.min(n, spot.cap);
+          for (var i = 0; i < shown; i++){
+            var col = i % spot.cols, row = Math.floor(i / spot.cols);
+            achPropDraw(cat, z.x + spot.x + col * spot.dx, z.y + spot.y + row * spot.dy);
+          }
+          if (n > spot.cap){
+            if (spot.badge){
+              drawCountBadge(z.x + spot.badge[0], z.y + spot.badge[1], n);
+            } else {
+              var lastRow = Math.floor((shown - 1) / spot.cols);
+              var rowH = Math.max(spot.dy, 12);
+              drawCountBadge(z.x + spot.x, z.y + spot.y + (lastRow + 1) * rowH - 4, n);
+            }
+          }
+        }
+      }
+      if (agent === "泛音" && nightAch && nightAch.n > 0){
+        drawCandle(z.x + 146, z.y + 14);
+        drawCountBadge(z.x + 138, z.y + 22, nightAch.n);
+      }
+      if (agent === "门房" && heartTotal > 0){
+        drawHeartPlaque(z.x + 56, z.y + 14, heartTotal);
+      }
+    }
 
     function themeNow(){
       var h = hourNow();
@@ -787,12 +936,12 @@
           ctx.strokeStyle = "rgba(255,224,180,.20)"; ctx.lineWidth = 1.5;
           ctx.setLineDash([4,3]); ctx.strokeRect(z.x+6, z.y+6, z.w-12, z.h-12); ctx.setLineDash([]);
           drawRug(agent, z);         /* 主题地毯(在床与道具之下) */
-          decorFor(agent, z, th);    /* 性格道具 */
-          /* 床 */
+          /* 床(先画,道具再叠上来,避免几间屋的道具被床挡住看不见——小债修复) */
           var bx = z.bed[0], by = z.bed[1];
           px(bx-9, by-12, 18, 26, "#5c3a28");
           px(bx-7, by-10, 14, 22, "#cbbb9e");
           px(bx-7, by-10, 14, 7, "#ece2cc");
+          decorFor(agent, z, th);    /* 性格道具 */
         }
         /* 工位桌 + 道具 */
         var dx = z.desk[0], dy = z.desk[1];
@@ -801,6 +950,7 @@
         ctx.strokeRect(dx-13, dy-7, 26, 14);
         ctx.font = "12px sans-serif"; ctx.textAlign = "center";
         ctx.fillText(z.prop, dx, dy - 10);
+        drawAchProps(agent, z);   /* 今日成就实物:全屋最后一笔,永不被床/桌盖住 */
       });
     }
     function drawCow(cx, cy){
@@ -1165,6 +1315,17 @@
         if (reduced){ drawStatic(); }
         else { ensure(); redrawIdle(); }
       },
+      setAchievements: function(list){    /* 真值同步先写:数量直接来自 achievements_today,static 帧就是对的 */
+        achByCategory = {}; heartTotal = 0; nightAch = null;
+        (list || []).forEach(function(a){
+          if (a.icon === "❤️"){ heartTotal = achNum(a.value); return; }
+          if (a.icon === "🌙"){ nightAch = {n: achNum(a.value)}; return; }
+          var cat = LABEL_CATEGORY[a.label];
+          if (cat) achByCategory[cat] = achNum(a.value);
+        });
+        if (reduced){ drawStatic(); }
+        else { ensure(); redrawIdle(); }
+      },
       refresh: function(){ if (reduced || rafId === null) drawStatic(); },
       remeasure: function(){ resize(); ensure(); },
       setReduced: function(r){
@@ -1186,6 +1347,9 @@
         return actors.map(function(a){
           return {agent:a.agent, cond:a.cond, x:Math.round(a.x), y:Math.round(a.y), moving:a.moving};
         });
+      },
+      achState: function(){
+        return {byCategory: achByCategory, heart: heartTotal, night: nightAch};
       }
     };
   }
@@ -1383,6 +1547,10 @@
     el("peek-role").textContent = r.role || "";
     var timeStr = st.ts ? (st.tsMode === "dur" ? durText(st.ts) : relTime(st.ts)) : "";
     el("peek-status").textContent = st.label + (timeStr ? " · " + timeStr : "");
+    var achEl = el("peek-ach");
+    var achTxt = achSentenceFor(agent);
+    achEl.textContent = achTxt ? "今日成就:" + achTxt : "";
+    achEl.hidden = !achTxt;
     var list = el("peek-list");
     list.innerHTML = "";
     var recent = (state.data.heartbeats || []).filter(function(b){
@@ -1702,6 +1870,7 @@
     lu.classList.add("weak");
     setCaption(null, false);
     map.setResidents(null);
+    map.setAchievements(null);
     renderEnergy(null);
     renderAchievements(null);
     el("ecg-note").textContent = "信号弱";
@@ -1742,6 +1911,7 @@
     var stats = data.stats || {};
     renderEnergy(stats.energy);                 /* 电表:纯 DOM,hidden 环境也立即出真值 */
     renderAchievements(stats.achievements_today);
+    map.setAchievements(stats.achievements_today);   /* 成就进屋:同一份真数,static 帧里就已经画好 */
 
     renderStream(beats, state.first ? null : newKeys);
     renderSunTrack(beats);
@@ -1788,6 +1958,7 @@
     get actors(){ return map.actors(); },
     get energy(){ return state.data && state.data.stats && state.data.stats.energy; },
     get achievements(){ return state.data && state.data.stats && state.data.stats.achievements_today; },
+    get achRooms(){ return map.achState(); },
     tick: tickTimes,
     reload: load,
     step: function(){ ecg.debugStep(); },
