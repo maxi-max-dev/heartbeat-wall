@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-13T13:32:34Z",
+  "generated_at": "2026-07-13T13:47:36Z",
   "home": {
     "id": "onlycarbon",
     "name": "唯一碳基之家",
@@ -12,15 +12,15 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-07-13T12:48:36Z",
-      "last_status": "done"
+      "last_beat_at": "2026-07-13T13:47:10Z",
+      "last_status": "running"
     },
     {
       "agent": "Jarvis",
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-13T13:29:49Z",
+      "last_beat_at": "2026-07-13T13:44:52Z",
       "last_status": "running"
     },
     {
@@ -44,8 +44,8 @@
       "emoji": "🔮",
       "role": "占卜师",
       "category": "占卜",
-      "last_beat_at": "2026-07-12T17:00:00Z",
-      "last_status": "failed"
+      "last_beat_at": null,
+      "last_status": null
     },
     {
       "agent": "哨兵",
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-13T13:29:49Z",
+      "last_beat_at": "2026-07-13T13:44:52Z",
       "last_status": "running"
     }
   ],
   "stats": {
     "beats_24h": 200,
-    "active_now": 3,
-    "last_beat_at": "2026-07-13T13:29:49Z",
+    "active_now": 4,
+    "last_beat_at": "2026-07-13T13:47:10Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -109,31 +109,74 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "198 下"
+        "value": "200 下"
       },
       {
         "icon": "🔧",
         "label": "工作坊交付",
-        "value": "87 件活"
+        "value": "86 件活"
       },
       {
         "icon": "🫖",
         "label": "打理家务",
-        "value": "1 桩"
+        "value": "2 桩"
       },
       {
         "icon": "🌙",
         "label": "夜班时长",
-        "value": "4 小时"
-      },
-      {
-        "icon": "🛠️",
-        "label": "翻车又爬起",
-        "value": "1 次"
+        "value": "1 小时"
       }
     ]
   },
   "heartbeats": [
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "running",
+      "started_at": "2026-07-13T13:47:10Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-13T13:46:23Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-13T13:46:20Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-13T13:44:52Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-13T13:44:52Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "done",
+      "started_at": "2026-07-13T13:30:00Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "Jarvis",
       "category": "管家",
@@ -1683,54 +1726,6 @@
       "category": "造物",
       "status": "done",
       "started_at": "2026-07-12T17:01:32Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "MiroFish",
-      "category": "占卜",
-      "status": "failed",
-      "started_at": "2026-07-12T17:00:00Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-12T16:48:20Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-12T16:25:35Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-12T14:22:26Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-12T13:52:52Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-12T13:37:11Z",
       "duration_s": null,
       "title": null
     }
