@@ -705,15 +705,14 @@
     function px(x, y, w, h, color){ ctx.fillStyle = color; ctx.fillRect(x, y, w, h); }
 
     function drawGround(th){
-      var g1 = th === "night" ? "#22381f" : th === "dusk" ? "#3d5626" : "#4a7a3e";
-      var g2 = th === "night" ? "#1e331c" : th === "dusk" ? "#385023" : "#447239";
-      ctx.fillStyle = g1; ctx.fillRect(0, 0, WW, WH);
-      ctx.fillStyle = g2;
+      var p = pal(th);
+      ctx.fillStyle = p.g1; ctx.fillRect(0, 0, WW, WH);
+      ctx.fillStyle = p.g2;
       for (var ty = 0; ty < WH; ty += 16)
         for (var tx = ((ty/16) % 2) * 16; tx < WW; tx += 32)
           ctx.fillRect(tx, ty, 16, 16);
       /* 小径 */
-      ctx.fillStyle = th === "night" ? "#55492f" : "#8a7752";
+      ctx.fillStyle = p.path;
       ctx.fillRect(192, 266, 256, 12);
       ctx.fillRect(242, 278, 12, 22);
       ctx.fillRect(374, 278, 12, 22);
@@ -722,29 +721,40 @@
       ctx.fillRect(300, 112, 12, 16);
     }
     function drawCommons(th, now){
-      /* 水井 */
+      var p = pal(th);
+      /* 水井 + 水面微光 */
       ctx.lineWidth = 5; ctx.strokeStyle = "#a8a49a";
       ctx.beginPath(); ctx.arc(238, 178, 12, 0, 6.2832); ctx.stroke();
-      ctx.fillStyle = "#2e3e52"; ctx.beginPath(); ctx.arc(238, 178, 8, 0, 6.2832); ctx.fill();
+      ctx.fillStyle = "#24384f"; ctx.beginPath(); ctx.arc(238, 178, 8, 0, 6.2832); ctx.fill();
+      var shim = now === null ? 0.6 : (0.4 + 0.35 * Math.sin(now/700));
+      ctx.fillStyle = "rgba(200,230,255," + (0.5*shim) + ")";
+      ctx.fillRect(234, 175, 4, 1); ctx.fillRect(239, 178, 3, 1);
+      ctx.strokeStyle = "rgba(190,220,255," + (0.4*shim) + ")"; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(238, 178, 5, 0.5, 2.0); ctx.stroke();
       /* 长椅 */
       px(367, 142, 30, 8, "#8a5a34"); px(369, 150, 4, 5, "#5c3a20"); px(391, 150, 4, 5, "#5c3a20");
       /* 茶桌 */
       ctx.fillStyle = "#7a4c2c"; ctx.beginPath(); ctx.arc(302, 238, 11, 0, 6.2832); ctx.fill();
       ctx.font = "10px sans-serif"; ctx.textAlign = "center"; ctx.fillText("☕", 302, 241);
-      /* 菜地(东北角装饰) */
-      px(GARDEN.x, GARDEN.y, GARDEN.w, GARDEN.h, th === "night" ? "#3a2c1a" : "#5c4526");
+      /* 菜地:发芽的小菜苗(静态) */
+      px(GARDEN.x, GARDEN.y, GARDEN.w, GARDEN.h, p.soil);
       ctx.strokeStyle = "rgba(255,220,170,.22)"; ctx.lineWidth = 2;
       ctx.setLineDash([4,3]); ctx.strokeRect(GARDEN.x+3, GARDEN.y+3, GARDEN.w-6, GARDEN.h-6); ctx.setLineDash([]);
-      ctx.fillStyle = th === "night" ? "#3f6b36" : "#6fae4e";
       for (var r = 0; r < 3; r++)
-        for (var c = 0; c < 6; c++)
-          ctx.fillRect(GARDEN.x + 14 + c*18, GARDEN.y + 18 + r*26, 8, 8);
+        for (var c = 0; c < 6; c++){
+          var gx = GARDEN.x + 14 + c*18, gy = GARDEN.y + 16 + r*26;
+          var big = ((r + c) % 3) === 0;
+          ctx.fillStyle = "#3f2c18"; ctx.fillRect(gx-1, gy+6, 8, 2);
+          ctx.fillStyle = "#4f9a44"; ctx.fillRect(gx+2, gy+1, 2, 6);
+          ctx.fillRect(gx, gy+2, 2, 2); ctx.fillRect(gx+4, gy+2, 2, 2);
+          if (big){ ctx.fillStyle = "#7fd06a"; ctx.fillRect(gx+1, gy-2, 4, 3); }
+        }
     }
     function drawZones(th){
       Object.keys(ZONES).forEach(function(agent){
         var z = ZONES[agent];
         if (z.pasture){
-          px(z.x, z.y, z.w, z.h, th === "night" ? "#2c4a24" : "#57833c");
+          px(z.x, z.y, z.w, z.h, th === "night" ? "#34572a" : "#5c8a3e");
           ctx.strokeStyle = "#6d4a2a"; ctx.lineWidth = 4;
           ctx.setLineDash([7,5]); ctx.strokeRect(z.x+2, z.y+2, z.w-4, z.h-4); ctx.setLineDash([]);
           drawCow(586, 392);
@@ -752,12 +762,32 @@
           ctx.fillStyle = "#d9b45b";
           ctx.beginPath(); ctx.arc(z.bed[0], z.bed[1]+6, 9, 3.14, 6.2832); ctx.fill();
           ctx.fillRect(z.bed[0]-9, z.bed[1]+4, 18, 4);
+          /* 水槽 */
+          ctx.fillStyle = "#5a4028"; ctx.fillRect(z.x+16, z.y+44, 20, 8);
+          ctx.fillStyle = "#7fb0d0"; ctx.fillRect(z.x+18, z.y+45, 16, 3);
+          /* 小花 */
+          var fcol = ["#f5a3b3","#e8d84a","#ff9d5c"];
+          var flowers = [[z.x+14, z.y+22],[z.x+42, z.y+16],[z.x+74, z.y+52],[z.x+100, z.y+26]];
+          for (var fi = 0; fi < flowers.length; fi++){
+            ctx.fillStyle = "#4f9a44"; ctx.fillRect(flowers[fi][0], flowers[fi][1], 1, 4);
+            ctx.fillStyle = fcol[fi % 3]; ctx.fillRect(flowers[fi][0]-1, flowers[fi][1]-2, 3, 3);
+          }
+          /* 草丛 */
+          ctx.fillStyle = th === "night" ? "#3f6b36" : "#6fae4e";
+          var tufts = [[z.x+56, z.y+42],[z.x+118, z.y+52],[z.x+30, z.y+58]];
+          for (var ti = 0; ti < tufts.length; ti++){
+            ctx.fillRect(tufts[ti][0], tufts[ti][1], 1, 3);
+            ctx.fillRect(tufts[ti][0]+2, tufts[ti][1]-1, 1, 4);
+            ctx.fillRect(tufts[ti][0]+4, tufts[ti][1], 1, 3);
+          }
         } else {
-          px(z.x, z.y, z.w, z.h, th === "night" ? "#54432f" : "#8a6a48");
+          px(z.x, z.y, z.w, z.h, pal(th).room);
           ctx.strokeStyle = "#2a1c10"; ctx.lineWidth = 3;
           ctx.strokeRect(z.x+1.5, z.y+1.5, z.w-3, z.h-3);
           ctx.strokeStyle = "rgba(255,224,180,.20)"; ctx.lineWidth = 1.5;
           ctx.setLineDash([4,3]); ctx.strokeRect(z.x+6, z.y+6, z.w-12, z.h-12); ctx.setLineDash([]);
+          drawRug(agent, z);         /* 主题地毯(在床与道具之下) */
+          decorFor(agent, z, th);    /* 性格道具 */
           /* 床 */
           var bx = z.bed[0], by = z.bed[1];
           px(bx-9, by-12, 18, 26, "#5c3a28");
@@ -780,6 +810,169 @@
       px(cx+3, cy-7, 4, 3, "#3a3a3a");
       px(cx-8, cy-2, 3, 4, "#c9c4b6"); px(cx+5, cy-2, 3, 4, "#c9c4b6");
       px(cx-8, cy-11, 2, 2, "#2a1a10");
+    }
+
+    /* ================= 昼夜调色板(夜里整体拉亮一档,暗处能看清) ================= */
+    function pal(th){
+      if (th === "day")  return {g1:"#5a8a46", g2:"#4f7d3c", room:"#8a6a48", soil:"#6b5230", path:"#9a835a"};
+      if (th === "dusk") return {g1:"#5e6a3a", g2:"#515c30", room:"#7c5c3e", soil:"#5a4426", path:"#846c4c"};
+      return                {g1:"#34513c", g2:"#2d4834", room:"#574632", soil:"#473722", path:"#615339"};
+    }
+
+    /* ================= 房间生活化:每间屋的性格道具(纯静态布景,不承载数据) ================= */
+    var RUGS = {
+      "MiroFish":"#3a2c5a","Watcher":"#26405c","哨兵":"#245049","泛音":"#6b4526",
+      "备份员":"#5a3f22","采集员":"#2c5a3a","Mobile":"#5c5222","门房":"#5c2c3a",
+      "Jarvis":"#722f2f","牧场主":"#3a5024"
+    };
+    function drawRug(agent, z){
+      var col = RUGS[agent] || "#4a3a22";
+      var w = Math.min(z.w - 22, z.w * 0.6), h = Math.min(z.h - 28, z.h * 0.5);
+      var cx = z.x + z.w * 0.52, cy = z.y + z.h * 0.64;
+      ctx.fillStyle = col; ctx.fillRect(cx - w/2, cy - h/2, w, h);
+      ctx.strokeStyle = "rgba(255,236,205,0.16)"; ctx.lineWidth = 2;
+      ctx.strokeRect(cx - w/2 + 3, cy - h/2 + 3, w - 6, h - 6);
+      ctx.fillStyle = "rgba(255,236,205,0.09)"; ctx.fillRect(cx - 4, cy - 4, 8, 8);
+    }
+    function frame(x, y, w, h, inner){
+      ctx.fillStyle = "#37271a"; ctx.fillRect(x-1, y-1, w+2, h+2);
+      ctx.fillStyle = inner; ctx.fillRect(x, y, w, h);
+    }
+    function pot(x, y){
+      ctx.fillStyle = "#a5623a"; ctx.fillRect(x, y+5, 8, 5);
+      ctx.fillStyle = "#4f9a44"; ctx.fillRect(x+1, y, 6, 6);
+      ctx.fillStyle = "#63b855"; ctx.fillRect(x+2, y-2, 4, 4);
+    }
+    function dots(x, y, arr, col){
+      ctx.fillStyle = col;
+      for (var i = 0; i < arr.length; i++) ctx.fillRect(x + arr[i][0], y + arr[i][1], 1, 1);
+    }
+    /* 每间屋一套道具。坐标相对各自 zone,避开床(左)与桌(中右) */
+    function decorFor(agent, z, th){
+      var X = z.x, Y = z.y;
+      if (agent === "MiroFish"){          /* 星象室:星图挂画 + 星座 + 望远镜 + 水晶球架 */
+        frame(X+56, Y+7, 30, 16, "#140c28");
+        dots(X+56, Y+7, [[6,4],[12,7],[20,5],[24,10],[15,12],[9,9]], "#c9b6ff");
+        ctx.strokeStyle = "rgba(180,150,255,.55)"; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(X+62, Y+11); ctx.lineTo(X+68, Y+14); ctx.lineTo(X+76, Y+12); ctx.stroke();
+        ctx.strokeStyle = "#9a8fc0"; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(X+120, Y+82); ctx.lineTo(X+136, Y+64); ctx.stroke();
+        ctx.fillStyle = "#5a5070"; ctx.fillRect(X+117, Y+80, 8, 5);
+        ctx.fillStyle = "#4a3a6a"; ctx.fillRect(X+20, Y+80, 12, 4);
+        ctx.fillStyle = "rgba(205,175,255,.85)"; ctx.beginPath(); ctx.arc(X+26, Y+75, 4, 0, 6.2832); ctx.fill();
+      } else if (agent === "Watcher"){     /* 电波室:一排监视器 + 天线 + 便利贴 */
+        for (var m = 0; m < 3; m++){
+          frame(X+54 + m*24, Y+9, 18, 14, "#0f1a12");
+          ctx.fillStyle = "#5fce7d"; ctx.fillRect(X+56 + m*24, Y+11, 14, 2);
+          ctx.fillStyle = "rgba(95,206,125,.5)"; ctx.fillRect(X+56 + m*24, Y+15, 10, 1);
+        }
+        ctx.strokeStyle = "#8fa0b0"; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(X+128, Y+34); ctx.lineTo(X+128, Y+20); ctx.moveTo(X+128, Y+22); ctx.lineTo(X+134, Y+16); ctx.moveTo(X+128, Y+22); ctx.lineTo(X+122, Y+16); ctx.stroke();
+        ctx.fillStyle = "#e8d873"; ctx.fillRect(X+20, Y+78, 7, 7); ctx.fillRect(X+30, Y+80, 6, 6);
+      } else if (agent === "哨兵"){        /* 瞭望塔:地图桌 + 探照灯 + 望远镜 */
+        ctx.fillStyle = "#6a5236"; ctx.fillRect(X+14, Y+74, 26, 14);
+        ctx.strokeStyle = "rgba(220,200,160,.5)"; ctx.lineWidth = 1;
+        ctx.strokeRect(X+17, Y+77, 20, 8);
+        ctx.beginPath(); ctx.moveTo(X+17, Y+81); ctx.lineTo(X+37, Y+81); ctx.moveTo(X+27, Y+77); ctx.lineTo(X+27, Y+85); ctx.stroke();
+        ctx.fillStyle = "#c9c4b6"; ctx.fillRect(X+82, Y+12, 10, 8);
+        ctx.fillStyle = "rgba(255,240,180,.4)"; ctx.beginPath();
+        ctx.moveTo(X+92, Y+14); ctx.lineTo(X+108, Y+8); ctx.lineTo(X+108, Y+22); ctx.closePath(); ctx.fill();
+      } else if (agent === "泛音"){        /* 工作坊:洞洞板挂工具 + 齿轮堆 + 图纸卷 */
+        frame(X+52, Y+8, 40, 22, "#3a2b1c");
+        ctx.fillStyle = "#b9a071";
+        for (var pgx = 0; pgx < 5; pgx++) for (var pgy = 0; pgy < 3; pgy++) ctx.fillRect(X+56 + pgx*7, Y+12 + pgy*6, 1, 1);
+        ctx.strokeStyle = "#d0d0d0"; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(X+60, Y+14); ctx.lineTo(X+60, Y+24); ctx.stroke();  /* 扳手 */
+        ctx.fillStyle = "#c9902e"; ctx.beginPath(); ctx.arc(X+22, Y+82, 5, 0, 6.2832); ctx.fill();
+        ctx.beginPath(); ctx.arc(X+31, Y+84, 4, 0, 6.2832); ctx.fill();
+        ctx.fillStyle = "#3a2b1c"; ctx.beginPath(); ctx.arc(X+22, Y+82, 2, 0, 6.2832); ctx.fill();
+        ctx.fillStyle = "#d9cba6"; ctx.fillRect(X+128, Y+78, 14, 5);  /* 图纸卷 */
+        ctx.fillStyle = "#8a7a52"; ctx.fillRect(X+128, Y+78, 3, 5);
+      } else if (agent === "备份员"){      /* 档案馆:成摞箱子 + 文件架 + 梯子 */
+        ctx.fillStyle = "#7a5a34";
+        ctx.fillRect(X+16, Y+74, 20, 14); ctx.fillRect(X+18, Y+62, 16, 12); ctx.fillRect(X+40, Y+78, 18, 10);
+        ctx.strokeStyle = "#4a3418"; ctx.lineWidth = 1;
+        ctx.strokeRect(X+16, Y+74, 20, 14); ctx.strokeRect(X+18, Y+62, 16, 12); ctx.strokeRect(X+40, Y+78, 18, 10);
+        ctx.fillStyle = "#5a4020"; ctx.fillRect(X+126, Y+40, 16, 48);   /* 文件架 */
+        for (var sh = 0; sh < 3; sh++){ ctx.fillStyle = "#8a6a3a"; ctx.fillRect(X+126, Y+50 + sh*13, 16, 2); }
+        ctx.strokeStyle = "#b99a5a"; ctx.lineWidth = 2;             /* 梯子 */
+        ctx.beginPath(); ctx.moveTo(X+108, Y+40); ctx.lineTo(X+112, Y+88); ctx.moveTo(X+118, Y+40); ctx.lineTo(X+114, Y+88);
+        for (var rung = 0; rung < 4; rung++){ ctx.moveTo(X+110, Y+50 + rung*11); ctx.lineTo(X+116, Y+50 + rung*11); } ctx.stroke();
+      } else if (agent === "采集员"){      /* 渔房:鱼篓 + 渔网 + 水桶 + 晾鱼 */
+        ctx.fillStyle = "#9a7a44"; ctx.fillRect(X+16, Y+62, 14, 12);
+        ctx.strokeStyle = "#6a4f24"; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(X+16, Y+66); ctx.lineTo(X+30, Y+66); ctx.moveTo(X+23, Y+62); ctx.lineTo(X+23, Y+74); ctx.stroke();
+        ctx.strokeStyle = "rgba(210,220,210,.5)"; ctx.lineWidth = 1;   /* 渔网(挂上墙) */
+        for (var nn = 0; nn < 5; nn++){ ctx.beginPath(); ctx.moveTo(X+52 + nn*6, Y+8); ctx.lineTo(X+55 + nn*6, Y+20); ctx.stroke(); }
+        ctx.beginPath(); ctx.moveTo(X+52, Y+14); ctx.lineTo(X+82, Y+14); ctx.stroke();
+        ctx.fillStyle = "#4a6a8a"; ctx.fillRect(X+130, Y+70, 10, 10);  /* 水桶 */
+        ctx.fillStyle = "#8fb8d8"; ctx.fillRect(X+131, Y+71, 8, 2);
+        ctx.fillStyle = "#c9c4b0"; ctx.fillRect(X+96, Y+10, 8, 3); ctx.fillRect(X+108, Y+10, 8, 3);  /* 晾着的鱼 */
+      } else if (agent === "Mobile"){      /* 外勤间:背包 + 挂外套 + 地图 + 鞋架 */
+        ctx.fillStyle = "#c06a3a"; ctx.fillRect(X+16, Y+70, 12, 14);   /* 背包 */
+        ctx.fillStyle = "#8a4a24"; ctx.fillRect(X+18, Y+66, 8, 5);
+        ctx.fillStyle = "#e0d8b0"; ctx.fillRect(X+17, Y+74, 10, 4);
+        ctx.fillStyle = "#3a6a9a"; ctx.fillRect(X+52, Y+8, 8, 18);     /* 挂外套 */
+        ctx.fillStyle = "#2e567e"; ctx.fillRect(X+54, Y+8, 4, 8);
+        frame(X+70, Y+8, 22, 16, "#5c6a3a");                          /* 地图 */
+        ctx.strokeStyle = "rgba(230,220,180,.5)"; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(X+73, Y+16); ctx.lineTo(X+80, Y+11); ctx.lineTo(X+88, Y+18); ctx.stroke();
+        ctx.fillStyle = "#7a5638";                                     /* 鞋架 */
+        ctx.fillRect(X+124, Y+80, 8, 4); ctx.fillRect(X+134, Y+80, 8, 4);
+      } else if (agent === "门房"){        /* 门厅:登记簿 + 挂钩钥匙串(门已在别处画) */
+        ctx.fillStyle = "#7a5a34"; ctx.fillRect(X+16, Y+40, 20, 5);   /* 挂钩板 */
+        ctx.fillStyle = "#d9b84a";
+        ctx.fillRect(X+20, Y+45, 2, 6); ctx.fillRect(X+27, Y+45, 2, 5); ctx.fillRect(X+33, Y+45, 2, 6);  /* 钥匙串 */
+        ctx.fillStyle = "#b03a2e"; ctx.fillRect(X+18, Y+80, 12, 9);    /* 登记簿 */
+        ctx.fillStyle = "#e8dcc4"; ctx.fillRect(X+20, Y+82, 8, 5);
+      } else if (agent === "Jarvis"){      /* 客厅:台灯 + 绿植 + 茶几 + 书架(最暖) */
+        ctx.fillStyle = "#5a3a24"; ctx.fillRect(X+16, Y+44, 18, 44);   /* 书架 */
+        var spines = ["#b0472e","#c99a2e","#4a7a5a","#3a6a9a","#8a5a9a"];
+        for (var bk = 0; bk < 5; bk++){ ctx.fillStyle = spines[bk]; ctx.fillRect(X+18, Y+47 + bk*8, 14, 6); }
+        pot(X+92, Y+70);                                               /* 绿植 */
+        ctx.fillStyle = "#5a4020"; ctx.fillRect(X+72, Y+82, 16, 4);    /* 茶几 */
+        ctx.fillStyle = "#c99a3a"; ctx.fillRect(X+82, Y+10, 6, 4);     /* 台灯座 */
+        ctx.fillStyle = "#3a2810"; ctx.fillRect(X+84, Y+14, 2, 8);
+        if (th === "night" || th === "dusk"){                          /* 台灯暖光(夜/黄昏) */
+          ctx.globalCompositeOperation = "lighter";
+          var lg = ctx.createRadialGradient(X+85, Y+11, 0, X+85, Y+11, 20);
+          lg.addColorStop(0, "rgba(255,205,120,.5)"); lg.addColorStop(1, "rgba(255,205,120,0)");
+          ctx.fillStyle = lg; ctx.beginPath(); ctx.arc(X+85, Y+11, 20, 0, 6.2832); ctx.fill();
+          ctx.globalCompositeOperation = "source-over";
+        }
+        ctx.fillStyle = "#ffd777"; ctx.fillRect(X+82, Y+7, 6, 4);      /* 灯罩 */
+      }
+    }
+
+    /* ================= 飘浮小生物(纯氛围,固定数量,绝不代表数据) =================
+       夜=萤火虫发微光,昼/黄昏=蝴蝶扑翅。位置固定几只 + 缓慢漂移,静态帧里也在。 */
+    var CREATURES = [
+      {x:250,y:176,s:0.20}, {x:352,y:150,s:1.10}, {x:300,y:246,s:2.30},
+      {x:414,y:198,s:3.00}, {x:560,y:72,s:0.70},  {x:300,y:398,s:1.80}
+    ];
+    var BFLY = ["#ff9d5c","#e8b84b","#f5a3b3","#b48ce8"];
+    function drawCreatures(th, now){
+      var t = now === null ? 0 : now;
+      for (var i = 0; i < CREATURES.length; i++){
+        var c = CREATURES[i];
+        var x = c.x + (now === null ? 0 : Math.sin(t/1500 + c.s*6.28) * 20);
+        var y = c.y + (now === null ? 0 : Math.cos(t/1900 + c.s*5.0) * 12);
+        if (th === "night"){
+          var glow = now === null ? 0.7 : Math.max(0, 0.4 + 0.45 * Math.sin(t/480 + c.s*12));
+          ctx.globalCompositeOperation = "lighter";
+          var g = ctx.createRadialGradient(x, y, 0, x, y, 7);
+          g.addColorStop(0, "rgba(200,255,120," + (0.5*glow) + ")"); g.addColorStop(1, "rgba(200,255,120,0)");
+          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 7, 0, 6.2832); ctx.fill();
+          ctx.globalCompositeOperation = "source-over";
+          ctx.fillStyle = "rgba(225,255,150," + (0.6 + 0.4*glow) + ")"; ctx.fillRect(x-1, y-1, 2, 2);
+        } else {
+          var flap = now === null ? 0.6 : (0.3 + 0.5 * Math.abs(Math.sin(t/110 + c.s*6)));
+          ctx.fillStyle = BFLY[i % BFLY.length];
+          ctx.fillRect(x-1, y-2, 2, 4);
+          ctx.beginPath(); ctx.ellipse(x-2, y-1, 2.4, flap*3 + 1, 0, 0, 6.2832); ctx.fill();
+          ctx.beginPath(); ctx.ellipse(x+2, y-1, 2.4, flap*3 + 1, 0, 0, 6.2832); ctx.fill();
+        }
+      }
     }
     function drawBlob(a, now){
       var flat = (a.cond === "sleeping" || a.cond === "tidy");
@@ -845,16 +1038,20 @@
     }
     function drawNight(th){
       if (th === "day") return;
-      ctx.fillStyle = th === "night" ? "rgba(12,18,44,0.42)" : "rgba(160,75,20,0.14)";
+      /* 夜色拉亮一档(偏蓝更透,暗处能看清);黄昏薄橙 */
+      ctx.fillStyle = th === "night" ? "rgba(26,40,74,0.30)" : "rgba(150,70,25,0.13)";
       ctx.fillRect(0, 0, WW, WH);
-      /* 灯:只在真的有人干活/在场的地方亮 */
+      /* 暖光池:只在真的有人干活/在场的地方亮,更柔更宽 */
       ctx.globalCompositeOperation = "lighter";
       actors.forEach(function(a){
-        var r = a.cond === "working" ? 56 : (a.cond === "resting" ? 30 : 0);
+        var r = a.cond === "working" ? 70 : (a.cond === "resting" ? 42 : 0);
         if (!r) return;
-        var g = ctx.createRadialGradient(a.x, a.y - 8, 0, a.x, a.y - 8, r);
-        g.addColorStop(0, "rgba(255,180,95,0.30)"); g.addColorStop(1, "rgba(255,180,95,0)");
-        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(a.x, a.y - 8, r, 0, 6.2832); ctx.fill();
+        var cx = a.x, cy = a.y - 8;
+        var g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+        g.addColorStop(0, "rgba(255,190,110,0.26)");
+        g.addColorStop(0.55, "rgba(255,180,95,0.10)");
+        g.addColorStop(1, "rgba(255,180,95,0)");
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 6.2832); ctx.fill();
       });
       ctx.globalCompositeOperation = "source-over";
     }
@@ -892,6 +1089,7 @@
       for (var i = 0; i < sorted.length; i++) drawBlob(sorted[i], now);
       drawParticles();
       drawNight(th);
+      drawCreatures(th, now);
       drawLabels();
       lastDrawMode = now === null ? "static" : "live";
     }
