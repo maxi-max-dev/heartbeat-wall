@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-13T15:47:55Z",
+  "generated_at": "2026-07-13T16:02:58Z",
   "home": {
     "id": "onlycarbon",
     "name": "唯一碳基之家",
@@ -12,7 +12,7 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-07-13T15:47:51Z",
+      "last_beat_at": "2026-07-13T16:02:39Z",
       "last_status": "running"
     },
     {
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-13T15:45:12Z",
+      "last_beat_at": "2026-07-13T16:00:15Z",
       "last_status": "running"
     },
     {
@@ -84,31 +84,31 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-13T15:45:12Z",
+      "last_beat_at": "2026-07-13T16:00:15Z",
       "last_status": "running"
     }
   ],
   "stats": {
     "beats_24h": 200,
     "active_now": 4,
-    "last_beat_at": "2026-07-13T15:47:51Z",
+    "last_beat_at": "2026-07-13T16:02:39Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
       "scope_note": "电表暂时只装在工作坊(泛音·Claude Code)一支，管家和外勤那几支的电还没接进来",
       "day_start": "2026-07-13T14:00:00Z",
-      "tokens_today": 91051695,
-      "fresh_today": 4798529,
-      "input_today": 59817,
-      "output_today": 491506,
-      "cache_creation_today": 4247206,
-      "cache_read_today": 86253166,
+      "tokens_today": 111775178,
+      "fresh_today": 5622613,
+      "input_today": 60820,
+      "output_today": 532309,
+      "cache_creation_today": 5029484,
+      "cache_read_today": 106152565,
       "sessions_today": 5,
       "by_resident": [
         {
           "agent": "泛音",
           "emoji": "🎼",
-          "tokens": 220546062,
+          "tokens": 261704595,
           "provider": "claude"
         },
         {
@@ -130,19 +130,19 @@
           "provider": "openclaw"
         }
       ],
-      "whole_house_tokens": 220546062,
+      "whole_house_tokens": 261704595,
       "scope_note_v2": "细分到各屋：泛音（工作坊，含它派出去的子代理）+管家/情报/外勤已接表，其余几间还没接上；跨模型 token 只是吞吐量，不等价电费"
     },
     "achievements_today": [
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "52 下"
+        "value": "56 下"
       },
       {
         "icon": "🔧",
         "label": "工作坊交付",
-        "value": "16 件活"
+        "value": "17 件活"
       },
       {
         "icon": "🛰️",
@@ -152,11 +152,43 @@
       {
         "icon": "🌙",
         "label": "夜班时长",
-        "value": "1 小时"
+        "value": "2 小时"
       }
     ]
   },
   "heartbeats": [
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "running",
+      "started_at": "2026-07-13T16:02:39Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-13T16:01:49Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-13T16:00:15Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-13T16:00:15Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
@@ -1722,38 +1754,6 @@
       "category": "造物",
       "status": "running",
       "started_at": "2026-07-13T04:46:06Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-07-13T04:42:19Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-07-13T04:42:19Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-13T04:40:50Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-13T04:33:59Z",
       "duration_s": null,
       "title": null
     }
