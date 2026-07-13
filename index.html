@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>心跳墙 · 唯一碳基之家</title>
-<meta name="description" content="Strava for AI agents —— 直播这个家里的 agent 编制在干什么,只晒活动,不晒产出。">
+<meta name="description" content="Strava for AI agents,直播这个家里的 agent 编制在干什么,只晒活动,不晒产出。">
 <style>
   :root{
     --bg:#18120d;
@@ -182,6 +182,17 @@
   .stream-sep{color:var(--text-faint)}
   .stream-text{color:var(--text-dim)}
   .stream-empty,.resident-empty{color:var(--text-faint);font-size:13.5px;padding:8px 4px}
+  /* 连刷屏折叠:一条汇总,点开看每一跳的明细时间 */
+  .stream-item.fold{display:block;padding:0}
+  .stream-item.fold summary{display:flex;align-items:baseline;gap:9px;padding:9px 6px;cursor:pointer;list-style:none}
+  .stream-item.fold summary::-webkit-details-marker{display:none}
+  .fold-caret{color:var(--text-faint);font-size:11px;flex:none;transition:transform .2s ease}
+  .stream-item.fold details[open] .fold-caret{transform:rotate(90deg)}
+  .fold-list{list-style:none;margin:0;padding:2px 6px 10px 26px;display:flex;flex-direction:column;gap:3px}
+  .fold-list li{font-size:12px;color:var(--text-faint);display:flex;gap:7px;align-items:baseline}
+  .fold-dot{width:5px;height:5px;border-radius:50%;flex:none;background:var(--text-faint)}
+  .fold-dot.dot-done{background:var(--gold)}
+  .fold-dot.dot-failed{background:var(--red)}
 
   /* ---------- activity bar ---------- */
   .activity-bar{
@@ -385,19 +396,102 @@
   }catch(e){}
   if (FORCE) document.documentElement.classList.add("force-reduced");
 
-  var VERBS = {
-    "造物": {running:"正在专心造东西", done:"完成了一次创作",   failed:"这次创作卡住了"},
-    "管家": {running:"正在张罗家里的事", done:"处理完一件家务",   failed:"这件事没弄成"},
-    "情报": {running:"正在打探消息",     done:"交回一份情报",     failed:"这趟打探扑了个空"},
-    "外勤": {running:"正在外面跑腿",     done:"跑完一趟外勤",     failed:"外勤遇到点状况"},
-    "占卜": {running:"正在掐指推演",     done:"完成了一次占卜",   failed:"这卦没算明白"},
-    "瞭望": {running:"正在盯梢",         done:"巡了一圈回来",     failed:"瞭望没扫到东西"},
-    "采集": {running:"正在扫描动态",     done:"收了一网数据",     failed:"这次扫描没扫着"},
-    "备份": {running:"正在打包备份",     done:"存好了一份档",     failed:"备份没存住"},
-    "牧场": {running:"正在照看额度",     done:"巡了一轮牧场",     failed:"牧场这次出了点岔子"},
-    "值守": {running:"正在门口守着",     done:"应了一次门",       failed:"没能及时应门"}
+  /* ---------- 声线字典:拟人化只改措辞不改事实 ----------
+     句子按事件时间戳哈希确定性选取,刷新页面同一事件永远同一句。
+     running 不进历史流(「谁正在忙」由居民卡片和大数字表达),所以声线只有 done/failed。
+     _many 变体给连刷屏折叠用,{n} 会换成真实条数。 */
+  var VOICE = {
+    "造物": {
+      done: ["又搓好一个新零件","交了一版活,揉了揉不存在的眼睛","拧上最后一颗螺丝,收工","把一个想法敲成了实物","调了半天,终于顺眼了","新东西下线,还冒着热气"],
+      failed: ["翻车了,蹲在地上看轮子","造到一半卡壳,先喝口水","零件不对付,回炉重造","这版没成,图纸摊了一桌"],
+      done_many: ["连着交了 {n} 件活,手都没停","一口气搓完 {n} 个零件","{n} 件活打包交付,工位还热着"],
+      failed_many: ["连翻了 {n} 次车,坐地上缓缓","{n} 连败,今晚风水不对"]
+    },
+    "管家": {
+      done: ["把家里的事又理了一遍","巡了一圈,灯都好好亮着","账本对平了,茶也续上了","今日份的家务,收拾妥当","门窗检查完毕,一切如常"],
+      failed: ["有件家务没办利索,记在小本上了","巡到一半被绊了一下,回头再来","这单没办成,先给自己扣点工资","茶凉了都没办妥,惭愧"],
+      done_many: ["连着操持了 {n} 件家务,井井有条","{n} 件事一并办妥,不敢居功"],
+      failed_many: ["{n} 件事没办顺,今天有点水逆"]
+    },
+    "情报": {
+      done: ["交回一份新鲜情报","天线转了一圈,抄下几条动静","外面的风声,整理成了小抄","今日份的世界,浓缩完毕"],
+      failed: ["这趟打探扑了个空","信号里全是杂音,明天再听","蹲了半天,目标没露面","风声太紧,先撤"],
+      done_many: ["连交 {n} 份情报,耳朵还竖着","{n} 条动静入档"],
+      failed_many: ["{n} 趟都扑空,今晚风声不对"]
+    },
+    "外勤": {
+      done: ["跑完一趟外勤,鞋都没来得及脱","腿着办完一件事,已归队","外面的活儿办妥,打卡回屋","顺路把事办了,不绕远"],
+      failed: ["外勤路上迷了道,先折返","这趟白跑,门没开","半路下雨,改日再跑","跑到地方发现带错了东西"],
+      done_many: ["连跑 {n} 趟,计步器都热了","{n} 趟外勤全办妥,腿功了得"],
+      failed_many: ["{n} 趟都没跑成,鞋底喊冤"]
+    },
+    "占卜": {
+      done: ["夜观天象,记下一卦","掐指一算,卦象已封存","水晶球擦亮,偷看了明天一眼","起卦完毕,天机不可尽泄","算盘一响,又是一签"],
+      failed: ["这卦没算明白","天机混沌,今晚的星星不配合","卦摔了,捡起来明天重算","水晶球起雾,看不真切"],
+      done_many: ["连起 {n} 卦,袖口都算出火星了","{n} 卦入册,天机满仓"],
+      failed_many: ["{n} 卦皆迷,水晶球该擦了"]
+    },
+    "瞭望": {
+      done: ["瞭望塔转了一圈,四方无事","巡夜完毕,风平浪静","望远镜扫过,记下几处灯火","塔上看了一轮,该亮的都亮着"],
+      failed: ["今晚雾大,塔上什么都没看清","瞭望到一半,镜片起雾了","风太吵,这轮白望","塔灯闪了一下,这轮没巡完"],
+      done_many: ["连巡 {n} 轮,塔灯常亮","{n} 轮瞭望,四野皆安"],
+      failed_many: ["{n} 轮都雾蒙蒙,改日再望"]
+    },
+    "采集": {
+      done: ["收了一网新数据,活蹦乱跳","雷达转完一圈,格子都填上了","今日样本入库,封条贴好","一网下去,收获颇丰"],
+      failed: ["网撒出去空了,明天换个水域","雷达今天有点近视","这网破了个洞,先补网","转了一圈,什么都没扫着"],
+      done_many: ["连收 {n} 网,仓库渐满","{n} 网数据齐活,雷达冒烟"],
+      failed_many: ["{n} 网皆空,鱼汛未至"]
+    },
+    "备份": {
+      done: ["把全家的记忆又抄了一份压箱底","档案馆上新,钥匙收好了","今日份的时光,装盒封存","抄写完毕,墨迹已干"],
+      failed: ["这份记忆没抄全,箱子先不锁","抄到一半墨干了,明日再誊","箱子没关严,重新来过","档案掉了一页,正满地找"],
+      done_many: ["连存 {n} 份档,箱底更沉了","{n} 份记忆入箱,安心"],
+      failed_many: ["{n} 份都没抄成,得修修笔了"]
+    },
+    "牧场": {
+      done: ["把闲着的额度赶出去吃草","牧场巡完一圈,草都还够","数了数栏里的额度,一头不少","额度们吃饱了,在打嗝"],
+      failed: ["有头额度跑丢了,举着灯找","栅栏松了一角,连夜去修","今天的草不太对,牛不肯吃","巡到一半下雨,先躲屋檐"],
+      done_many: ["连巡 {n} 轮牧场,牛都认识他了","{n} 轮巡完,额度膘肥体壮"],
+      failed_many: ["{n} 轮都不顺,牧草今年欠收"]
+    },
+    "值守": {
+      done: ["在门口数今天的脚印","应了一次门,是熟客","门铃擦得锃亮,访客登记好了","换了班,门口一切如常"],
+      failed: ["门铃响的时候刚好走神了","跑去开门,人已经走了","登记本翻到一半卡住了","这一班守得迷糊,记上一笔"],
+      done_many: ["连应 {n} 次门,门轴都热乎了","{n} 位访客登记在册"],
+      failed_many: ["{n} 次没应上,给门铃道个歉"]
+    }
   };
-  var STATUS_TEXT = {running:"正在忙", done:"刚忙完", failed:"刚碰了个钉子"};
+  var VOICE_FALLBACK = {
+    done: ["干完了一件事","又了结一桩事"],
+    failed: ["这次没顺利","这趟不太走运"],
+    done_many: ["连着干完 {n} 件事"],
+    failed_many: ["连着 {n} 次没成"]
+  };
+
+  /* 确定性选句:同一事件哈希到同一句,刷新不换词 */
+  function hashStr(s){
+    var h = 5381;
+    for (var i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+    return Math.abs(h);
+  }
+  function pickLine(pool, seed){
+    return pool[hashStr(seed) % pool.length];
+  }
+  function voiceFor(beat){
+    var v = VOICE[beat.category] || VOICE_FALLBACK;
+    var key = beat.status === "failed" ? "failed" : "done";
+    var pool = v[key] || VOICE_FALLBACK[key];
+    return beat.agent + " " + pickLine(pool, bkey(beat));
+  }
+  function voiceForGroup(g){
+    var v = VOICE[g.category] || VOICE_FALLBACK;
+    var key = g.status === "failed" ? "failed_many" : "done_many";
+    var pool = v[key] || VOICE_FALLBACK[key];
+    var seed = g.agent + "|" + g.status + "|" + g.items[0].started_at + "|" +
+               g.items[g.items.length - 1].started_at + "|" + g.items.length;
+    return g.agent + " " + pickLine(pool, seed).replace("{n}", g.items.length);
+  }
   var DATA_URL = "./data/heartbeats.json";
   var FETCH_MS = 60000;   /* 数据每 60s 重取(源头 15 分钟一更) */
   var TICK_MS  = 30000;   /* 相对时间每 30s 自己走,不依赖刷新 */
@@ -418,11 +512,13 @@
     return Math.floor(diff/86400) + " 天前";
   }
 
-  function sentenceFor(beat){
-    var table = VERBS[beat.category];
-    var verb = table && table[beat.status];
-    if (!verb) verb = beat.status === "running" ? "正在忙活" : beat.status === "failed" ? "这次没顺利" : "干完了一件事";
-    return beat.agent + " " + verb;
+  function durText(iso){
+    var then = new Date(iso).getTime();
+    if (isNaN(then)) return "";
+    var d = Math.max(0, Math.round((Date.now() - then) / 1000));
+    if (d < 3600) return Math.max(1, Math.floor(d / 60)) + " 分钟";
+    if (d < 86400) return Math.floor(d / 3600) + " 小时";
+    return Math.floor(d / 86400) + " 天";
   }
 
   function dotClass(status){
@@ -678,46 +774,122 @@
       dot.classList.add(dotClass(r.last_status));
       if (r.last_status === "running") card.classList.add("is-running");
       else if (r.last_status === "failed") card.classList.add("is-failed");
-      text.textContent = (STATUS_TEXT[r.last_status] || "") + " · ";
+      var age = (Date.now() - new Date(r.last_beat_at).getTime()) / 1000;
       var t = document.createElement("span");
-      t.setAttribute("data-ts", r.last_beat_at);
-      t.textContent = relTime(r.last_beat_at);
+      if (r.last_status === "running" && age > 1800){
+        /* 挂着 running 超过 30 分钟:诚实说已经忙了多久,不再说「正在 · 很久前」 */
+        text.textContent = "已经忙了 ";
+        t.setAttribute("data-dur", r.last_beat_at);
+        t.textContent = durText(r.last_beat_at);
+      } else {
+        var label = r.last_status === "running" ? "正在忙"
+                  : r.last_status === "failed" ? (age <= 2700 ? "刚碰了个钉子" : "上次碰了钉子")
+                  : (age <= 2700 ? "刚忙完" : "上次忙完");
+        text.textContent = label + " · ";
+        t.setAttribute("data-ts", r.last_beat_at);
+        t.textContent = relTime(r.last_beat_at);
+      }
       text.appendChild(t);
     });
   }
 
-  /* ---------- 心跳流:首屏依次浮入;之后只有真正新到的心跳才闪 ---------- */
+  /* ---------- 心跳流(历史流) ----------
+     · running 不进流:此刻的事由居民卡片和大数字表达,历史流只放已发生的
+     · 等价心跳(同居民+同类别+同状态+同时间戳)去重
+     · 连续同居民+同类别+同状态折叠成一条汇总,数量真实,点开看每跳明细
+     · 首屏依次浮入;之后只有真正新到的心跳才闪 */
+  function buildFeedGroups(heartbeats){
+    var feed = [];
+    var seenKeys = new Set();
+    (heartbeats || []).forEach(function(b){
+      if (b.status === "running") return;
+      var k = bkey(b);
+      if (seenKeys.has(k)) return;
+      seenKeys.add(k);
+      feed.push(b);
+    });
+    var groups = [];
+    feed.forEach(function(b){
+      var last = groups[groups.length - 1];
+      if (last && last.agent === b.agent && last.category === b.category && last.status === b.status){
+        last.items.push(b);
+      } else {
+        groups.push({agent:b.agent, category:b.category, status:b.status, items:[b]});
+      }
+    });
+    return groups;
+  }
+  function rowContent(beat, sentence){
+    var frag = document.createDocumentFragment();
+    var dot = document.createElement("span");
+    dot.className = "stream-dot " + dotClass(beat.status);
+    var time = document.createElement("span");
+    time.className = "stream-time";
+    time.setAttribute("data-ts", beat.started_at);
+    time.textContent = relTime(beat.started_at);
+    var sep = document.createElement("span");
+    sep.className = "stream-sep";
+    sep.textContent = "·";
+    var text = document.createElement("span");
+    text.className = "stream-text";
+    text.textContent = sentence;
+    frag.appendChild(dot); frag.appendChild(time); frag.appendChild(sep); frag.appendChild(text);
+    return frag;
+  }
   function renderStream(heartbeats, newKeys){
     var list = el("stream-list");
     list.innerHTML = "";
-    var beats = (heartbeats || []).slice(0, 40);
-    if (beats.length === 0){
+    var groups = buildFeedGroups(heartbeats).slice(0, 30);
+    if (groups.length === 0){
       list.innerHTML = '<li class="stream-empty">这窗口期还没有心跳</li>';
       return;
     }
     var frag = document.createDocumentFragment();
-    beats.forEach(function(b, i){
+    groups.forEach(function(g, gi){
+      var isNew = false;
+      if (newKeys){
+        for (var i = 0; i < g.items.length; i++){
+          if (newKeys.has(bkey(g.items[i]))){ isNew = true; break; }
+        }
+      }
       var li = document.createElement("li");
       li.className = "stream-item";
       if (state.first){
         li.classList.add("enter");
-        li.style.setProperty("--i", Math.min(i, 14));
-      } else if (newKeys && newKeys.has(bkey(b))){
+        li.style.setProperty("--i", Math.min(gi, 14));
+      } else if (isNew){
         li.classList.add("is-new");
       }
-      var dot = document.createElement("span");
-      dot.className = "stream-dot " + dotClass(b.status);
-      var time = document.createElement("span");
-      time.className = "stream-time";
-      time.setAttribute("data-ts", b.started_at);
-      time.textContent = relTime(b.started_at);
-      var sep = document.createElement("span");
-      sep.className = "stream-sep";
-      sep.textContent = "·";
-      var text = document.createElement("span");
-      text.className = "stream-text";
-      text.textContent = sentenceFor(b);
-      li.appendChild(dot); li.appendChild(time); li.appendChild(sep); li.appendChild(text);
+      var newest = g.items[0];
+      if (g.items.length === 1){
+        li.appendChild(rowContent(newest, voiceFor(newest)));
+      } else {
+        li.classList.add("fold");
+        var det = document.createElement("details");
+        var sum = document.createElement("summary");
+        sum.appendChild(rowContent(newest, voiceForGroup(g)));
+        var caret = document.createElement("span");
+        caret.className = "fold-caret";
+        caret.textContent = "▸";
+        sum.appendChild(caret);
+        sum.title = g.items.map(function(b){ return relTime(b.started_at); }).slice(0, 8).join("、")
+                    + (g.items.length > 8 ? "…" : "");
+        det.appendChild(sum);
+        var ul = document.createElement("ul");
+        ul.className = "fold-list";
+        g.items.forEach(function(b){
+          var row = document.createElement("li");
+          var d = document.createElement("span");
+          d.className = "fold-dot " + dotClass(b.status);
+          var t = document.createElement("span");
+          t.setAttribute("data-ts", b.started_at);
+          t.textContent = relTime(b.started_at);
+          row.appendChild(d); row.appendChild(t);
+          ul.appendChild(row);
+        });
+        det.appendChild(ul);
+        li.appendChild(det);
+      }
       frag.appendChild(li);
     });
     list.appendChild(frag);
@@ -759,8 +931,13 @@
 
   /* ---------- 相对时间自走(每 30s),不用等刷新 ---------- */
   function tickTimes(){
+    /* 居民卡整体重算:让「正在忙 30 分钟」到点自动翻成「已经忙了 X」 */
+    if (state.data) renderResidents(state.data.residents);
     document.querySelectorAll("[data-ts]").forEach(function(node){
       node.textContent = relTime(node.getAttribute("data-ts"));
+    });
+    document.querySelectorAll("[data-dur]").forEach(function(node){
+      node.textContent = durText(node.getAttribute("data-dur"));
     });
     ecg.refresh();
   }
@@ -785,7 +962,7 @@
     setEmbers(0);
     el("ecg-note").textContent = "信号弱";
     el("stream-list").innerHTML =
-      '<li class="stream-empty">暂时连不上心跳数据，稍后再来看看</li>';
+      '<li class="stream-empty">信号断了一小会儿，听不见家里的心跳 · 先当全家都在打盹，稍后再来敲门</li>';
     document.querySelectorAll(".resident-card").forEach(function(card){
       card.classList.remove("is-running", "is-failed");
       card.querySelector(".status-dot").className = "status-dot dot-quiet";
