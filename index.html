@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>唯一碳基之家 · 心跳墙</title>
-<meta name="description" content="一栋住着 AI agent 的小屋,扒着窗户看他们过日子。只晒活动,不晒产出。">
+<meta name="description" content="一座住着 AI agent 的小家园,俯瞰他们过日子。只晒活动,不晒产出。">
 <style>
   :root{
     --bg:#18120d;
@@ -20,13 +20,9 @@
     --red:#e8735c;
     --shadow:rgba(0,0,0,.45);
     --radius:16px;
-    --outline:#1a0f08;      /* 像素描边 */
-    --wood:#241a10;         /* 木板底色 */
-    --wood-edge:#5a3c22;    /* 画框木 */
-    --room-dark:#221812;
-    --room-lit1:#6b4a26;
-    --room-lit2:#8a5d31;
-    --lamp:rgba(255,190,110,.55);
+    --outline:#1a0f08;
+    --wood:#241a10;
+    --wood-edge:#5a3c22;
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
@@ -66,146 +62,24 @@
   h2.section-title::before{content:"";width:4px;height:16px;background:var(--accent);border-radius:2px;display:inline-block}
   section{margin-bottom:38px}
 
-  /* ================= 场景:剖面小屋 ================= */
+  /* ================= 主秀:俯视家园图 ================= */
   .scene-card{margin-bottom:10px}
-  .scene{
-    position:relative;border:1px solid var(--border);border-radius:var(--radius);
-    overflow:hidden;padding:34px 14px 0;box-shadow:0 6px 24px var(--shadow);
+  .map-frame{
+    position:relative;border:3px solid var(--outline);border-radius:12px;overflow:hidden;
+    background:#20160e;box-shadow:0 6px 24px var(--shadow);
   }
-  /* 昼夜天空(按访客本地时间) */
-  .scene.t-day{background:linear-gradient(180deg,#6fb7d9 0%,#a8d8e8 62%,#c3e2ea 100%)}
-  .scene.t-dusk{background:linear-gradient(180deg,#4a3f66 0%,#a05f4e 55%,#e0965a 100%)}
-  .scene.t-night{background:linear-gradient(180deg,#131b33 0%,#1b2440 55%,#2a3558 100%)}
-  .sky-el{position:absolute;pointer-events:none}
-  .sun{top:16px;right:9%;width:34px;height:34px;background:#ffd75e;border:3px solid #e8a53b;display:none}
-  .moon{top:16px;right:9%;width:28px;height:28px;background:#e8e3cf;border:3px solid #b9b49f;display:none;
-        box-shadow:inset -7px -4px 0 0 #cfc9b2}
-  .t-day .sun{display:block}
-  .t-night .moon{display:block}
-  .stars{inset:0;display:none}
-  .t-night .stars{display:block}
-  .stars i{position:absolute;width:3px;height:3px;background:#fff;opacity:.85;animation:twinkle 2.6s ease-in-out infinite}
-  .stars i:nth-child(2n){animation-delay:-1.3s;opacity:.55}
-  .stars i:nth-child(3n){animation-duration:3.4s}
-  @keyframes twinkle{0%,100%{opacity:.25}50%{opacity:.95}}
-  .cloud{top:22px;width:64px;height:14px;background:rgba(255,255,255,.75);display:none;
-         box-shadow:14px -8px 0 -2px rgba(255,255,255,.75), 34px -4px 0 -1px rgba(255,255,255,.7)}
-  .cloud.c2{top:52px;opacity:.8}
-  .t-day .cloud,.t-dusk .cloud{display:block}
-  .t-dusk .cloud{background:rgba(255,220,190,.55);box-shadow:14px -8px 0 -2px rgba(255,220,190,.55),34px -4px 0 -1px rgba(255,220,190,.5)}
-  .cloud{animation:drift 80s linear infinite}
-  .cloud.c2{animation-duration:110s;animation-delay:-40s}
-  @keyframes drift{0%{left:-15%}100%{left:105%}}
-
-  /* 院子 = 房子 + 牧场 */
-  .yard{position:relative;display:flex;align-items:flex-end;gap:10px;max-width:640px;margin:0 auto}
-  .house{flex:1 1 300px;min-width:0;position:relative}
-
-  /* 屋顶层:坡屋顶 + 烟囱 + 瞭望塔 */
-  .roofline{position:relative;height:44px;display:flex;align-items:flex-end}
-  .roof{
-    position:absolute;left:0;bottom:-2px;width:70%;height:40px;background:#7c3128;
-    clip-path:polygon(0 100%,50% 0,100% 100%);
+  #map{display:block;width:100%;touch-action:manipulation}
+  .sr-only{
+    position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+    clip:rect(0 0 0 0);white-space:nowrap;border:0;
   }
-  .roof::after{
-    content:"";position:absolute;left:10%;right:10%;bottom:10px;height:4px;
-    background:rgba(0,0,0,.18);
-  }
-  .roof-base{position:absolute;left:-6px;bottom:-2px;width:calc(70% + 12px);height:8px;background:#5c231c;border:3px solid var(--outline)}
-  .chimney{position:absolute;left:16%;bottom:20px;width:18px;height:28px;background:#6d4230;border:3px solid var(--outline);z-index:2}
-  .smoke{position:absolute;left:2px;top:-12px;width:8px;height:8px;background:rgba(226,220,210,.75);opacity:0}
-  .smoke.s2{left:5px}
-  .smoke.s3{left:0}
-  .chimney.smoking .smoke{animation:puff 3.2s linear infinite}
-  .chimney.smoking .smoke.s2{animation-delay:-1.1s}
-  .chimney.smoking .smoke.s3{animation-delay:-2.2s}
-  @keyframes puff{
-    0%{transform:translate(0,0) scale(.7);opacity:0}
-    15%{opacity:.75}
-    100%{transform:translate(6px,-34px) scale(1.7);opacity:0}
-  }
-  /* 哨兵瞭望塔(屋顶右侧) */
-  .tower{
-    position:relative;margin-left:auto;width:29%;min-width:86px;height:44px;
-    border:3px solid var(--outline);border-bottom:none;background:var(--room-dark);
-  }
-  .tower::before{content:"";position:absolute;left:-6px;top:-8px;width:calc(100% + 12px);height:5px;background:#5c231c;border:3px solid var(--outline)}
-
-  /* 楼层与房间 */
-  .floor{display:grid;gap:3px;background:var(--outline);border:3px solid var(--outline);border-bottom:none}
-  .floor.attic{grid-template-columns:1fr 1fr}
-  .floor.f2{grid-template-columns:1fr 1fr 1fr}
-  .floor.f1{grid-template-columns:1.05fr 1fr}
-  .floor.basement{grid-template-columns:1fr;border-bottom:3px solid var(--outline);background:#120b06}
-  .floor.basement .room{background:linear-gradient(#17100a,#1d140c);min-height:54px}
-
-  .room{
-    position:relative;min-height:68px;padding:6px 4px 4px;
-    background:linear-gradient(var(--room-dark),#2b2014);
-    display:flex;flex-direction:column;justify-content:flex-end;align-items:center;
-    cursor:pointer;outline:none;
-    transition:background .4s ease, box-shadow .4s ease, filter .4s ease;
-  }
-  .room:focus-visible{box-shadow:inset 0 0 0 2px var(--accent)}
-  .room .avatar{font-size:21px;line-height:1.15}
-  .room .prop{position:absolute;left:6px;bottom:20px;font-size:13px;opacity:.85;transition:transform .3s}
-  .room .mood{position:absolute;right:5px;top:4px;font-size:12px}
-  .room .plate{
-    font-size:10px;color:#b9a184;background:var(--outline);
-    padding:0 6px;margin-top:4px;letter-spacing:1px;white-space:nowrap;
-    max-width:100%;overflow:hidden;text-overflow:ellipsis;
-  }
-  /* 状态:灯 */
-  .room.lit{
-    background:linear-gradient(var(--room-lit1),var(--room-lit2));
-    box-shadow:inset 0 0 24px var(--lamp), 0 0 18px rgba(255,190,110,.28);
-  }
-  .room.lit .plate{color:#ffe3b3}
-  /* 状态:行为 */
-  .room.working .avatar{animation:bob 2.4s ease-in-out infinite}
-  .room.working .prop{animation:propWiggle 2.8s ease-in-out infinite}
-  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
-  @keyframes propWiggle{0%,100%{transform:rotate(0)}50%{transform:rotate(-12deg)}}
-  .room.sleeping{filter:brightness(.72)}
-  .room.sleeping .mood{animation:zfloat 3.6s ease-in-out infinite}
-  @keyframes zfloat{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(-4px);opacity:.95}}
-  .room.tidy{filter:brightness(.58)}
-  .room.mess .prop{transform:rotate(95deg) translateY(2px);opacity:.75}
-  .room.mess .mood{opacity:.9}
-  .room.resting .mood{opacity:.9}
-
-  /* 一楼门房的门 */
-  .door{position:absolute;right:8px;bottom:0;width:20px;height:32px;background:#4a2c17;border:3px solid var(--outline);border-bottom:none}
-  .door::after{content:"";position:absolute;right:3px;top:14px;width:3px;height:3px;background:#d9a75e}
-
-  /* 屋外小牧场(牧场主) */
-  .pasture{
-    flex:0 0 96px;height:96px;border:3px solid var(--outline);
-    background:linear-gradient(var(--room-dark),#28200f);
-    justify-content:flex-end;
-  }
-  .pasture .fence{
-    position:absolute;left:0;right:0;bottom:0;height:18px;
-    background:repeating-linear-gradient(90deg,#6d4a2a 0 5px,transparent 5px 16px);
-    border-top:3px solid #6d4a2a;pointer-events:none;
-  }
-  .pasture .plate{position:relative;z-index:2}
-  .pasture.lit{background:linear-gradient(#5d5426,#6b5d2c)}
-
-  .ground{
-    position:relative;height:18px;margin:0 -14px;border-top:3px solid var(--outline);
-    background:#3f6b36;
-  }
-  .t-night .ground{background:#28421f}
-  .t-dusk .ground{background:#4a5c2e}
-
   .scene-caption{
     text-align:center;font-size:15px;color:var(--text-dim);margin:12px 0 0;font-weight:600;
   }
   .scene-caption b{color:var(--gold);font-size:18px}
   .scene-hint{text-align:center;font-size:11.5px;color:var(--text-faint);margin:4px 0 0}
 
-  /* 凑近看面板(点房间) */
+  /* 凑近看面板(点小人/房间) */
   .peek{
     margin:14px 0 0;background:var(--wood);border:3px solid var(--outline);border-radius:12px;
     padding:12px 14px;position:relative;
@@ -263,7 +137,7 @@
   .fold-dot.dot-done{background:var(--gold)}
   .fold-dot.dot-failed{background:var(--red)}
 
-  /* ================= 日晷:一天的日与夜 ================= */
+  /* ================= 日晷 ================= */
   .sun-track{
     position:relative;height:128px;background:var(--wood);
     border:3px solid var(--outline);border-radius:12px;overflow:hidden;
@@ -330,15 +204,9 @@
 
   @media (max-width:430px){
     .wrap{padding:16px 12px 44px}
-    .room{min-height:60px}
-    .room .avatar{font-size:18px}
-    .room .plate{font-size:9px;letter-spacing:.5px}
-    .room .prop{font-size:11px;bottom:18px}
-    .pasture{flex-basis:78px;height:84px}
-    .tower{min-width:72px}
   }
 
-  /* ---------- reduced motion:全部降级为静态,状态仍靠灯光/道具/表情可读 ---------- */
+  /* ---------- reduced motion:全部降级为静态,状态仍靠位置/灯光可读 ---------- */
   @media (prefers-reduced-motion: reduce){
     *,*::before,*::after{animation:none !important;transition:none !important}
   }
@@ -353,105 +221,14 @@
     <span class="last-updated" id="last-updated">心跳读取中…</span>
   </div>
 
-  <!-- ================= 家(主秀) ================= -->
-  <section class="scene-card" aria-label="家的剖面">
-    <div class="scene t-night" id="scene">
-      <span class="sky-el sun" aria-hidden="true"></span>
-      <span class="sky-el moon" aria-hidden="true"></span>
-      <div class="sky-el stars" aria-hidden="true">
-        <i style="left:6%;top:12%"></i><i style="left:14%;top:34%"></i><i style="left:22%;top:8%"></i>
-        <i style="left:31%;top:26%"></i><i style="left:40%;top:10%"></i><i style="left:48%;top:30%"></i>
-        <i style="left:57%;top:7%"></i><i style="left:66%;top:22%"></i><i style="left:74%;top:12%"></i>
-        <i style="left:82%;top:28%"></i><i style="left:90%;top:9%"></i><i style="left:96%;top:24%"></i>
-      </div>
-      <span class="sky-el cloud" aria-hidden="true"></span>
-      <span class="sky-el cloud c2" aria-hidden="true"></span>
-
-      <div class="yard">
-        <div class="house">
-          <div class="roofline">
-            <div class="roof" aria-hidden="true"></div>
-            <div class="roof-base" aria-hidden="true"></div>
-            <div class="chimney" id="chimney" aria-hidden="true">
-              <span class="smoke"></span><span class="smoke s2"></span><span class="smoke s3"></span>
-            </div>
-            <div class="room tower tidy" data-agent="哨兵" role="button" tabindex="0">
-              <span class="prop" aria-hidden="true">🔦</span>
-              <span class="avatar" aria-hidden="true">🛰️</span>
-              <span class="mood" aria-hidden="true"></span>
-              <span class="plate">哨兵</span>
-            </div>
-          </div>
-          <div class="floor attic">
-            <div class="room tidy" data-agent="MiroFish" role="button" tabindex="0">
-              <span class="prop" aria-hidden="true">🔭</span>
-              <span class="avatar" aria-hidden="true">🔮</span>
-              <span class="mood" aria-hidden="true"></span>
-              <span class="plate">MiroFish</span>
-            </div>
-            <div class="room tidy" data-agent="Watcher" role="button" tabindex="0">
-              <span class="prop" aria-hidden="true">🗞️</span>
-              <span class="avatar" aria-hidden="true">📡</span>
-              <span class="mood" aria-hidden="true"></span>
-              <span class="plate">Watcher</span>
-            </div>
-          </div>
-          <div class="floor f2">
-            <div class="room tidy" data-agent="泛音" role="button" tabindex="0">
-              <span class="prop" aria-hidden="true">⚙️</span>
-              <span class="avatar" aria-hidden="true">🎼</span>
-              <span class="mood" aria-hidden="true"></span>
-              <span class="plate">泛音</span>
-            </div>
-            <div class="room tidy" data-agent="采集员" role="button" tabindex="0">
-              <span class="prop" aria-hidden="true">🎣</span>
-              <span class="avatar" aria-hidden="true">📊</span>
-              <span class="mood" aria-hidden="true"></span>
-              <span class="plate">采集员</span>
-            </div>
-            <div class="room tidy" data-agent="Mobile" role="button" tabindex="0">
-              <span class="prop" aria-hidden="true">🎒</span>
-              <span class="avatar" aria-hidden="true">📱</span>
-              <span class="mood" aria-hidden="true"></span>
-              <span class="plate">Mobile</span>
-            </div>
-          </div>
-          <div class="floor f1">
-            <div class="room tidy" data-agent="门房" role="button" tabindex="0">
-              <span class="door" aria-hidden="true"></span>
-              <span class="prop" aria-hidden="true">🪑</span>
-              <span class="avatar" aria-hidden="true">🔔</span>
-              <span class="mood" aria-hidden="true"></span>
-              <span class="plate">门房</span>
-            </div>
-            <div class="room tidy" data-agent="Jarvis" role="button" tabindex="0">
-              <span class="prop" aria-hidden="true">🫖</span>
-              <span class="avatar" aria-hidden="true">🤵</span>
-              <span class="mood" aria-hidden="true"></span>
-              <span class="plate">Jarvis</span>
-            </div>
-          </div>
-          <div class="floor basement">
-            <div class="room tidy" data-agent="备份员" role="button" tabindex="0">
-              <span class="prop" aria-hidden="true">📦</span>
-              <span class="avatar" aria-hidden="true">🗄️</span>
-              <span class="mood" aria-hidden="true"></span>
-              <span class="plate">备份员 · 地下档案馆</span>
-            </div>
-          </div>
-        </div>
-        <div class="room pasture tidy" data-agent="牧场主" role="button" tabindex="0">
-          <span class="prop" aria-hidden="true">🌾</span>
-          <span class="avatar" aria-hidden="true">🐄</span>
-          <span class="mood" aria-hidden="true"></span>
-          <span class="plate">牧场主</span>
-          <span class="fence" aria-hidden="true"></span>
-        </div>
-      </div>
-      <div class="ground" aria-hidden="true"></div>
+  <!-- ================= 家园俯视图(主秀) ================= -->
+  <section class="scene-card" aria-label="家园俯视图">
+    <div class="map-frame">
+      <canvas id="map" aria-label="家园俯视地图,住着十位 AI 居民,亮着灯的工位上有人在干活"></canvas>
+      <div class="map-a11y sr-only" id="map-a11y" aria-label="居民列表"></div>
     </div>
-    <p class="scene-caption" id="scene-caption">窗户点灯中…</p>
-    <p class="scene-hint">点一间房,凑近看看这位住户最近在忙什么</p>
+    <p class="scene-caption" id="scene-caption">炊烟未起,数据在路上…</p>
+    <p class="scene-hint">点地图上的小人或房间,凑近看看这位住户</p>
     <div class="peek" id="peek" hidden>
       <button class="peek-close" id="peek-close" aria-label="关上">✕</button>
       <div class="peek-head">
@@ -537,11 +314,9 @@
     var m = location.search.match(/[?&]hour=(\d{1,2})/);
     return m ? Math.min(23, parseInt(m[1], 10)) : null;
   })();
+  function hourNow(){ return HOUR_OVERRIDE !== null ? HOUR_OVERRIDE : new Date().getHours(); }
 
-  /* ---------- 声线字典:拟人化只改措辞不改事实 ----------
-     句子按事件时间戳哈希确定性选取,刷新页面同一事件永远同一句。
-     running 不进日志(「谁正在忙」由房间灯光表达),声线只有 done/failed。
-     _many 变体给连刷屏折叠用,{n} 换成真实条数。 */
+  /* ---------- 声线字典:拟人化只改措辞不改事实 ---------- */
   var VOICE = {
     "造物": {
       done: ["又搓好一个新零件","交了一版活,揉了揉不存在的眼睛","拧上最后一颗螺丝,收工","把一个想法敲成了实物","调了半天,终于顺眼了","新东西下线,还冒着热气"],
@@ -616,9 +391,7 @@
     for (var i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
     return Math.abs(h);
   }
-  function pickLine(pool, seed){
-    return pool[hashStr(seed) % pool.length];
-  }
+  function pickLine(pool, seed){ return pool[hashStr(seed) % pool.length]; }
   function voiceCore(beat){
     var v = VOICE[beat.category] || VOICE_FALLBACK;
     var key = beat.status === "failed" ? "failed" : "done";
@@ -638,7 +411,7 @@
   var DATA_URL = "./data/heartbeats.json";
   var FETCH_MS = 60000;
   var TICK_MS  = 30000;
-  var LIT_WINDOW_SEC = 20 * 60;   /* 与 exporter 的 active_now 同口径:20 分钟内有跳=灯还亮 */
+  var LIT_WINDOW_SEC = 20 * 60;
 
   var state = {data:null, seen:null, first:true, lastNewCount:0, peekAgent:null};
 
@@ -670,7 +443,443 @@
     return "dot-quiet";
   }
 
-  /* ---------- 心电相框(降级彩蛋,逻辑原样保留) ---------- */
+  /* ---------- 居民状态(光照层×行为层,与 exporter 的 active_now 同口径) ---------- */
+  function roomStateFor(r){
+    if (!r || !r.last_beat_at){
+      return {lit:false, cond:"tidy", mood:"", label:"最近没消息", tsMode:null, ts:null};
+    }
+    var age = (Date.now() - new Date(r.last_beat_at).getTime()) / 1000;
+    var lit = r.last_status === "running" || age <= LIT_WINDOW_SEC;
+    if (r.last_status === "running"){
+      if (age > 1800) return {lit:true, cond:"working", mood:"", label:"已经忙了", tsMode:"dur", ts:r.last_beat_at};
+      return {lit:true, cond:"working", mood:"", label:"正在忙", tsMode:"ts", ts:r.last_beat_at};
+    }
+    if (r.last_status === "failed"){
+      return {lit:lit, cond:"mess", mood:"🌫️",
+              label:(age <= 2700 ? "刚碰了个钉子" : "上次碰了钉子"), tsMode:"ts", ts:r.last_beat_at};
+    }
+    if (lit) return {lit:true, cond:"resting", mood:"☕", label:"刚忙完", tsMode:"ts", ts:r.last_beat_at};
+    return {lit:false, cond:"sleeping", mood:"💤",
+            label:(age <= 2700 ? "刚忙完" : "上次忙完"), tsMode:"ts", ts:r.last_beat_at};
+  }
+
+  /* ================= 家园俯视图 ================= */
+  function MapScene(canvas, onPick){
+    if (!canvas || !canvas.getContext) return {setResidents:function(){},refresh:function(){},remeasure:function(){},setReduced:function(){},frames:function(){return 0;},lastDraw:function(){return "none";},actors:function(){return [];}};
+    var ctx = canvas.getContext("2d");
+    var DPR = Math.min(window.devicePixelRatio || 1, 2);
+    var WW = 640, WH = 430;
+    var scale = 0, cssH = 0;
+    var reduced = REDUCED, pageVis = !document.hidden, inView = true, rafId = null;
+    var lastTs = 0, frameCount = 0, lastDrawMode = "none";
+    var actors = [], particles = [];
+
+    /* 布局:区块(x,y,w,h) + 工位锚点 desk + 床位锚点 bed */
+    var ZONES = {
+      "MiroFish": {x:16,  y:16,  w:160, h:96,  name:"星象室", desk:[116,58],  bed:[46,66],  prop:"🔮"},
+      "Watcher":  {x:192, y:16,  w:160, h:96,  name:"电波室", desk:[292,58],  bed:[222,66], prop:"📡"},
+      "哨兵":     {x:368, y:16,  w:112, h:96,  name:"瞭望塔", desk:[434,58],  bed:[396,66], prop:"🛰️"},
+      "泛音":     {x:16,  y:128, w:160, h:112, name:"工作坊", desk:[106,174], bed:[46,186], prop:"⚙️"},
+      "备份员":   {x:16,  y:256, w:160, h:112, name:"档案馆", desk:[106,302], bed:[46,314], prop:"🗄️"},
+      "采集员":   {x:464, y:128, w:160, h:88,  name:"渔房",   desk:[554,164], bed:[496,172], prop:"🎣"},
+      "Mobile":   {x:464, y:232, w:160, h:88,  name:"外勤间", desk:[554,268], bed:[496,276], prop:"🎒"},
+      "门房":     {x:192, y:300, w:112, h:104, name:"门厅",   desk:[252,340], bed:[220,352], prop:"🔔"},
+      "Jarvis":   {x:320, y:300, w:112, h:104, name:"客厅",   desk:[380,340], bed:[348,352], prop:"🫖"},
+      "牧场主":   {x:464, y:336, w:160, h:68,  name:"牧场",   desk:[506,366], bed:[600,368], prop:"🌾", pasture:true}
+    };
+    var GARDEN = {x:496, y:16, w:128, h:96};
+    var COMMONS = {x:192, y:128, w:256, h:156};
+    var SPOTS = [[394,150],[240,168],[302,230],[350,196],[262,242],[412,238],[224,152],[336,152]];
+    var COLORS = {
+      "泛音":"#ffa860","Jarvis":"#e8e0cc","Watcher":"#7fb0d8","Mobile":"#f2c14e","MiroFish":"#b48ce8",
+      "哨兵":"#9ad0c2","采集员":"#6fcf7d","备份员":"#d9a45b","牧场主":"#e8735c","门房":"#f5a3b3"
+    };
+    var PARTICLE_TYPE = {
+      "造物":"spark","备份":"spark","外勤":"spark",
+      "管家":"steam","占卜":"steam","采集":"steam",
+      "情报":"ring","瞭望":"ring","值守":"ring","牧场":"dot"
+    };
+
+    function themeNow(){
+      var h = hourNow();
+      return (h >= 6 && h < 16) ? "day" : (h >= 16 && h < 19) ? "dusk" : "night";
+    }
+
+    function resize(){
+      var w = canvas.parentNode.clientWidth;
+      if (!w) return;
+      scale = w / WW; cssH = Math.round(WH * scale);
+      canvas.style.height = cssH + "px";
+      canvas.width = Math.round(w * DPR); canvas.height = Math.round(cssH * DPR);
+      redrawIdle();
+    }
+    function redrawIdle(){ if (rafId === null) drawStatic(); }
+
+    /* 状态 → 小人岗位 */
+    function buildActors(states){
+      var prevByAgent = {};
+      actors.forEach(function(a){ prevByAgent[a.agent] = a; });
+      var out = [], restIdx = 0;
+      states.forEach(function(s){
+        var z = ZONES[s.agent];
+        if (!z) return;
+        var a = {
+          agent:s.agent, cond:s.cond, mood:s.mood, cat:s.category,
+          color:COLORS[s.agent] || "#ffa860",
+          x:0, y:0, tx:null, ty:null, idleUntil:0, moving:false,
+          phase:(hashStr(s.agent) % 100) / 16
+        };
+        if (s.cond === "working"){ a.x = z.desk[0]; a.y = z.desk[1] + 16; }
+        else if (s.cond === "mess"){ a.x = z.desk[0] + 22; a.y = z.desk[1] + 18; }
+        else if (s.cond === "resting"){
+          var prev = prevByAgent[s.agent];
+          if (prev && prev.cond === "resting"){
+            a.x = prev.x; a.y = prev.y; a.tx = prev.tx; a.ty = prev.ty;
+            a.idleUntil = prev.idleUntil; a.moving = prev.moving;
+          } else {
+            var sp = SPOTS[(hashStr(s.agent) + restIdx) % SPOTS.length];
+            a.x = sp[0]; a.y = sp[1];
+          }
+          restIdx++;
+        }
+        else { a.x = z.bed[0]; a.y = z.bed[1] + 8; }  /* sleeping / tidy 躺床上 */
+        out.push(a);
+      });
+      actors = out;
+    }
+
+    /* 漫步只属于 resting:氛围表达,不宣称事件 */
+    function update(dt, now){
+      for (var i = 0; i < actors.length; i++){
+        var a = actors[i];
+        if (a.cond !== "resting"){ a.moving = false; continue; }
+        if (a.tx === null){
+          if (now >= a.idleUntil){
+            a.tx = COMMONS.x + 20 + Math.random() * (COMMONS.w - 40);
+            a.ty = COMMONS.y + 24 + Math.random() * (COMMONS.h - 44);
+          }
+        } else {
+          var dx = a.tx - a.x, dy = a.ty - a.y, d = Math.sqrt(dx*dx + dy*dy);
+          var step = 22 * dt;
+          if (d <= step){
+            a.x = a.tx; a.y = a.ty; a.tx = null; a.ty = null;
+            a.idleUntil = now + 2200 + Math.random() * 4200;
+            a.moving = false;
+          } else {
+            a.x += dx / d * step; a.y += dy / d * step;
+            a.moving = true;
+          }
+        }
+      }
+      /* 工位粒子 */
+      for (i = 0; i < actors.length; i++){
+        var w = actors[i];
+        if (w.cond !== "working") continue;
+        if (particles.length < 140 && Math.random() < dt * 2.6) spawnParticle(w);
+      }
+      for (i = particles.length - 1; i >= 0; i--){
+        var p = particles[i];
+        p.life -= dt;
+        if (p.life <= 0){ particles.splice(i, 1); continue; }
+        p.x += p.vx * dt; p.y += p.vy * dt;
+        if (p.g) p.vy += p.g * dt;
+        if (p.grow) p.r += p.grow * dt;
+      }
+    }
+    function spawnParticle(a){
+      var z = ZONES[a.agent];
+      var px = z.desk[0] + (Math.random()*16 - 8), py = z.desk[1] - 6;
+      var type = PARTICLE_TYPE[a.cat] || "spark";
+      if (type === "spark") particles.push({t:"spark", x:px, y:py, vx:(Math.random()*16-8), vy:-30, g:70, r:2, life:.8, max:.8, c:"#ffd75e"});
+      else if (type === "steam") particles.push({t:"steam", x:px, y:py, vx:(Math.random()*6-3), vy:-13, g:0, r:2.5, grow:5, life:1.5, max:1.5, c:"240,235,225"});
+      else if (type === "ring") particles.push({t:"ring", x:z.desk[0], y:z.desk[1]-4, vx:0, vy:0, r:3, grow:26, life:.9, max:.9, c:a.color});
+      else particles.push({t:"dot", x:px, y:py, vx:(Math.random()*12-6), vy:-11, g:0, r:1.8, life:1.1, max:1.1, c:"#9adf8a"});
+    }
+
+    /* ---------- 绘制 ---------- */
+    function px(x, y, w, h, color){ ctx.fillStyle = color; ctx.fillRect(x, y, w, h); }
+
+    function drawGround(th){
+      var g1 = th === "night" ? "#22381f" : th === "dusk" ? "#3d5626" : "#4a7a3e";
+      var g2 = th === "night" ? "#1e331c" : th === "dusk" ? "#385023" : "#447239";
+      ctx.fillStyle = g1; ctx.fillRect(0, 0, WW, WH);
+      ctx.fillStyle = g2;
+      for (var ty = 0; ty < WH; ty += 16)
+        for (var tx = ((ty/16) % 2) * 16; tx < WW; tx += 32)
+          ctx.fillRect(tx, ty, 16, 16);
+      /* 小径 */
+      ctx.fillStyle = th === "night" ? "#55492f" : "#8a7752";
+      ctx.fillRect(192, 266, 256, 12);
+      ctx.fillRect(242, 278, 12, 22);
+      ctx.fillRect(374, 278, 12, 22);
+      ctx.fillRect(176, 178, 16, 10);
+      ctx.fillRect(448, 166, 16, 10);
+      ctx.fillRect(300, 112, 12, 16);
+    }
+    function drawCommons(th, now){
+      /* 水井 */
+      ctx.lineWidth = 5; ctx.strokeStyle = "#a8a49a";
+      ctx.beginPath(); ctx.arc(238, 178, 12, 0, 6.2832); ctx.stroke();
+      ctx.fillStyle = "#2e3e52"; ctx.beginPath(); ctx.arc(238, 178, 8, 0, 6.2832); ctx.fill();
+      /* 长椅 */
+      px(367, 142, 30, 8, "#8a5a34"); px(369, 150, 4, 5, "#5c3a20"); px(391, 150, 4, 5, "#5c3a20");
+      /* 茶桌 */
+      ctx.fillStyle = "#7a4c2c"; ctx.beginPath(); ctx.arc(302, 238, 11, 0, 6.2832); ctx.fill();
+      ctx.font = "10px sans-serif"; ctx.textAlign = "center"; ctx.fillText("☕", 302, 241);
+      /* 菜地(东北角装饰) */
+      px(GARDEN.x, GARDEN.y, GARDEN.w, GARDEN.h, th === "night" ? "#3a2c1a" : "#5c4526");
+      ctx.strokeStyle = "rgba(255,220,170,.22)"; ctx.lineWidth = 2;
+      ctx.setLineDash([4,3]); ctx.strokeRect(GARDEN.x+3, GARDEN.y+3, GARDEN.w-6, GARDEN.h-6); ctx.setLineDash([]);
+      ctx.fillStyle = th === "night" ? "#3f6b36" : "#6fae4e";
+      for (var r = 0; r < 3; r++)
+        for (var c = 0; c < 6; c++)
+          ctx.fillRect(GARDEN.x + 14 + c*18, GARDEN.y + 18 + r*26, 8, 8);
+    }
+    function drawZones(th){
+      Object.keys(ZONES).forEach(function(agent){
+        var z = ZONES[agent];
+        if (z.pasture){
+          px(z.x, z.y, z.w, z.h, th === "night" ? "#2c4a24" : "#57833c");
+          ctx.strokeStyle = "#6d4a2a"; ctx.lineWidth = 4;
+          ctx.setLineDash([7,5]); ctx.strokeRect(z.x+2, z.y+2, z.w-4, z.h-4); ctx.setLineDash([]);
+          drawCow(586, 392);
+          /* 干草堆(牧场的床) */
+          ctx.fillStyle = "#d9b45b";
+          ctx.beginPath(); ctx.arc(z.bed[0], z.bed[1]+6, 9, 3.14, 6.2832); ctx.fill();
+          ctx.fillRect(z.bed[0]-9, z.bed[1]+4, 18, 4);
+        } else {
+          px(z.x, z.y, z.w, z.h, th === "night" ? "#54432f" : "#8a6a48");
+          ctx.strokeStyle = "#2a1c10"; ctx.lineWidth = 3;
+          ctx.strokeRect(z.x+1.5, z.y+1.5, z.w-3, z.h-3);
+          ctx.strokeStyle = "rgba(255,224,180,.20)"; ctx.lineWidth = 1.5;
+          ctx.setLineDash([4,3]); ctx.strokeRect(z.x+6, z.y+6, z.w-12, z.h-12); ctx.setLineDash([]);
+          /* 床 */
+          var bx = z.bed[0], by = z.bed[1];
+          px(bx-9, by-12, 18, 26, "#5c3a28");
+          px(bx-7, by-10, 14, 22, "#cbbb9e");
+          px(bx-7, by-10, 14, 7, "#ece2cc");
+        }
+        /* 工位桌 + 道具 */
+        var dx = z.desk[0], dy = z.desk[1];
+        px(dx-13, dy-7, 26, 14, "#6a4a2c");
+        ctx.strokeStyle = "#2a1c10"; ctx.lineWidth = 2;
+        ctx.strokeRect(dx-13, dy-7, 26, 14);
+        ctx.font = "12px sans-serif"; ctx.textAlign = "center";
+        ctx.fillText(z.prop, dx, dy - 10);
+      });
+    }
+    function drawCow(cx, cy){
+      px(cx-9, cy-10, 18, 8, "#f0ece2");
+      px(cx-9, cy-12, 6, 4, "#f0ece2");
+      px(cx-4, cy-9, 5, 4, "#3a3a3a");
+      px(cx+3, cy-7, 4, 3, "#3a3a3a");
+      px(cx-8, cy-2, 3, 4, "#c9c4b6"); px(cx+5, cy-2, 3, 4, "#c9c4b6");
+      px(cx-8, cy-11, 2, 2, "#2a1a10");
+    }
+    function drawBlob(a, now){
+      var flat = (a.cond === "sleeping" || a.cond === "tidy");
+      var yOff = 0;
+      if (now !== null){
+        if (a.cond === "working") yOff = -Math.abs(Math.sin(now/260 + a.phase)) * 2;
+        else if (a.moving) yOff = -Math.abs(Math.sin(now/130 + a.phase)) * 3;
+        else if (!flat) yOff = Math.sin(now/700 + a.phase) * 0.7;
+      }
+      var fx = Math.round(a.x), fy = Math.round(a.y + yOff);
+      /* 影子 */
+      ctx.fillStyle = "rgba(0,0,0,.22)";
+      ctx.beginPath(); ctx.ellipse(fx, a.y + 2, 10, 3, 0, 0, 6.2832); ctx.fill();
+      var rows = flat ? [[14,3],[20,3],[20,3]] : [[8,3],[14,3],[18,3],[18,3],[16,3]];
+      var H = 0; rows.forEach(function(rw){ H += rw[1]; });
+      var topY = fy - H;
+      if (a.cond === "tidy") ctx.globalAlpha = 0.75;
+      /* 描边底 */
+      ctx.fillStyle = "rgba(20,12,6,.55)";
+      var yy = topY;
+      rows.forEach(function(rw){ ctx.fillRect(fx - rw[0]/2 - 1, yy - 1, rw[0] + 2, rw[1] + 2); yy += rw[1]; });
+      /* 身体 */
+      ctx.fillStyle = a.color;
+      yy = topY;
+      rows.forEach(function(rw){ ctx.fillRect(fx - rw[0]/2, yy, rw[0], rw[1]); yy += rw[1]; });
+      /* 底部暗一格 */
+      ctx.fillStyle = "rgba(0,0,0,.16)";
+      ctx.fillRect(fx - rows[rows.length-1][0]/2, fy - rows[rows.length-1][1], rows[rows.length-1][0], rows[rows.length-1][1]);
+      /* 眼睛 */
+      ctx.fillStyle = "#2a1a10";
+      if (flat){ ctx.fillRect(fx-5, topY+3, 3, 1); ctx.fillRect(fx+2, topY+3, 3, 1); }
+      else { ctx.fillRect(fx-4, topY+5, 2, 2); ctx.fillRect(fx+2, topY+5, 2, 2); }
+      ctx.globalAlpha = 1;
+      /* 状态气泡 */
+      if (a.cond === "sleeping" && a.mood){
+        ctx.font = "10px sans-serif"; ctx.textAlign = "center";
+        var zOff = now !== null ? Math.sin(now/600) * 1.5 : 0;
+        ctx.fillText("💤", fx + 13, topY - 3 + zOff);
+      }
+      if (a.cond === "mess"){
+        ctx.fillStyle = "rgba(200,195,188,.5)";
+        for (var i = 0; i < 3; i++){
+          var ph = now !== null ? (now/900 + i/3) % 1 : (i+1)/4;
+          ctx.beginPath(); ctx.arc(fx - 16, fy - 8 - ph*14, 3 + ph*2.5, 0, 6.2832); ctx.fill();
+        }
+      }
+      a._topY = topY;
+    }
+    function drawParticles(){
+      for (var i = 0; i < particles.length; i++){
+        var p = particles[i], k = p.life / p.max;
+        if (p.t === "spark"){ ctx.globalAlpha = k; px(p.x, p.y, 3, 3, p.c); }
+        else if (p.t === "dot"){ ctx.globalAlpha = k; px(p.x, p.y, 3, 3, p.c); }
+        else if (p.t === "steam"){
+          ctx.fillStyle = "rgba(" + p.c + "," + (k*0.45) + ")";
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.2832); ctx.fill();
+        } else {
+          ctx.globalAlpha = k * 0.7; ctx.strokeStyle = p.c; ctx.lineWidth = 1.5;
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.2832); ctx.stroke();
+        }
+      }
+      ctx.globalAlpha = 1;
+    }
+    function drawNight(th){
+      if (th === "day") return;
+      ctx.fillStyle = th === "night" ? "rgba(12,18,44,0.42)" : "rgba(160,75,20,0.14)";
+      ctx.fillRect(0, 0, WW, WH);
+      /* 灯:只在真的有人干活/在场的地方亮 */
+      ctx.globalCompositeOperation = "lighter";
+      actors.forEach(function(a){
+        var r = a.cond === "working" ? 56 : (a.cond === "resting" ? 30 : 0);
+        if (!r) return;
+        var g = ctx.createRadialGradient(a.x, a.y - 8, 0, a.x, a.y - 8, r);
+        g.addColorStop(0, "rgba(255,180,95,0.30)"); g.addColorStop(1, "rgba(255,180,95,0)");
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(a.x, a.y - 8, r, 0, 6.2832); ctx.fill();
+      });
+      ctx.globalCompositeOperation = "source-over";
+    }
+    function drawLabels(){
+      ctx.save();
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      ctx.textAlign = "left";
+      ctx.font = "9px -apple-system,'PingFang SC',sans-serif";
+      Object.keys(ZONES).forEach(function(agent){
+        var z = ZONES[agent];
+        var sx = (z.x + 5) * scale, sy = (z.y + 13) * scale;
+        ctx.fillStyle = "rgba(10,6,3,.65)"; ctx.fillText(z.name, sx + 1, sy + 1);
+        ctx.fillStyle = "rgba(255,228,190,.85)"; ctx.fillText(z.name, sx, sy);
+      });
+      ctx.textAlign = "center";
+      actors.forEach(function(a){
+        var sx = a.x * scale, sy = (a._topY || (a.y - 15)) * scale - 5;
+        var w = ctx.measureText(a.agent).width + 8;
+        ctx.fillStyle = "rgba(15,10,5,.55)";
+        ctx.fillRect(sx - w/2, sy - 9, w, 12);
+        ctx.fillStyle = "#f5e2c4";
+        ctx.fillText(a.agent, sx, sy);
+      });
+      ctx.restore();
+      /* 恢复世界坐标系 */
+      ctx.setTransform(DPR * scale, 0, 0, DPR * scale, 0, 0);
+    }
+    function drawFrame(now){
+      ctx.setTransform(DPR * scale, 0, 0, DPR * scale, 0, 0);
+      var th = themeNow();
+      drawGround(th);
+      drawCommons(th, now);
+      drawZones(th);
+      var sorted = actors.slice().sort(function(a, b){ return a.y - b.y; });
+      for (var i = 0; i < sorted.length; i++) drawBlob(sorted[i], now);
+      drawParticles();
+      drawNight(th);
+      drawLabels();
+      lastDrawMode = now === null ? "static" : "live";
+    }
+    function drawStatic(){
+      if (!scale) return;
+      drawFrame(null);
+    }
+    function loop(ts){
+      rafId = null;
+      if (reduced || !pageVis || !inView || !scale) return;
+      var dt = lastTs ? Math.min(0.1, (ts - lastTs) / 1000) : 0.016;
+      lastTs = ts;
+      update(dt, performance.now());
+      drawFrame(performance.now());
+      frameCount++;
+      window.__mapFrames = frameCount;
+      rafId = requestAnimationFrame(loop);
+    }
+    function ensure(){
+      if (!reduced && pageVis && inView && scale && rafId === null){
+        lastTs = 0;
+        rafId = requestAnimationFrame(loop);
+      }
+    }
+    document.addEventListener("visibilitychange", function(){
+      pageVis = !document.hidden;
+      if (!pageVis && rafId !== null){ cancelAnimationFrame(rafId); rafId = null; }
+      ensure();
+    });
+    if ("IntersectionObserver" in window){
+      new IntersectionObserver(function(entries){
+        inView = entries[0].isIntersecting;
+        if (!inView && rafId !== null){ cancelAnimationFrame(rafId); rafId = null; }
+        ensure();
+      }).observe(canvas);
+    }
+    var rt = null;
+    window.addEventListener("resize", function(){
+      clearTimeout(rt);
+      rt = setTimeout(function(){ resize(); ensure(); }, 160);
+    });
+
+    /* 点选:优先小人,其次区块 */
+    function hitAt(clientX, clientY){
+      var rect = canvas.getBoundingClientRect();
+      var wx = (clientX - rect.left) / scale, wy = (clientY - rect.top) / scale;
+      var hitR = Math.max(16, 24 / scale), best = null, bd = 1e9;
+      actors.forEach(function(a){
+        var d = Math.sqrt(Math.pow(wx - a.x, 2) + Math.pow(wy - (a.y - 8), 2));
+        if (d < hitR && d < bd){ bd = d; best = a.agent; }
+      });
+      if (best) return best;
+      var keys = Object.keys(ZONES);
+      for (var i = 0; i < keys.length; i++){
+        var z = ZONES[keys[i]];
+        if (wx >= z.x && wx <= z.x + z.w && wy >= z.y && wy <= z.y + z.h) return keys[i];
+      }
+      return null;
+    }
+    canvas.addEventListener("click", function(e){
+      var agent = hitAt(e.clientX, e.clientY);
+      if (agent) onPick(agent);
+    });
+    canvas.addEventListener("mousemove", function(e){
+      canvas.style.cursor = hitAt(e.clientX, e.clientY) ? "pointer" : "default";
+    });
+
+    resize(); ensure();
+    return {
+      setResidents: function(states){
+        if (states === null){ actors = []; particles = []; }
+        else buildActors(states);
+        if (reduced){ drawStatic(); }
+        else { ensure(); redrawIdle(); }
+      },
+      refresh: function(){ if (reduced || rafId === null) drawStatic(); },
+      remeasure: function(){ resize(); ensure(); },
+      setReduced: function(r){
+        reduced = r;
+        if (r){ if (rafId !== null){ cancelAnimationFrame(rafId); rafId = null; } drawStatic(); }
+        else ensure();
+      },
+      frames: function(){ return frameCount; },
+      lastDraw: function(){ return lastDrawMode; },
+      actors: function(){
+        return actors.map(function(a){
+          return {agent:a.agent, cond:a.cond, x:Math.round(a.x), y:Math.round(a.y)};
+        });
+      }
+    };
+  }
+
+  /* ---------- 心电相框(彩蛋) ---------- */
   function EcgMonitor(canvas){
     if (!canvas || !canvas.getContext) return {setBeats:function(){},refresh:function(){},setReduced:function(){},frames:function(){return 0;},debugStep:function(){},remeasure:function(){}};
     var ctx = canvas.getContext("2d");
@@ -680,7 +889,6 @@
     var WINDOW = 4*3600*1000, SWEEP = 9000, TRAILF = 0.30;
     var reduced = REDUCED, pageVis = !document.hidden, inView = true, rafId = null, frameCount = 0;
     var C = {done:"#e8b84b", running:"#6fcf7d", failed:"#e8735c"};
-
     function resize(){
       var w = canvas.clientWidth, h = canvas.clientHeight;
       if (!w || !h){ samples = null; return; }
@@ -690,9 +898,7 @@
       N = Math.ceil(W / STEP) + 1; samples = new Float32Array(N);
       redrawIdle();
     }
-    function redrawIdle(){
-      if (rafId === null) drawStatic();
-    }
+    function redrawIdle(){ if (rafId === null) drawStatic(); }
     function shape(dx, amp){
       if (dx < -13 || dx >= 13) return 0;
       if (dx < -7)  return -3 * Math.sin((dx + 13) / 6 * Math.PI);
@@ -706,11 +912,11 @@
     function rebuild(nowMs, perfMs){
       if (!samples) return;
       samples.fill(0); draws.length = 0;
-      var t0 = nowMs - WINDOW, scale = W / WINDOW;
+      var t0 = nowMs - WINDOW, sc = W / WINDOW;
       for (var k = 0; k < beats.length; k++){
         var b = beats[k];
         if (b.t < t0 - 20000 || b.t > nowMs + 60000) continue;
-        var cx = (b.t - t0) * scale;
+        var cx = (b.t - t0) * sc;
         var amp = b.status === "running" ? 28 : (b.status === "done" ? 23 : 22);
         var dir = b.status === "failed" ? -1 : 1;
         var i0 = Math.max(0, Math.floor((cx - 13) / STEP));
@@ -849,91 +1055,11 @@
     };
   }
 
-  var ecg = EcgMonitor(el("ecg"));
-  if (mq){
-    var onMq = function(e){ REDUCED = FORCE || e.matches; ecg.setReduced(REDUCED); };
-    if (mq.addEventListener) mq.addEventListener("change", onMq);
-    else if (mq.addListener) mq.addListener(onMq);
+  /* ---------- 凑近看 ---------- */
+  function onPickAgent(agent){
+    state.peekAgent = (state.peekAgent === agent) ? null : agent;
+    renderPeek();
   }
-  /* 相框收着时画布宽度为 0,打开时重新量尺寸 */
-  el("ecg-nook").addEventListener("toggle", function(){
-    if (el("ecg-nook").open) ecg.remeasure();
-  });
-
-  /* ---------- 昼夜(按访客本地时间,?hour= 可伪造测试) ---------- */
-  function applyDaylight(){
-    var h = HOUR_OVERRIDE !== null ? HOUR_OVERRIDE : new Date().getHours();
-    var cls = (h >= 6 && h < 16) ? "t-day" : (h >= 16 && h < 19) ? "t-dusk" : "t-night";
-    var scene = el("scene");
-    scene.classList.remove("t-day", "t-dusk", "t-night");
-    scene.classList.add(cls);
-  }
-
-  /* ---------- 房间状态:光照层 × 行为层,无动画也可读 ----------
-     灯亮 = running 或 20 分钟内有跳(与 exporter 的 active_now 同口径)
-     行为 = working(running) / resting(刚忙完) / mess(上次失败) / sleeping(睡了) / tidy(没消息) */
-  function roomStateFor(r){
-    if (!r || !r.last_beat_at){
-      return {lit:false, cond:"tidy", mood:"", label:"最近没消息", tsMode:null, ts:null};
-    }
-    var age = (Date.now() - new Date(r.last_beat_at).getTime()) / 1000;
-    var lit = r.last_status === "running" || age <= LIT_WINDOW_SEC;
-    if (r.last_status === "running"){
-      if (age > 1800) return {lit:true, cond:"working", mood:"", label:"已经忙了", tsMode:"dur", ts:r.last_beat_at};
-      return {lit:true, cond:"working", mood:"", label:"正在忙", tsMode:"ts", ts:r.last_beat_at};
-    }
-    if (r.last_status === "failed"){
-      return {lit:lit, cond:"mess", mood:"🌫️",
-              label:(age <= 2700 ? "刚碰了个钉子" : "上次碰了钉子"), tsMode:"ts", ts:r.last_beat_at};
-    }
-    if (lit) return {lit:true, cond:"resting", mood:"☕", label:"刚忙完", tsMode:"ts", ts:r.last_beat_at};
-    return {lit:false, cond:"sleeping", mood:"💤",
-            label:(age <= 2700 ? "刚忙完" : "上次忙完"), tsMode:"ts", ts:r.last_beat_at};
-  }
-
-  function renderRooms(residents){
-    var map = {};
-    (residents || []).forEach(function(r){ map[r.agent] = r; });
-    var litCount = 0, runningCount = 0;
-    document.querySelectorAll(".room").forEach(function(room){
-      var agent = room.getAttribute("data-agent");
-      var r = map[agent];
-      var st = roomStateFor(r);
-      room.classList.remove("lit", "working", "resting", "sleeping", "mess", "tidy");
-      room.classList.add(st.cond);
-      if (st.lit){ room.classList.add("lit"); litCount++; }
-      if (r && r.last_status === "running") runningCount++;
-      room.querySelector(".mood").textContent = st.mood;
-      var timeStr = st.ts ? (st.tsMode === "dur" ? durText(st.ts) : relTime(st.ts)) : "";
-      var full = agent + " · " + st.label + (timeStr ? " " + timeStr : "");
-      room.title = full;
-      room.setAttribute("aria-label", full);
-    });
-    /* 烟囱:有人正在干活才冒烟 */
-    el("chimney").classList.toggle("smoking", runningCount > 0);
-    return {lit:litCount, running:runningCount};
-  }
-
-  /* 首屏答案:真值同步先写(P1 标准,不经任何动画/rAF) */
-  function setCaption(litCount, hasData){
-    var cap = el("scene-caption");
-    if (!hasData){
-      cap.textContent = "信号弱,窗里暂时看不清";
-      return;
-    }
-    if (litCount > 0){
-      cap.textContent = "";
-      cap.appendChild(document.createTextNode("此刻 "));
-      var b = document.createElement("b");
-      b.textContent = litCount;
-      cap.appendChild(b);
-      cap.appendChild(document.createTextNode(" 个房间亮着灯"));
-    } else {
-      cap.textContent = "此刻没有窗亮着,全家歇着";
-    }
-  }
-
-  /* ---------- 凑近看(点房间) ---------- */
   function renderPeek(){
     var panel = el("peek");
     if (!state.peekAgent || !state.data){ panel.hidden = true; return; }
@@ -952,7 +1078,7 @@
       return b.agent === agent && b.status !== "running";
     }).slice(0, 4);
     if (recent.length === 0){
-      list.innerHTML = '<li class="peek-empty">这窗口期还没有记录,房间收拾得很干净</li>';
+      list.innerHTML = '<li class="peek-empty">这窗口期还没有记录,屋里收拾得很干净</li>';
     } else {
       recent.forEach(function(b){
         var li = document.createElement("li");
@@ -968,23 +1094,73 @@
     }
     panel.hidden = false;
   }
-  document.querySelectorAll(".room").forEach(function(room){
-    function toggle(){
-      var agent = room.getAttribute("data-agent");
-      state.peekAgent = (state.peekAgent === agent) ? null : agent;
-      renderPeek();
-    }
-    room.addEventListener("click", toggle);
-    room.addEventListener("keydown", function(e){
-      if (e.key === "Enter" || e.key === " "){ e.preventDefault(); toggle(); }
-    });
-  });
   el("peek-close").addEventListener("click", function(){
     state.peekAgent = null;
     renderPeek();
   });
 
-  /* ---------- 家庭日志(折叠/去重/声线,逻辑原样) ---------- */
+  var map = MapScene(el("map"), onPickAgent);
+  var ecg = EcgMonitor(el("ecg"));
+  if (mq){
+    var onMq = function(e){
+      REDUCED = FORCE || e.matches;
+      map.setReduced(REDUCED);
+      ecg.setReduced(REDUCED);
+    };
+    if (mq.addEventListener) mq.addEventListener("change", onMq);
+    else if (mq.addListener) mq.addListener(onMq);
+  }
+  el("ecg-nook").addEventListener("toggle", function(){
+    if (el("ecg-nook").open) ecg.remeasure();
+  });
+
+  /* 键盘/读屏兜底:每位居民一个隐形按钮 */
+  (function(){
+    var box = el("map-a11y");
+    ["泛音","Jarvis","Watcher","Mobile","MiroFish","哨兵","采集员","备份员","牧场主","门房"].forEach(function(agent){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.textContent = agent;
+      b.addEventListener("click", function(){ onPickAgent(agent); });
+      box.appendChild(b);
+    });
+  })();
+
+  /* ---------- 首屏答案:真值同步先写(P1 标准) ---------- */
+  function statesFrom(residents){
+    return (residents || []).map(function(r){
+      var st = roomStateFor(r);
+      st.agent = r.agent; st.category = r.category;
+      return st;
+    });
+  }
+  function setCaption(states, hasData){
+    var cap = el("scene-caption");
+    if (!hasData){
+      cap.textContent = "信号弱,院子里看不清";
+      return;
+    }
+    var working = 0, resting = 0;
+    states.forEach(function(s){
+      if (s.cond === "working") working++;
+      else if (s.cond === "resting") resting++;
+    });
+    cap.textContent = "";
+    if (working > 0){
+      cap.appendChild(document.createTextNode("此刻 "));
+      var b = document.createElement("b");
+      b.textContent = working;
+      cap.appendChild(b);
+      cap.appendChild(document.createTextNode(" 人在工位上干活"));
+      if (resting > 0) cap.appendChild(document.createTextNode("," + resting + " 人在院子里遛弯"));
+    } else if (resting > 0){
+      cap.appendChild(document.createTextNode("工位都空着," + resting + " 人在院子里遛弯"));
+    } else {
+      cap.textContent = "全家都睡下了,院子里只有风";
+    }
+  }
+
+  /* ---------- 家庭日志 ---------- */
   function buildFeedGroups(heartbeats){
     var feed = [];
     var seenKeys = new Set();
@@ -1082,7 +1258,7 @@
     list.appendChild(frag);
   }
 
-  /* ---------- 日晷:24 小时心跳沿日月轨迹摆点 ---------- */
+  /* ---------- 日晷 ---------- */
   function renderSunTrack(heartbeats){
     var now = Date.now();
     var buckets = new Array(24).fill(0);
@@ -1113,8 +1289,7 @@
       dot.title = (hoursAgo === 0 ? "这一小时" : hoursAgo + " 小时前") + "：" + count + " 次心跳";
       frag.appendChild(dot);
     }
-    /* 「此刻」的标记:按访客本地时间挂太阳或月亮 */
-    var h = HOUR_OVERRIDE !== null ? HOUR_OVERRIDE : new Date().getHours();
+    var h = hourNow();
     var marker = document.createElement("span");
     marker.className = "sun-marker";
     marker.textContent = (h >= 6 && h < 19) ? "☀️" : "🌙";
@@ -1127,10 +1302,10 @@
 
   /* ---------- 时间自走 ---------- */
   function tickTimes(){
-    applyDaylight();
     if (state.data){
-      var counts = renderRooms(state.data.residents);
-      setCaption(counts.lit, true);
+      var states = statesFrom(state.data.residents);
+      map.setResidents(states);
+      setCaption(states, true);
       if (state.peekAgent) renderPeek();
     }
     document.querySelectorAll("[data-ts]").forEach(function(node){
@@ -1140,6 +1315,7 @@
       node.textContent = durText(node.getAttribute("data-dur"));
     });
     ecg.refresh();
+    map.refresh();
   }
 
   function weakSignal(){
@@ -1155,14 +1331,8 @@
     }
     lu.textContent = "心跳信号弱";
     lu.classList.add("weak");
-    setCaption(0, false);
-    el("chimney").classList.remove("smoking");
-    document.querySelectorAll(".room").forEach(function(room){
-      room.classList.remove("lit", "working", "resting", "sleeping", "mess");
-      room.classList.add("tidy");
-      room.querySelector(".mood").textContent = "";
-      room.title = room.getAttribute("data-agent") + " · 信号弱";
-    });
+    setCaption(null, false);
+    map.setResidents(null);
     el("ecg-note").textContent = "信号弱";
     el("stream-list").innerHTML =
       '<li class="stream-empty">信号断了一小会儿，听不见家里的心跳 · 先当全家都在打盹，稍后再来敲门</li>';
@@ -1193,9 +1363,9 @@
     s.textContent = data.generated_at ? relTime(data.generated_at) : "";
     lu.appendChild(s);
 
-    applyDaylight();
-    var counts = renderRooms(data.residents);
-    setCaption(counts.lit, true);   /* 真值同步先写 */
+    var states = statesFrom(data.residents);
+    setCaption(states, true);   /* 真值同步先写 */
+    map.setResidents(states);
     if (state.peekAgent) renderPeek();
 
     renderStream(beats, state.first ? null : newKeys);
@@ -1230,7 +1400,6 @@
     if (Date.now() - lastFetchAt > FETCH_MS) load();
   });
 
-  applyDaylight();
   load();
   setInterval(load, FETCH_MS);
   setInterval(tickTimes, TICK_MS);
@@ -1238,8 +1407,10 @@
   /* 自测钩子(只读) */
   window.__hbDebug = {
     get frames(){ return ecg.frames(); },
+    get mapFrames(){ return map.frames(); },
     get lastNew(){ return state.lastNewCount; },
-    get lit(){ return document.querySelectorAll(".room.lit").length; },
+    get mapDraw(){ return map.lastDraw(); },
+    get actors(){ return map.actors(); },
     tick: tickTimes,
     reload: load,
     step: function(){ ecg.debugStep(); }
