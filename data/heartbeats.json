@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-13T15:17:50Z",
+  "generated_at": "2026-07-13T15:32:53Z",
   "home": {
     "id": "onlycarbon",
     "name": "唯一碳基之家",
@@ -12,7 +12,7 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-07-13T15:17:21Z",
+      "last_beat_at": "2026-07-13T15:32:42Z",
       "last_status": "running"
     },
     {
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-13T15:15:07Z",
+      "last_beat_at": "2026-07-13T15:30:10Z",
       "last_status": "running"
     },
     {
@@ -84,31 +84,31 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-13T15:15:07Z",
+      "last_beat_at": "2026-07-13T15:30:10Z",
       "last_status": "running"
     }
   ],
   "stats": {
     "beats_24h": 200,
     "active_now": 4,
-    "last_beat_at": "2026-07-13T15:17:21Z",
+    "last_beat_at": "2026-07-13T15:32:42Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
       "scope_note": "电表暂时只装在工作坊(泛音·Claude Code)一支，管家和外勤那几支的电还没接进来",
       "day_start": "2026-07-13T14:00:00Z",
-      "tokens_today": 64485486,
-      "fresh_today": 3436859,
-      "input_today": 58240,
-      "output_today": 415217,
-      "cache_creation_today": 2963402,
-      "cache_read_today": 61048627,
+      "tokens_today": 79605621,
+      "fresh_today": 4096317,
+      "input_today": 59235,
+      "output_today": 460337,
+      "cache_creation_today": 3576745,
+      "cache_read_today": 75509304,
       "sessions_today": 5,
       "by_resident": [
         {
           "agent": "泛音",
           "emoji": "🎼",
-          "tokens": 142534509,
+          "tokens": 176162823,
           "provider": "claude"
         },
         {
@@ -130,19 +130,19 @@
           "provider": "openclaw"
         }
       ],
-      "whole_house_tokens": 142534509,
+      "whole_house_tokens": 176162823,
       "scope_note_v2": "细分到各屋：泛音（工作坊，含它派出去的子代理）+管家/情报/外勤已接表，其余几间还没接上；跨模型 token 只是吞吐量，不等价电费"
     },
     "achievements_today": [
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "45 下"
+        "value": "49 下"
       },
       {
         "icon": "🔧",
         "label": "工作坊交付",
-        "value": "15 件活"
+        "value": "16 件活"
       },
       {
         "icon": "🛰️",
@@ -157,6 +157,38 @@
     ]
   },
   "heartbeats": [
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "running",
+      "started_at": "2026-07-13T15:32:42Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-13T15:30:10Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-13T15:30:10Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-13T15:26:19Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
@@ -1722,38 +1754,6 @@
       "category": "造物",
       "status": "done",
       "started_at": "2026-07-13T04:30:14Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-07-13T04:27:16Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-07-13T04:27:16Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-13T04:22:21Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "running",
-      "started_at": "2026-07-13T04:20:00Z",
       "duration_s": null,
       "title": null
     }
