@@ -29,14 +29,14 @@
       "emoji": "📡",
       "role": "情报员",
       "category": "情报",
-      "sources": { "cc_sessions": false, "cron_names": [], "launchd_labels": [] }
+      "sources": { "cc_sessions": false, "cron_names": [], "launchd_labels": [], "openclaw_agent": "monitor" }
     },
     {
       "agent": "Mobile",
       "emoji": "📱",
       "role": "外勤",
       "category": "外勤",
-      "sources": { "cc_sessions": false, "cron_names": [], "launchd_labels": [] }
+      "sources": { "cc_sessions": false, "cron_names": [], "launchd_labels": [], "openclaw_agent": "mobile" }
     },
     {
       "agent": "MiroFish",

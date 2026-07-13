@@ -312,6 +312,111 @@ def beats_from_launchd(cockpit, label_to_resident, now_iso):
     return out
 
 
+# --- 数据源 4：OpenClaw agent 会话（Watcher/Mobile，真实消息时间戳） --------
+# 直读 ~/.openclaw/agents/<agent>/sessions/*.jsonl 的消息时间戳，和 CC 会话同构。
+# 只诚实标 "done"（最近活动过）——OpenClaw 侧无法可靠判定"此刻在跑"，绝不臆造 running。
+def beats_from_openclaw_sessions(resident):
+    agent_dir = resident["sources"].get("openclaw_agent")
+    if not agent_dir:
+        return []
+    base = os.path.expanduser(os.path.join("~", ".openclaw", "agents", agent_dir, "sessions"))
+    cutoff = datetime.now(timezone.utc).timestamp() - WINDOW_HOURS * 3600
+    out = []
+    for path in glob.glob(os.path.join(base, "*.jsonl")):
+        if ".trajectory." in path:
+            continue
+        try:
+            if os.path.getmtime(path) < cutoff:
+                continue  # 今日窗口外的会话文件不必读
+        except OSError:
+            continue
+        last_ts = None
+        try:
+            with open(path, encoding="utf-8", errors="ignore") as fh:
+                for line in fh:
+                    line = line.strip()
+                    if not line.startswith("{"):
+                        continue
+                    try:
+                        o = json.loads(line)
+                    except Exception:
+                        continue
+                    if o.get("type") != "message":
+                        continue
+                    ts = o.get("timestamp")
+                    if ts:
+                        last_ts = ts
+        except OSError:
+            continue
+        if not last_ts:
+            continue
+        try:
+            t = parse_iso(last_ts).timestamp()
+        except Exception:
+            continue
+        if t < cutoff:
+            continue
+        out.append({
+            "agent": resident["agent"],
+            "category": resident["category"],
+            "status": "done",
+            "started_at": iso(t),
+            "duration_s": None,
+            "title": None,
+        })
+    return out
+
+
+# --- 数据源 5：launchd 日志 mtime（cron 居民"最近活动过"的真实运行痕迹）----
+# 日志路径运行时从 launchctl 反查（不写进公开 registry），只 stat mtime（从不读内容）。
+# 排除常驻守护进程（gateway）——它一直在写日志，会把"底座在跑"误当"居民在干活"。
+_LAUNCHD_LOG_EXCLUDE = {"ai.openclaw.gateway"}
+
+
+def beats_from_launchd_logs(label_to_resident):
+    uid = os.getuid()
+    best = {}  # agent -> (mtime, resident)
+    for label, resident in label_to_resident.items():
+        if label in _LAUNCHD_LOG_EXCLUDE:
+            continue
+        try:
+            p = subprocess.run(
+                ["launchctl", "print", f"gui/{uid}/{label}"],
+                capture_output=True, text=True, timeout=8,
+            )
+        except Exception:
+            continue
+        logpath = None
+        for line in p.stdout.splitlines():
+            s = line.strip()
+            if s.startswith("stdout path = "):
+                logpath = s[len("stdout path = "):].strip()
+                break
+        if not logpath:
+            continue
+        try:
+            mtime = os.path.getmtime(os.path.expanduser(logpath))
+        except OSError:
+            continue
+        a = resident["agent"]
+        if a not in best or mtime > best[a][0]:
+            best[a] = (mtime, resident)
+    cutoff = datetime.now(timezone.utc).timestamp() - WINDOW_HOURS * 3600
+    out = []
+    for a, (mtime, resident) in best.items():
+        if mtime < cutoff:
+            continue  # 超过 48h 窗口=确实很久没跑，诚实保持暗着，不强行点亮
+        out.append({
+            "agent": resident["agent"],
+            "category": resident["category"],
+            "status": "done",
+            "started_at": iso(mtime),
+            "duration_s": None,
+            "title": None,
+        })
+    return out
+
+
 def load_registry():
     with open(REGISTRY_PATH, encoding="utf-8") as f:
         return json.load(f)
@@ -374,11 +479,21 @@ def build_heartbeats(registry, inject_leak_for_selftest=False):
         except Exception:
             pass
 
+    openclaw_session_residents = [r for r in residents if r["sources"].get("openclaw_agent")]
+
+    def _openclaw_sessions_all():
+        acc = []
+        for r in openclaw_session_residents:
+            acc.extend(beats_from_openclaw_sessions(r))
+        return acc
+
     new_beats = []
     for label, fn in (
         ("cc_sessions", lambda: beats_from_cc_sessions(cc_resident)),
         ("openclaw_cron", lambda: beats_from_cron(cockpit, cron_name_to_resident)),
+        ("openclaw_sessions", _openclaw_sessions_all),
         ("launchd", lambda: beats_from_launchd(cockpit, label_to_resident, launchd_now_iso)),
+        ("launchd_logs", lambda: beats_from_launchd_logs(label_to_resident)),
     ):
         try:
             new_beats.extend(fn())
@@ -406,7 +521,7 @@ def build_heartbeats(registry, inject_leak_for_selftest=False):
         merged.append(b)
 
     cutoff = now - timedelta(hours=WINDOW_HOURS)
-    kept = []
+    windowed = []
     for b in merged:
         sa = b.get("started_at")
         if not sa:
@@ -416,14 +531,16 @@ def build_heartbeats(registry, inject_leak_for_selftest=False):
                 continue
         except Exception:
             continue
-        kept.append(b)
-    kept.sort(key=lambda b: b["started_at"], reverse=True)
-    kept = kept[:MAX_BEATS]
+        windowed.append(b)
+    windowed.sort(key=lambda b: b["started_at"], reverse=True)
+    # feed 截断到 MAX_BEATS，但居民"最近一跳"用未截断的窗口全量算，
+    # 否则活跃居民(泛音)的几百跳会把稀疏居民的孤零心跳挤出榜，害它显示"没消息"。
+    kept = windowed[:MAX_BEATS]
 
     # residents 名册：附最近一跳时间 + 最近一跳状态（给首页绿点用）
     residents_out = []
     for r in residents:
-        latest = next((b for b in kept if b["agent"] == r["agent"]), None)
+        latest = next((b for b in windowed if b["agent"] == r["agent"]), None)
         residents_out.append({
             "agent": r["agent"],
             "emoji": r["emoji"],
