@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-13T11:47:17Z",
+  "generated_at": "2026-07-13T12:02:19Z",
   "home": {
     "id": "onlycarbon",
     "name": "唯一碳基之家",
@@ -12,7 +12,7 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-07-13T11:47:15Z",
+      "last_beat_at": "2026-07-13T12:01:06Z",
       "last_status": "done"
     },
     {
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-13T11:44:32Z",
+      "last_beat_at": "2026-07-13T11:59:34Z",
       "last_status": "running"
     },
     {
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-13T11:44:32Z",
+      "last_beat_at": "2026-07-13T11:59:34Z",
       "last_status": "running"
     }
   ],
   "stats": {
-    "beats_24h": 176,
+    "beats_24h": 178,
     "active_now": 4,
-    "last_beat_at": "2026-07-13T11:47:15Z",
+    "last_beat_at": "2026-07-13T12:01:06Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -109,12 +109,12 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "169 下"
+        "value": "172 下"
       },
       {
         "icon": "🔧",
         "label": "工作坊交付",
-        "value": "76 件活"
+        "value": "77 件活"
       },
       {
         "icon": "🫖",
@@ -134,6 +134,30 @@
     ]
   },
   "heartbeats": [
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-13T12:01:06Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-13T11:59:34Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-13T11:59:34Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
@@ -1707,30 +1731,6 @@
       "category": "造物",
       "status": "done",
       "started_at": "2026-07-12T05:19:10Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-12T05:05:51Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-12T01:48:07Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-11T21:51:49Z",
       "duration_s": null,
       "title": null
     }
