@@ -3,12 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>心跳墙 · 唯一碳基之家</title>
-<meta name="description" content="Strava for AI agents,直播这个家里的 agent 编制在干什么,只晒活动,不晒产出。">
+<title>唯一碳基之家 · 心跳墙</title>
+<meta name="description" content="一栋住着 AI agent 的小屋,扒着窗户看他们过日子。只晒活动,不晒产出。">
 <style>
   :root{
     --bg:#18120d;
-    --bg-elevated:#221a13;
     --bg-card:#2a2018;
     --border:#3c2f24;
     --text:#f5ead9;
@@ -21,6 +20,13 @@
     --red:#e8735c;
     --shadow:rgba(0,0,0,.45);
     --radius:16px;
+    --outline:#1a0f08;      /* 像素描边 */
+    --wood:#241a10;         /* 木板底色 */
+    --wood-edge:#5a3c22;    /* 画框木 */
+    --room-dark:#221812;
+    --room-lit1:#6b4a26;
+    --room-lit2:#8a5d31;
+    --lamp:rgba(255,190,110,.55);
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
@@ -39,80 +45,19 @@
   .wrap{max-width:880px;margin:0 auto;padding:20px 18px 60px;position:relative;z-index:1}
   a{color:var(--accent)}
 
-  /* ---------- 壁炉余烬(数量与 active_now 挂钩,0 在忙 = 无火星) ---------- */
-  .embers{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
-  .embers i{
-    position:absolute;bottom:-8px;left:var(--x);width:var(--s);height:var(--s);border-radius:50%;
-    background:radial-gradient(circle,#ffd9a8 0%,rgba(255,157,92,.7) 40%,transparent 70%);
-    opacity:0;animation:emberRise var(--d) linear infinite;animation-delay:var(--dl);
-  }
-  .embers i:nth-child(1){--x:8%; --s:4px;--d:23s;--dl:-4s; --o:.32;--sw:26px}
-  .embers i:nth-child(2){--x:21%;--s:3px;--d:29s;--dl:-12s;--o:.25;--sw:-20px}
-  .embers i:nth-child(3){--x:36%;--s:5px;--d:26s;--dl:-8s; --o:.28;--sw:14px}
-  .embers i:nth-child(4){--x:52%;--s:3px;--d:31s;--dl:-18s;--o:.24;--sw:-28px}
-  .embers i:nth-child(5){--x:67%;--s:4px;--d:24s;--dl:-2s; --o:.31;--sw:22px}
-  .embers i:nth-child(6){--x:80%;--s:3px;--d:28s;--dl:-14s;--o:.23;--sw:-16px}
-  .embers i:nth-child(7){--x:92%;--s:4px;--d:33s;--dl:-22s;--o:.28;--sw:30px}
-  @keyframes emberRise{
-    0%{transform:translate3d(0,0,0);opacity:0}
-    6%{opacity:var(--o)}
-    80%{opacity:calc(var(--o)*.55)}
-    100%{transform:translate3d(var(--sw),-104vh,0);opacity:0}
-  }
-  body[data-embers="none"] .embers{display:none}
-  body[data-embers="low"] .embers i:nth-child(n+5){display:none}
-
-  /* ---------- hero ---------- */
+  /* ---------- header ---------- */
   .hero-top{
     display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;
-    font-size:13px;color:var(--text-faint);margin-bottom:28px;
+    font-size:13px;color:var(--text-faint);margin-bottom:18px;
   }
   .home-badge{
     display:inline-flex;align-items:center;gap:6px;
     background:var(--bg-card);border:1px solid var(--border);
     padding:6px 12px;border-radius:999px;color:var(--text-dim);font-weight:600;
   }
+  .home-name{color:var(--text);font-weight:700}
   .last-updated{white-space:nowrap}
   .last-updated.weak{color:var(--red)}
-
-  .hero-main{text-align:center;margin:18px 0 10px}
-  .big-number{
-    font-size:clamp(72px,20vw,148px);
-    font-weight:800;
-    line-height:1;
-    letter-spacing:-.03em;
-    background:linear-gradient(180deg,var(--gold),var(--accent));
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-    text-shadow:0 8px 40px var(--accent-soft);
-    display:inline-block;
-  }
-  .big-number.breathe{animation:breathe 4.6s ease-in-out infinite}
-  .big-number.pop{animation:pop .5s cubic-bezier(.34,1.56,.64,1)}
-  @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
-  @keyframes pop{0%{transform:scale(1)}35%{transform:scale(1.16)}100%{transform:scale(1)}}
-  .big-number-label{
-    font-size:clamp(15px,3.6vw,19px);color:var(--text-dim);font-weight:600;margin-top:4px;
-  }
-  .tagline{
-    text-align:center;color:var(--text-faint);font-size:15px;margin:14px 0 22px;
-  }
-  .home-name{color:var(--text);font-weight:700}
-
-  /* ---------- 心电监护仪 ---------- */
-  .ecg-card{
-    background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
-    padding:12px 14px 10px;margin:0 0 42px;box-shadow:0 4px 18px var(--shadow);
-  }
-  .ecg-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:6px}
-  .ecg-title{font-size:12.5px;color:var(--text-dim);font-weight:600;letter-spacing:.02em}
-  .ecg-legend{display:flex;gap:10px;font-size:11px;color:var(--text-faint)}
-  .ecg-legend .lg{display:inline-flex;align-items:center;gap:4px}
-  .ecg-legend i{width:7px;height:7px;border-radius:50%;display:inline-block}
-  .li-done{background:var(--gold)}
-  .li-running{background:var(--green)}
-  .li-failed{background:var(--red)}
-  #ecg{width:100%;height:96px;display:block}
-  .ecg-caption{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--text-faint);margin-top:4px}
 
   h2.section-title{
     font-size:15px;color:var(--text-dim);font-weight:700;margin:0 0 14px;
@@ -121,52 +66,177 @@
   h2.section-title::before{content:"";width:4px;height:16px;background:var(--accent);border-radius:2px;display:inline-block}
   section{margin-bottom:38px}
 
-  /* ---------- residents ---------- */
-  .resident-grid{
-    display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;
+  /* ================= 场景:剖面小屋 ================= */
+  .scene-card{margin-bottom:10px}
+  .scene{
+    position:relative;border:1px solid var(--border);border-radius:var(--radius);
+    overflow:hidden;padding:34px 14px 0;box-shadow:0 6px 24px var(--shadow);
   }
-  .resident-card{
-    background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
-    padding:14px 14px 12px;box-shadow:0 4px 18px var(--shadow);
-    transition:transform .15s ease, border-color .15s ease, opacity .3s ease;
-    position:relative;
-  }
-  .resident-card:hover{transform:translateY(-2px);border-color:var(--accent)}
-  .resident-emoji{font-size:26px;line-height:1;display:inline-block}
-  .resident-name{font-weight:700;margin-top:8px;font-size:15px}
-  .resident-role{color:var(--text-faint);font-size:12px;margin-top:1px}
-  .resident-status{
-    display:flex;align-items:center;gap:6px;margin-top:10px;font-size:12px;color:var(--text-dim);
-  }
-  .status-dot{width:8px;height:8px;border-radius:50%;flex:none;background:var(--text-faint)}
-  .status-dot.dot-running{background:var(--green);box-shadow:0 0 0 0 rgba(111,207,125,.6);animation:pulse 1.8s infinite}
-  .status-dot.dot-done{background:var(--gold)}
-  .status-dot.dot-failed{background:var(--red)}
-  .status-dot.dot-quiet{background:var(--text-faint)}
-  @keyframes pulse{
-    0%{box-shadow:0 0 0 0 rgba(111,207,125,.55)}
-    70%{box-shadow:0 0 0 7px rgba(111,207,125,0)}
-    100%{box-shadow:0 0 0 0 rgba(111,207,125,0)}
-  }
-  /* running = 灯亮:光晕呼吸 + emoji 轻点头。只有真的 running 才有 */
-  .resident-card.is-running{border-color:rgba(111,207,125,.4)}
-  .resident-card.is-running::after{
-    content:"";position:absolute;inset:-1px;border-radius:var(--radius);pointer-events:none;
-    box-shadow:0 0 22px rgba(111,207,125,.22), inset 0 0 14px rgba(111,207,125,.06);
-    opacity:.3;animation:glowPulse 2.8s ease-in-out infinite;
-  }
-  @keyframes glowPulse{0%,100%{opacity:.22}50%{opacity:.9}}
-  .resident-card.is-running .resident-emoji{animation:bob 2.4s ease-in-out infinite}
-  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
-  /* 没消息 = 睡着:静止 + 调暗,睡眠的诚实表达就是不动 */
-  .resident-card.is-quiet{opacity:.7}
-  .resident-card.is-failed{border-color:rgba(232,115,92,.35)}
+  /* 昼夜天空(按访客本地时间) */
+  .scene.t-day{background:linear-gradient(180deg,#6fb7d9 0%,#a8d8e8 62%,#c3e2ea 100%)}
+  .scene.t-dusk{background:linear-gradient(180deg,#4a3f66 0%,#a05f4e 55%,#e0965a 100%)}
+  .scene.t-night{background:linear-gradient(180deg,#131b33 0%,#1b2440 55%,#2a3558 100%)}
+  .sky-el{position:absolute;pointer-events:none}
+  .sun{top:16px;right:9%;width:34px;height:34px;background:#ffd75e;border:3px solid #e8a53b;display:none}
+  .moon{top:16px;right:9%;width:28px;height:28px;background:#e8e3cf;border:3px solid #b9b49f;display:none;
+        box-shadow:inset -7px -4px 0 0 #cfc9b2}
+  .t-day .sun{display:block}
+  .t-night .moon{display:block}
+  .stars{inset:0;display:none}
+  .t-night .stars{display:block}
+  .stars i{position:absolute;width:3px;height:3px;background:#fff;opacity:.85;animation:twinkle 2.6s ease-in-out infinite}
+  .stars i:nth-child(2n){animation-delay:-1.3s;opacity:.55}
+  .stars i:nth-child(3n){animation-duration:3.4s}
+  @keyframes twinkle{0%,100%{opacity:.25}50%{opacity:.95}}
+  .cloud{top:22px;width:64px;height:14px;background:rgba(255,255,255,.75);display:none;
+         box-shadow:14px -8px 0 -2px rgba(255,255,255,.75), 34px -4px 0 -1px rgba(255,255,255,.7)}
+  .cloud.c2{top:52px;opacity:.8}
+  .t-day .cloud,.t-dusk .cloud{display:block}
+  .t-dusk .cloud{background:rgba(255,220,190,.55);box-shadow:14px -8px 0 -2px rgba(255,220,190,.55),34px -4px 0 -1px rgba(255,220,190,.5)}
+  .cloud{animation:drift 80s linear infinite}
+  .cloud.c2{animation-duration:110s;animation-delay:-40s}
+  @keyframes drift{0%{left:-15%}100%{left:105%}}
 
-  /* ---------- stream ---------- */
+  /* 院子 = 房子 + 牧场 */
+  .yard{position:relative;display:flex;align-items:flex-end;gap:10px;max-width:640px;margin:0 auto}
+  .house{flex:1 1 300px;min-width:0;position:relative}
+
+  /* 屋顶层:坡屋顶 + 烟囱 + 瞭望塔 */
+  .roofline{position:relative;height:44px;display:flex;align-items:flex-end}
+  .roof{
+    position:absolute;left:0;bottom:-2px;width:70%;height:40px;background:#7c3128;
+    clip-path:polygon(0 100%,50% 0,100% 100%);
+  }
+  .roof::after{
+    content:"";position:absolute;left:10%;right:10%;bottom:10px;height:4px;
+    background:rgba(0,0,0,.18);
+  }
+  .roof-base{position:absolute;left:-6px;bottom:-2px;width:calc(70% + 12px);height:8px;background:#5c231c;border:3px solid var(--outline)}
+  .chimney{position:absolute;left:16%;bottom:20px;width:18px;height:28px;background:#6d4230;border:3px solid var(--outline);z-index:2}
+  .smoke{position:absolute;left:2px;top:-12px;width:8px;height:8px;background:rgba(226,220,210,.75);opacity:0}
+  .smoke.s2{left:5px}
+  .smoke.s3{left:0}
+  .chimney.smoking .smoke{animation:puff 3.2s linear infinite}
+  .chimney.smoking .smoke.s2{animation-delay:-1.1s}
+  .chimney.smoking .smoke.s3{animation-delay:-2.2s}
+  @keyframes puff{
+    0%{transform:translate(0,0) scale(.7);opacity:0}
+    15%{opacity:.75}
+    100%{transform:translate(6px,-34px) scale(1.7);opacity:0}
+  }
+  /* 哨兵瞭望塔(屋顶右侧) */
+  .tower{
+    position:relative;margin-left:auto;width:29%;min-width:86px;height:44px;
+    border:3px solid var(--outline);border-bottom:none;background:var(--room-dark);
+  }
+  .tower::before{content:"";position:absolute;left:-6px;top:-8px;width:calc(100% + 12px);height:5px;background:#5c231c;border:3px solid var(--outline)}
+
+  /* 楼层与房间 */
+  .floor{display:grid;gap:3px;background:var(--outline);border:3px solid var(--outline);border-bottom:none}
+  .floor.attic{grid-template-columns:1fr 1fr}
+  .floor.f2{grid-template-columns:1fr 1fr 1fr}
+  .floor.f1{grid-template-columns:1.05fr 1fr}
+  .floor.basement{grid-template-columns:1fr;border-bottom:3px solid var(--outline);background:#120b06}
+  .floor.basement .room{background:linear-gradient(#17100a,#1d140c);min-height:54px}
+
+  .room{
+    position:relative;min-height:68px;padding:6px 4px 4px;
+    background:linear-gradient(var(--room-dark),#2b2014);
+    display:flex;flex-direction:column;justify-content:flex-end;align-items:center;
+    cursor:pointer;outline:none;
+    transition:background .4s ease, box-shadow .4s ease, filter .4s ease;
+  }
+  .room:focus-visible{box-shadow:inset 0 0 0 2px var(--accent)}
+  .room .avatar{font-size:21px;line-height:1.15}
+  .room .prop{position:absolute;left:6px;bottom:20px;font-size:13px;opacity:.85;transition:transform .3s}
+  .room .mood{position:absolute;right:5px;top:4px;font-size:12px}
+  .room .plate{
+    font-size:10px;color:#b9a184;background:var(--outline);
+    padding:0 6px;margin-top:4px;letter-spacing:1px;white-space:nowrap;
+    max-width:100%;overflow:hidden;text-overflow:ellipsis;
+  }
+  /* 状态:灯 */
+  .room.lit{
+    background:linear-gradient(var(--room-lit1),var(--room-lit2));
+    box-shadow:inset 0 0 24px var(--lamp), 0 0 18px rgba(255,190,110,.28);
+  }
+  .room.lit .plate{color:#ffe3b3}
+  /* 状态:行为 */
+  .room.working .avatar{animation:bob 2.4s ease-in-out infinite}
+  .room.working .prop{animation:propWiggle 2.8s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+  @keyframes propWiggle{0%,100%{transform:rotate(0)}50%{transform:rotate(-12deg)}}
+  .room.sleeping{filter:brightness(.72)}
+  .room.sleeping .mood{animation:zfloat 3.6s ease-in-out infinite}
+  @keyframes zfloat{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(-4px);opacity:.95}}
+  .room.tidy{filter:brightness(.58)}
+  .room.mess .prop{transform:rotate(95deg) translateY(2px);opacity:.75}
+  .room.mess .mood{opacity:.9}
+  .room.resting .mood{opacity:.9}
+
+  /* 一楼门房的门 */
+  .door{position:absolute;right:8px;bottom:0;width:20px;height:32px;background:#4a2c17;border:3px solid var(--outline);border-bottom:none}
+  .door::after{content:"";position:absolute;right:3px;top:14px;width:3px;height:3px;background:#d9a75e}
+
+  /* 屋外小牧场(牧场主) */
+  .pasture{
+    flex:0 0 96px;height:96px;border:3px solid var(--outline);
+    background:linear-gradient(var(--room-dark),#28200f);
+    justify-content:flex-end;
+  }
+  .pasture .fence{
+    position:absolute;left:0;right:0;bottom:0;height:18px;
+    background:repeating-linear-gradient(90deg,#6d4a2a 0 5px,transparent 5px 16px);
+    border-top:3px solid #6d4a2a;pointer-events:none;
+  }
+  .pasture .plate{position:relative;z-index:2}
+  .pasture.lit{background:linear-gradient(#5d5426,#6b5d2c)}
+
+  .ground{
+    position:relative;height:18px;margin:0 -14px;border-top:3px solid var(--outline);
+    background:#3f6b36;
+  }
+  .t-night .ground{background:#28421f}
+  .t-dusk .ground{background:#4a5c2e}
+
+  .scene-caption{
+    text-align:center;font-size:15px;color:var(--text-dim);margin:12px 0 0;font-weight:600;
+  }
+  .scene-caption b{color:var(--gold);font-size:18px}
+  .scene-hint{text-align:center;font-size:11.5px;color:var(--text-faint);margin:4px 0 0}
+
+  /* 凑近看面板(点房间) */
+  .peek{
+    margin:14px 0 0;background:var(--wood);border:3px solid var(--outline);border-radius:12px;
+    padding:12px 14px;position:relative;
+  }
+  .peek[hidden]{display:none}
+  .peek-head{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+  .peek-avatar{font-size:22px}
+  .peek-name{font-weight:700}
+  .peek-role{font-size:12px;color:var(--text-faint)}
+  .peek-status{font-size:12.5px;color:var(--text-dim);margin-left:auto;padding-right:22px}
+  .peek-close{
+    position:absolute;top:8px;right:10px;background:none;border:none;color:var(--text-faint);
+    font-size:14px;cursor:pointer;padding:2px 6px;
+  }
+  .peek-list{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:5px}
+  .peek-list li{font-size:13px;color:var(--text-dim);display:flex;gap:8px;align-items:baseline}
+  .peek-list .stream-time{flex:none}
+  .peek-empty{font-size:12.5px;color:var(--text-faint)}
+
+  /* ================= 家庭日志(木牌告示板) ================= */
+  .board{
+    background:
+      repeating-linear-gradient(180deg, transparent 0 34px, rgba(0,0,0,.14) 34px 36px),
+      var(--wood);
+    border:3px solid var(--outline);border-radius:12px;padding:4px 12px;
+    box-shadow:inset 0 0 30px rgba(0,0,0,.35), 0 4px 18px var(--shadow);
+  }
   .stream-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
   .stream-item{
     display:flex;align-items:baseline;gap:9px;padding:9px 6px;
-    border-bottom:1px solid var(--border);font-size:14px;flex-wrap:wrap;
+    border-bottom:1px dashed rgba(138,117,97,.28);font-size:14px;flex-wrap:wrap;
     border-radius:8px;
   }
   .stream-item:last-child{border-bottom:none}
@@ -181,8 +251,7 @@
   .stream-time{color:var(--text-faint);font-size:12.5px;white-space:nowrap}
   .stream-sep{color:var(--text-faint)}
   .stream-text{color:var(--text-dim)}
-  .stream-empty,.resident-empty{color:var(--text-faint);font-size:13.5px;padding:8px 4px}
-  /* 连刷屏折叠:一条汇总,点开看每一跳的明细时间 */
+  .stream-empty{color:var(--text-faint);font-size:13.5px;padding:10px 4px}
   .stream-item.fold{display:block;padding:0}
   .stream-item.fold summary{display:flex;align-items:baseline;gap:9px;padding:9px 6px;cursor:pointer;list-style:none}
   .stream-item.fold summary::-webkit-details-marker{display:none}
@@ -194,39 +263,62 @@
   .fold-dot.dot-done{background:var(--gold)}
   .fold-dot.dot-failed{background:var(--red)}
 
-  /* ---------- activity bar ---------- */
-  .activity-bar{
-    display:flex;align-items:flex-end;gap:3px;height:64px;
-    background:var(--bg-card);border:1px solid var(--border);border-radius:12px;
-    padding:10px 10px 8px;
+  /* ================= 日晷:一天的日与夜 ================= */
+  .sun-track{
+    position:relative;height:128px;background:var(--wood);
+    border:3px solid var(--outline);border-radius:12px;overflow:hidden;
   }
-  .activity-col{flex:1;height:100%;display:flex;align-items:flex-end;cursor:default}
-  .activity-fill{
-    width:100%;background:linear-gradient(180deg,var(--accent),var(--gold));
-    border-radius:3px 3px 1px 1px;min-height:3px;opacity:.85;
-    transition:opacity .15s;
+  .sun-track::before{
+    content:"";position:absolute;left:7%;top:26%;width:86%;height:150%;
+    border:2px dashed rgba(255,205,140,.16);border-radius:50%;
   }
-  .activity-col:hover .activity-fill{opacity:1}
-  .activity-fill.grow{transform-origin:bottom;animation:growUp .7s cubic-bezier(.22,1,.36,1) backwards;animation-delay:calc(var(--i)*20ms)}
-  @keyframes growUp{from{transform:scaleY(0)}}
-  /* 当前小时有真实心跳才脉动 */
-  .activity-col.is-now .activity-fill{transform-origin:bottom;animation:sparkPulse 1.7s ease-in-out infinite}
-  @keyframes sparkPulse{0%,100%{transform:scaleY(1);opacity:.85}50%{transform:scaleY(1.15);opacity:1}}
+  .sun-dot{
+    position:absolute;width:9px;height:9px;background:var(--gold);
+    transform:translate(-50%,-50%);
+  }
+  .sun-marker{position:absolute;font-size:15px;transform:translate(-50%,-58%);line-height:1}
   .activity-caption{display:flex;justify-content:space-between;font-size:11px;color:var(--text-faint);margin-top:6px}
 
-  /* ---------- showcase ---------- */
-  .showcase-grid{
-    display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;
-  }
+  /* ================= 墙上的画框 ================= */
+  .showcase-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px}
   .showcase-card{
-    display:flex;align-items:center;gap:10px;
-    background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
-    padding:14px;text-decoration:none;color:var(--text);
-    transition:transform .15s ease, border-color .15s ease;
+    display:flex;align-items:center;gap:10px;position:relative;
+    background:var(--wood);border:6px solid var(--wood-edge);outline:3px solid var(--outline);
+    border-radius:3px;padding:14px 12px;text-decoration:none;color:var(--text);
+    box-shadow:inset 0 0 16px rgba(0,0,0,.4), 0 4px 14px var(--shadow);
+    transition:transform .15s ease;
   }
-  .showcase-card:hover{transform:translateY(-2px);border-color:var(--gold)}
+  .showcase-card::before{
+    content:"";position:absolute;top:-9px;left:50%;width:5px;height:5px;
+    background:#c9b48e;border:2px solid var(--outline);transform:translateX(-50%);
+  }
+  .showcase-card:hover{transform:translateY(-2px) rotate(-.5deg)}
   .showcase-emoji{font-size:22px}
   .showcase-name{font-size:14px;font-weight:600}
+
+  /* ================= 炉台相框(ECG 彩蛋) ================= */
+  .ecg-nook{
+    background:var(--wood);border:3px solid var(--outline);border-radius:12px;
+    padding:0;margin-bottom:38px;
+  }
+  .ecg-nook summary{
+    list-style:none;cursor:pointer;padding:11px 14px;font-size:13px;color:var(--text-dim);
+    display:flex;align-items:center;gap:8px;
+  }
+  .ecg-nook summary::-webkit-details-marker{display:none}
+  .ecg-nook summary .fold-caret{margin-left:auto}
+  .ecg-nook[open] summary .fold-caret{transform:rotate(90deg)}
+  .ecg-inner{padding:2px 14px 12px}
+  .ecg-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+  .ecg-title{font-size:12px;color:var(--text-faint)}
+  .ecg-legend{display:flex;gap:10px;font-size:11px;color:var(--text-faint)}
+  .ecg-legend .lg{display:inline-flex;align-items:center;gap:4px}
+  .ecg-legend i{width:7px;height:7px;border-radius:50%;display:inline-block}
+  .li-done{background:var(--gold)}
+  .li-running{background:var(--green)}
+  .li-failed{background:var(--red)}
+  #ecg{width:100%;height:96px;display:block}
+  .ecg-caption{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--text-faint);margin-top:4px}
 
   /* ---------- footer ---------- */
   .site-footer{
@@ -236,22 +328,24 @@
   .site-footer p{margin:4px 0}
   .site-footer a{color:var(--text-faint);text-decoration:underline}
 
-  @media (max-width:420px){
-    .wrap{padding:16px 14px 44px}
-    .resident-grid{grid-template-columns:repeat(auto-fill,minmax(128px,1fr))}
+  @media (max-width:430px){
+    .wrap{padding:16px 12px 44px}
+    .room{min-height:60px}
+    .room .avatar{font-size:18px}
+    .room .plate{font-size:9px;letter-spacing:.5px}
+    .room .prop{font-size:11px;bottom:18px}
+    .pasture{flex-basis:78px;height:84px}
+    .tower{min-width:72px}
   }
 
-  /* ---------- reduced motion:全部降级为静态 ---------- */
+  /* ---------- reduced motion:全部降级为静态,状态仍靠灯光/道具/表情可读 ---------- */
   @media (prefers-reduced-motion: reduce){
     *,*::before,*::after{animation:none !important;transition:none !important}
-    .embers{display:none !important}
   }
   html.force-reduced *,html.force-reduced *::before,html.force-reduced *::after{animation:none !important;transition:none !important}
-  html.force-reduced .embers{display:none !important}
 </style>
 </head>
-<body data-embers="none">
-<div class="embers" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<body>
 <div class="wrap">
 
   <div class="hero-top">
@@ -259,107 +353,134 @@
     <span class="last-updated" id="last-updated">心跳读取中…</span>
   </div>
 
-  <div class="hero-main">
-    <div class="big-number" id="active-now">–</div>
-    <div class="big-number-label">此刻在干活的 agent</div>
-  </div>
-  <p class="tagline" id="tagline">一个人类，一屋子硅基，全天候造东西</p>
+  <!-- ================= 家(主秀) ================= -->
+  <section class="scene-card" aria-label="家的剖面">
+    <div class="scene t-night" id="scene">
+      <span class="sky-el sun" aria-hidden="true"></span>
+      <span class="sky-el moon" aria-hidden="true"></span>
+      <div class="sky-el stars" aria-hidden="true">
+        <i style="left:6%;top:12%"></i><i style="left:14%;top:34%"></i><i style="left:22%;top:8%"></i>
+        <i style="left:31%;top:26%"></i><i style="left:40%;top:10%"></i><i style="left:48%;top:30%"></i>
+        <i style="left:57%;top:7%"></i><i style="left:66%;top:22%"></i><i style="left:74%;top:12%"></i>
+        <i style="left:82%;top:28%"></i><i style="left:90%;top:9%"></i><i style="left:96%;top:24%"></i>
+      </div>
+      <span class="sky-el cloud" aria-hidden="true"></span>
+      <span class="sky-el cloud c2" aria-hidden="true"></span>
 
-  <div class="ecg-card">
-    <div class="ecg-head">
-      <span class="ecg-title">心跳监护 · 最近 4 小时</span>
-      <span class="ecg-legend" aria-hidden="true">
-        <span class="lg"><i class="li-done"></i>完成</span>
-        <span class="lg"><i class="li-running"></i>进行中</span>
-        <span class="lg"><i class="li-failed"></i>出状况</span>
-      </span>
+      <div class="yard">
+        <div class="house">
+          <div class="roofline">
+            <div class="roof" aria-hidden="true"></div>
+            <div class="roof-base" aria-hidden="true"></div>
+            <div class="chimney" id="chimney" aria-hidden="true">
+              <span class="smoke"></span><span class="smoke s2"></span><span class="smoke s3"></span>
+            </div>
+            <div class="room tower tidy" data-agent="哨兵" role="button" tabindex="0">
+              <span class="prop" aria-hidden="true">🔦</span>
+              <span class="avatar" aria-hidden="true">🛰️</span>
+              <span class="mood" aria-hidden="true"></span>
+              <span class="plate">哨兵</span>
+            </div>
+          </div>
+          <div class="floor attic">
+            <div class="room tidy" data-agent="MiroFish" role="button" tabindex="0">
+              <span class="prop" aria-hidden="true">🔭</span>
+              <span class="avatar" aria-hidden="true">🔮</span>
+              <span class="mood" aria-hidden="true"></span>
+              <span class="plate">MiroFish</span>
+            </div>
+            <div class="room tidy" data-agent="Watcher" role="button" tabindex="0">
+              <span class="prop" aria-hidden="true">🗞️</span>
+              <span class="avatar" aria-hidden="true">📡</span>
+              <span class="mood" aria-hidden="true"></span>
+              <span class="plate">Watcher</span>
+            </div>
+          </div>
+          <div class="floor f2">
+            <div class="room tidy" data-agent="泛音" role="button" tabindex="0">
+              <span class="prop" aria-hidden="true">⚙️</span>
+              <span class="avatar" aria-hidden="true">🎼</span>
+              <span class="mood" aria-hidden="true"></span>
+              <span class="plate">泛音</span>
+            </div>
+            <div class="room tidy" data-agent="采集员" role="button" tabindex="0">
+              <span class="prop" aria-hidden="true">🎣</span>
+              <span class="avatar" aria-hidden="true">📊</span>
+              <span class="mood" aria-hidden="true"></span>
+              <span class="plate">采集员</span>
+            </div>
+            <div class="room tidy" data-agent="Mobile" role="button" tabindex="0">
+              <span class="prop" aria-hidden="true">🎒</span>
+              <span class="avatar" aria-hidden="true">📱</span>
+              <span class="mood" aria-hidden="true"></span>
+              <span class="plate">Mobile</span>
+            </div>
+          </div>
+          <div class="floor f1">
+            <div class="room tidy" data-agent="门房" role="button" tabindex="0">
+              <span class="door" aria-hidden="true"></span>
+              <span class="prop" aria-hidden="true">🪑</span>
+              <span class="avatar" aria-hidden="true">🔔</span>
+              <span class="mood" aria-hidden="true"></span>
+              <span class="plate">门房</span>
+            </div>
+            <div class="room tidy" data-agent="Jarvis" role="button" tabindex="0">
+              <span class="prop" aria-hidden="true">🫖</span>
+              <span class="avatar" aria-hidden="true">🤵</span>
+              <span class="mood" aria-hidden="true"></span>
+              <span class="plate">Jarvis</span>
+            </div>
+          </div>
+          <div class="floor basement">
+            <div class="room tidy" data-agent="备份员" role="button" tabindex="0">
+              <span class="prop" aria-hidden="true">📦</span>
+              <span class="avatar" aria-hidden="true">🗄️</span>
+              <span class="mood" aria-hidden="true"></span>
+              <span class="plate">备份员 · 地下档案馆</span>
+            </div>
+          </div>
+        </div>
+        <div class="room pasture tidy" data-agent="牧场主" role="button" tabindex="0">
+          <span class="prop" aria-hidden="true">🌾</span>
+          <span class="avatar" aria-hidden="true">🐄</span>
+          <span class="mood" aria-hidden="true"></span>
+          <span class="plate">牧场主</span>
+          <span class="fence" aria-hidden="true"></span>
+        </div>
+      </div>
+      <div class="ground" aria-hidden="true"></div>
     </div>
-    <canvas id="ecg" role="img" aria-label="最近 4 小时的真实心跳波形"></canvas>
-    <div class="ecg-caption"><span>4 小时前</span><span id="ecg-note"></span><span>此刻</span></div>
-  </div>
-
-  <section aria-label="家庭成员">
-    <h2 class="section-title">家里住着谁</h2>
-    <div class="resident-grid" id="resident-grid">
-      <!-- 静态兜底名册:emoji/名字/角色都是公开信息,直接写死,JS 只负责补状态点和相对时间 -->
-      <div class="resident-card" data-agent="泛音">
-        <div class="resident-emoji">🎼</div>
-        <div class="resident-name">泛音</div>
-        <div class="resident-role">总工程师 · 造物</div>
-        <div class="resident-status"><span class="status-dot"></span><span class="status-text">读取中…</span></div>
+    <p class="scene-caption" id="scene-caption">窗户点灯中…</p>
+    <p class="scene-hint">点一间房,凑近看看这位住户最近在忙什么</p>
+    <div class="peek" id="peek" hidden>
+      <button class="peek-close" id="peek-close" aria-label="关上">✕</button>
+      <div class="peek-head">
+        <span class="peek-avatar" id="peek-avatar"></span>
+        <span class="peek-name" id="peek-name"></span>
+        <span class="peek-role" id="peek-role"></span>
+        <span class="peek-status" id="peek-status"></span>
       </div>
-      <div class="resident-card" data-agent="Jarvis">
-        <div class="resident-emoji">🤵</div>
-        <div class="resident-name">Jarvis</div>
-        <div class="resident-role">管家</div>
-        <div class="resident-status"><span class="status-dot"></span><span class="status-text">读取中…</span></div>
-      </div>
-      <div class="resident-card" data-agent="Watcher">
-        <div class="resident-emoji">📡</div>
-        <div class="resident-name">Watcher</div>
-        <div class="resident-role">情报员</div>
-        <div class="resident-status"><span class="status-dot"></span><span class="status-text">读取中…</span></div>
-      </div>
-      <div class="resident-card" data-agent="Mobile">
-        <div class="resident-emoji">📱</div>
-        <div class="resident-name">Mobile</div>
-        <div class="resident-role">外勤</div>
-        <div class="resident-status"><span class="status-dot"></span><span class="status-text">读取中…</span></div>
-      </div>
-      <div class="resident-card" data-agent="MiroFish">
-        <div class="resident-emoji">🔮</div>
-        <div class="resident-name">MiroFish</div>
-        <div class="resident-role">占卜师</div>
-        <div class="resident-status"><span class="status-dot"></span><span class="status-text">读取中…</span></div>
-      </div>
-      <div class="resident-card" data-agent="哨兵">
-        <div class="resident-emoji">🛰️</div>
-        <div class="resident-name">哨兵</div>
-        <div class="resident-role">瞭望员</div>
-        <div class="resident-status"><span class="status-dot"></span><span class="status-text">读取中…</span></div>
-      </div>
-      <div class="resident-card" data-agent="采集员">
-        <div class="resident-emoji">📊</div>
-        <div class="resident-name">采集员</div>
-        <div class="resident-role">雷达</div>
-        <div class="resident-status"><span class="status-dot"></span><span class="status-text">读取中…</span></div>
-      </div>
-      <div class="resident-card" data-agent="备份员">
-        <div class="resident-emoji">🗄️</div>
-        <div class="resident-name">备份员</div>
-        <div class="resident-role">档案馆</div>
-        <div class="resident-status"><span class="status-dot"></span><span class="status-text">读取中…</span></div>
-      </div>
-      <div class="resident-card" data-agent="牧场主">
-        <div class="resident-emoji">🐄</div>
-        <div class="resident-name">牧场主</div>
-        <div class="resident-role">额度牧场</div>
-        <div class="resident-status"><span class="status-dot"></span><span class="status-text">读取中…</span></div>
-      </div>
-      <div class="resident-card" data-agent="门房">
-        <div class="resident-emoji">🔔</div>
-        <div class="resident-name">门房</div>
-        <div class="resident-role">访客与提醒</div>
-        <div class="resident-status"><span class="status-dot"></span><span class="status-text">读取中…</span></div>
-      </div>
+      <ul class="peek-list" id="peek-list"></ul>
     </div>
   </section>
 
-  <section aria-label="最近心跳">
-    <h2 class="section-title">最近在忙什么</h2>
-    <ul class="stream-list" id="stream-list">
-      <li class="stream-empty">心跳读取中…</li>
-    </ul>
+  <section aria-label="家庭日志">
+    <h2 class="section-title">家庭日志</h2>
+    <div class="board">
+      <ul class="stream-list" id="stream-list">
+        <li class="stream-empty">日志翻页中…</li>
+      </ul>
+    </div>
   </section>
 
-  <section aria-label="24小时活动密度">
-    <h2 class="section-title">过去 24 小时</h2>
-    <div class="activity-bar" id="activity-bar"></div>
+  <section aria-label="这一天的日与夜">
+    <h2 class="section-title">这一天的日与夜</h2>
+    <div class="sun-track" id="sun-track"></div>
     <div class="activity-caption"><span>24 小时前</span><span>此刻</span></div>
   </section>
 
-  <section aria-label="他们做过的东西">
-    <h2 class="section-title">顺便看看家里出过什么</h2>
+  <section aria-label="墙上的画框">
+    <h2 class="section-title">墙上的画框</h2>
     <div class="showcase-grid">
       <a class="showcase-card" href="https://maxi-max-dev.github.io/museum-of-feelings/" target="_blank" rel="noopener">
         <span class="showcase-emoji">🖼️</span><span class="showcase-name">感觉博物馆</span>
@@ -376,6 +497,22 @@
     </div>
   </section>
 
+  <details class="ecg-nook" id="ecg-nook">
+    <summary>🖼️ 炉台上的小相框:全家的心跳记录<span class="fold-caret">▸</span></summary>
+    <div class="ecg-inner">
+      <div class="ecg-head">
+        <span class="ecg-title">最近 4 小时,每一跳都是真的</span>
+        <span class="ecg-legend" aria-hidden="true">
+          <span class="lg"><i class="li-done"></i>完成</span>
+          <span class="lg"><i class="li-running"></i>进行中</span>
+          <span class="lg"><i class="li-failed"></i>出状况</span>
+        </span>
+      </div>
+      <canvas id="ecg" role="img" aria-label="最近 4 小时的真实心跳波形"></canvas>
+      <div class="ecg-caption"><span>4 小时前</span><span id="ecg-note"></span><span>此刻</span></div>
+    </div>
+  </details>
+
   <footer class="site-footer">
     <p>只晒干活，不晒产出 · 心跳每 15 分钟更新 · 想让你家 agent 也入住？敬请期待</p>
     <p class="repo-link"><a href="https://github.com/maxi-max-dev/heartbeat-wall" target="_blank" rel="noopener">github.com/maxi-max-dev/heartbeat-wall</a></p>
@@ -387,7 +524,7 @@
 (function(){
   "use strict";
 
-  /* reduced-motion:系统设置 或 ?reduce 测试开关,全部动画降级为静态 */
+  /* reduced-motion:系统设置 或 ?reduce 测试开关 */
   var FORCE = /[?&]reduce\b/.test(location.search);
   var REDUCED = FORCE, mq = null;
   try{
@@ -395,11 +532,16 @@
     REDUCED = FORCE || mq.matches;
   }catch(e){}
   if (FORCE) document.documentElement.classList.add("force-reduced");
+  /* 昼夜测试开关:?hour=22 */
+  var HOUR_OVERRIDE = (function(){
+    var m = location.search.match(/[?&]hour=(\d{1,2})/);
+    return m ? Math.min(23, parseInt(m[1], 10)) : null;
+  })();
 
   /* ---------- 声线字典:拟人化只改措辞不改事实 ----------
      句子按事件时间戳哈希确定性选取,刷新页面同一事件永远同一句。
-     running 不进历史流(「谁正在忙」由居民卡片和大数字表达),所以声线只有 done/failed。
-     _many 变体给连刷屏折叠用,{n} 会换成真实条数。 */
+     running 不进日志(「谁正在忙」由房间灯光表达),声线只有 done/failed。
+     _many 变体给连刷屏折叠用,{n} 换成真实条数。 */
   var VOICE = {
     "造物": {
       done: ["又搓好一个新零件","交了一版活,揉了揉不存在的眼睛","拧上最后一颗螺丝,收工","把一个想法敲成了实物","调了半天,终于顺眼了","新东西下线,还冒着热气"],
@@ -469,7 +611,6 @@
     failed_many: ["连着 {n} 次没成"]
   };
 
-  /* 确定性选句:同一事件哈希到同一句,刷新不换词 */
   function hashStr(s){
     var h = 5381;
     for (var i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
@@ -478,12 +619,13 @@
   function pickLine(pool, seed){
     return pool[hashStr(seed) % pool.length];
   }
-  function voiceFor(beat){
+  function voiceCore(beat){
     var v = VOICE[beat.category] || VOICE_FALLBACK;
     var key = beat.status === "failed" ? "failed" : "done";
     var pool = v[key] || VOICE_FALLBACK[key];
-    return beat.agent + " " + pickLine(pool, bkey(beat));
+    return pickLine(pool, bkey(beat));
   }
+  function voiceFor(beat){ return beat.agent + " " + voiceCore(beat); }
   function voiceForGroup(g){
     var v = VOICE[g.category] || VOICE_FALLBACK;
     var key = g.status === "failed" ? "failed_many" : "done_many";
@@ -492,11 +634,13 @@
                g.items[g.items.length - 1].started_at + "|" + g.items.length;
     return g.agent + " " + pickLine(pool, seed).replace("{n}", g.items.length);
   }
-  var DATA_URL = "./data/heartbeats.json";
-  var FETCH_MS = 60000;   /* 数据每 60s 重取(源头 15 分钟一更) */
-  var TICK_MS  = 30000;   /* 相对时间每 30s 自己走,不依赖刷新 */
 
-  var state = {data:null, seen:null, heroN:null, first:true, lastNewCount:0};
+  var DATA_URL = "./data/heartbeats.json";
+  var FETCH_MS = 60000;
+  var TICK_MS  = 30000;
+  var LIT_WINDOW_SEC = 20 * 60;   /* 与 exporter 的 active_now 同口径:20 分钟内有跳=灯还亮 */
+
+  var state = {data:null, seen:null, first:true, lastNewCount:0, peekAgent:null};
 
   function el(id){ return document.getElementById(id); }
   function bkey(b){ return b.agent + "|" + b.status + "|" + b.started_at; }
@@ -511,7 +655,6 @@
     if (diff < 86400) return Math.floor(diff/3600) + " 小时前";
     return Math.floor(diff/86400) + " 天前";
   }
-
   function durText(iso){
     var then = new Date(iso).getTime();
     if (isNaN(then)) return "";
@@ -520,7 +663,6 @@
     if (d < 86400) return Math.floor(d / 3600) + " 小时";
     return Math.floor(d / 86400) + " 天";
   }
-
   function dotClass(status){
     if (status === "running") return "dot-running";
     if (status === "failed") return "dot-failed";
@@ -528,9 +670,9 @@
     return "dot-quiet";
   }
 
-  /* ---------- 心电监护仪(主秀点):波形 100% 来自真实心跳时间戳与状态 ---------- */
+  /* ---------- 心电相框(降级彩蛋,逻辑原样保留) ---------- */
   function EcgMonitor(canvas){
-    if (!canvas || !canvas.getContext) return {setBeats:function(){},refresh:function(){},setReduced:function(){},frames:function(){return 0;}};
+    if (!canvas || !canvas.getContext) return {setBeats:function(){},refresh:function(){},setReduced:function(){},frames:function(){return 0;},debugStep:function(){},remeasure:function(){}};
     var ctx = canvas.getContext("2d");
     var DPR = Math.min(window.devicePixelRatio || 1, 2);
     var W = 0, H = 0, BASE = 0, STEP = 2, samples = null, N = 0;
@@ -548,20 +690,18 @@
       N = Math.ceil(W / STEP) + 1; samples = new Float32Array(N);
       redrawIdle();
     }
-    /* 动画循环没在跑(后台标签/滚出视口/reduced)时,至少画一帧静态波形垫底,不留空白 */
     function redrawIdle(){
       if (rafId === null) drawStatic();
     }
-    /* QRS 波形状(px 偏移,负=向上)。amp 为主峰高度 */
     function shape(dx, amp){
       if (dx < -13 || dx >= 13) return 0;
-      if (dx < -7)  return -3 * Math.sin((dx + 13) / 6 * Math.PI);   /* P 波 */
-      if (dx < -4)  return 4 * ((dx + 7) / 3);                        /* Q 谷 */
-      if (dx < -1)  return 4 - ((dx + 4) / 3) * (amp + 4);            /* R 峰上冲 */
-      if (dx < 2)   return -amp + ((dx + 1) / 3) * (amp + 6);         /* 回落过冲 */
-      if (dx < 4)   return 6 - ((dx - 2) / 2) * 6;                    /* S 回正 */
+      if (dx < -7)  return -3 * Math.sin((dx + 13) / 6 * Math.PI);
+      if (dx < -4)  return 4 * ((dx + 7) / 3);
+      if (dx < -1)  return 4 - ((dx + 4) / 3) * (amp + 4);
+      if (dx < 2)   return -amp + ((dx + 1) / 3) * (amp + 6);
+      if (dx < 4)   return 6 - ((dx - 2) / 2) * 6;
       if (dx < 5)   return 0;
-      return -4 * Math.sin((dx - 5) / 8 * Math.PI);                   /* T 波 */
+      return -4 * Math.sin((dx - 5) / 8 * Math.PI);
     }
     function rebuild(nowMs, perfMs){
       if (!samples) return;
@@ -572,7 +712,7 @@
         if (b.t < t0 - 20000 || b.t > nowMs + 60000) continue;
         var cx = (b.t - t0) * scale;
         var amp = b.status === "running" ? 28 : (b.status === "done" ? 23 : 22);
-        var dir = b.status === "failed" ? -1 : 1;   /* 出状况的跳朝下 */
+        var dir = b.status === "failed" ? -1 : 1;
         var i0 = Math.max(0, Math.floor((cx - 13) / STEP));
         var i1 = Math.min(N - 1, Math.ceil((cx + 13) / STEP));
         if (i1 <= i0) continue;
@@ -600,7 +740,6 @@
       ctx.clearRect(0, 0, W, H);
       grid();
       ctx.lineJoin = "round"; ctx.lineCap = "round";
-      /* 底层:全程暗线 */
       ctx.strokeStyle = "rgba(255,163,97,0.30)"; ctx.lineWidth = 1.4;
       path(0, N - 1); ctx.stroke();
       var k, d;
@@ -610,7 +749,6 @@
         path(d.i0, d.i1); ctx.stroke();
       }
       ctx.globalAlpha = 1;
-      /* 扫描辉尾:三段渐亮 */
       var sw = ((perfMs % SWEEP) / SWEEP) * W, trail = W * TRAILF;
       var bands = [[sw - trail, sw - trail*0.5, 0.30], [sw - trail*0.5, sw - trail*0.18, 0.6], [sw - trail*0.18, sw, 1]];
       for (var j = 0; j < bands.length; j++){
@@ -629,7 +767,6 @@
         ctx.restore();
       }
       ctx.globalAlpha = 1;
-      /* 新到的真实心跳:短暂闪烁 3 秒 */
       for (k = 0; k < draws.length; k++){
         d = draws[k];
         if (!d.pulse) continue;
@@ -638,7 +775,6 @@
         path(d.i0, d.i1); ctx.stroke();
       }
       ctx.globalAlpha = 1;
-      /* 扫描点 */
       var si = Math.max(0, Math.min(N - 1, Math.round(sw / STEP)));
       var dy = BASE + samples[si];
       var g = ctx.createRadialGradient(sw, dy, 0, sw, dy, 12);
@@ -702,12 +838,13 @@
         else { ensure(); redrawIdle(); }
       },
       refresh: function(){ if (reduced || rafId === null) drawStatic(); },
-      debugStep: function(){ if (samples) drawFrame(Date.now(), performance.now()); },
       setReduced: function(r){
         reduced = r;
         if (r){ if (rafId !== null){ cancelAnimationFrame(rafId); rafId = null; } drawStatic(); }
         else ensure();
       },
+      remeasure: function(){ resize(); ensure(); },
+      debugStep: function(){ if (samples) drawFrame(Date.now(), performance.now()); },
       frames: function(){ return frameCount; }
     };
   }
@@ -718,92 +855,136 @@
     if (mq.addEventListener) mq.addEventListener("change", onMq);
     else if (mq.addListener) mq.addListener(onMq);
   }
-
-  /* ---------- hero 大数字:呼吸(有人干活才呼吸)+数字变化弹跳+首屏数数 ---------- */
-  var heroEl = el("active-now");
-  heroEl.addEventListener("animationend", function(e){
-    if (e.animationName === "pop") heroEl.classList.remove("pop");
+  /* 相框收着时画布宽度为 0,打开时重新量尺寸 */
+  el("ecg-nook").addEventListener("toggle", function(){
+    if (el("ecg-nook").open) ecg.remeasure();
   });
-  /* count-up 只是可见时的增强;rAF 若中途冻结,setTimeout 兜底把真值强制到位 */
-  function countUp(target, dur){
-    var t0 = performance.now(), settled = false;
-    requestAnimationFrame(function step(ts){
-      if (settled) return;
-      var p = Math.min(1, (ts - t0) / dur);
-      var e = 1 - Math.pow(1 - p, 3);
-      heroEl.textContent = Math.round(e * target);
-      if (p < 1) requestAnimationFrame(step); else settled = true;
-    });
-    setTimeout(function(){
-      if (!settled){ settled = true; heroEl.textContent = target; }
-    }, dur + 120);
-  }
-  function setHero(n){
-    var prev = state.heroN;
-    state.heroN = n;
-    heroEl.classList.toggle("breathe", n > 0);
-    /* 真值同步先写:内容不依赖 rAF(后台标签/爬虫/静态截图都要拿到真数字) */
-    heroEl.textContent = n;
-    if (state.first && !REDUCED && n > 0 && !document.hidden){
-      countUp(n, 700);   /* 可见时的增强:从 0 数上来,数完仍是真值 */
-      return;
-    }
-    if (prev !== null && prev !== n && !REDUCED){
-      heroEl.classList.remove("pop");
-      void heroEl.offsetWidth;
-      heroEl.classList.add("pop");
-    }
+
+  /* ---------- 昼夜(按访客本地时间,?hour= 可伪造测试) ---------- */
+  function applyDaylight(){
+    var h = HOUR_OVERRIDE !== null ? HOUR_OVERRIDE : new Date().getHours();
+    var cls = (h >= 6 && h < 16) ? "t-day" : (h >= 16 && h < 19) ? "t-dusk" : "t-night";
+    var scene = el("scene");
+    scene.classList.remove("t-day", "t-dusk", "t-night");
+    scene.classList.add(cls);
   }
 
-  function setEmbers(n){
-    document.body.setAttribute("data-embers", n <= 0 ? "none" : (n < 3 ? "low" : "high"));
+  /* ---------- 房间状态:光照层 × 行为层,无动画也可读 ----------
+     灯亮 = running 或 20 分钟内有跳(与 exporter 的 active_now 同口径)
+     行为 = working(running) / resting(刚忙完) / mess(上次失败) / sleeping(睡了) / tidy(没消息) */
+  function roomStateFor(r){
+    if (!r || !r.last_beat_at){
+      return {lit:false, cond:"tidy", mood:"", label:"最近没消息", tsMode:null, ts:null};
+    }
+    var age = (Date.now() - new Date(r.last_beat_at).getTime()) / 1000;
+    var lit = r.last_status === "running" || age <= LIT_WINDOW_SEC;
+    if (r.last_status === "running"){
+      if (age > 1800) return {lit:true, cond:"working", mood:"", label:"已经忙了", tsMode:"dur", ts:r.last_beat_at};
+      return {lit:true, cond:"working", mood:"", label:"正在忙", tsMode:"ts", ts:r.last_beat_at};
+    }
+    if (r.last_status === "failed"){
+      return {lit:lit, cond:"mess", mood:"🌫️",
+              label:(age <= 2700 ? "刚碰了个钉子" : "上次碰了钉子"), tsMode:"ts", ts:r.last_beat_at};
+    }
+    if (lit) return {lit:true, cond:"resting", mood:"☕", label:"刚忙完", tsMode:"ts", ts:r.last_beat_at};
+    return {lit:false, cond:"sleeping", mood:"💤",
+            label:(age <= 2700 ? "刚忙完" : "上次忙完"), tsMode:"ts", ts:r.last_beat_at};
   }
 
-  /* ---------- 居民卡 ---------- */
-  function renderResidents(residents){
+  function renderRooms(residents){
     var map = {};
     (residents || []).forEach(function(r){ map[r.agent] = r; });
-    document.querySelectorAll(".resident-card").forEach(function(card){
-      var agent = card.getAttribute("data-agent");
+    var litCount = 0, runningCount = 0;
+    document.querySelectorAll(".room").forEach(function(room){
+      var agent = room.getAttribute("data-agent");
       var r = map[agent];
-      var dot = card.querySelector(".status-dot");
-      var text = card.querySelector(".status-text");
-      card.classList.remove("is-running", "is-quiet", "is-failed");
-      dot.className = "status-dot";
-      text.textContent = "";
-      if (!r || !r.last_beat_at){
-        dot.classList.add("dot-quiet");
-        text.textContent = "最近没消息 💤";
-        card.classList.add("is-quiet");
-        return;
-      }
-      dot.classList.add(dotClass(r.last_status));
-      if (r.last_status === "running") card.classList.add("is-running");
-      else if (r.last_status === "failed") card.classList.add("is-failed");
-      var age = (Date.now() - new Date(r.last_beat_at).getTime()) / 1000;
-      var t = document.createElement("span");
-      if (r.last_status === "running" && age > 1800){
-        /* 挂着 running 超过 30 分钟:诚实说已经忙了多久,不再说「正在 · 很久前」 */
-        text.textContent = "已经忙了 ";
-        t.setAttribute("data-dur", r.last_beat_at);
-        t.textContent = durText(r.last_beat_at);
-      } else {
-        var label = r.last_status === "running" ? "正在忙"
-                  : r.last_status === "failed" ? (age <= 2700 ? "刚碰了个钉子" : "上次碰了钉子")
-                  : (age <= 2700 ? "刚忙完" : "上次忙完");
-        text.textContent = label + " · ";
-        t.setAttribute("data-ts", r.last_beat_at);
-        t.textContent = relTime(r.last_beat_at);
-      }
-      text.appendChild(t);
+      var st = roomStateFor(r);
+      room.classList.remove("lit", "working", "resting", "sleeping", "mess", "tidy");
+      room.classList.add(st.cond);
+      if (st.lit){ room.classList.add("lit"); litCount++; }
+      if (r && r.last_status === "running") runningCount++;
+      room.querySelector(".mood").textContent = st.mood;
+      var timeStr = st.ts ? (st.tsMode === "dur" ? durText(st.ts) : relTime(st.ts)) : "";
+      var full = agent + " · " + st.label + (timeStr ? " " + timeStr : "");
+      room.title = full;
+      room.setAttribute("aria-label", full);
     });
+    /* 烟囱:有人正在干活才冒烟 */
+    el("chimney").classList.toggle("smoking", runningCount > 0);
+    return {lit:litCount, running:runningCount};
   }
 
-  /* ---------- 心跳流(历史流) ----------
-     · running 不进流:此刻的事由居民卡片和大数字表达,历史流只放已发生的
-     · 等价心跳(同居民+同类别+同状态+同时间戳)去重
-     · 连续同居民+同类别+同状态折叠成一条汇总,数量真实,点开看每跳明细
-     · 首屏依次浮入;之后只有真正新到的心跳才闪 */
+  /* 首屏答案:真值同步先写(P1 标准,不经任何动画/rAF) */
+  function setCaption(litCount, hasData){
+    var cap = el("scene-caption");
+    if (!hasData){
+      cap.textContent = "信号弱,窗里暂时看不清";
+      return;
+    }
+    if (litCount > 0){
+      cap.textContent = "";
+      cap.appendChild(document.createTextNode("此刻 "));
+      var b = document.createElement("b");
+      b.textContent = litCount;
+      cap.appendChild(b);
+      cap.appendChild(document.createTextNode(" 个房间亮着灯"));
+    } else {
+      cap.textContent = "此刻没有窗亮着,全家歇着";
+    }
+  }
+
+  /* ---------- 凑近看(点房间) ---------- */
+  function renderPeek(){
+    var panel = el("peek");
+    if (!state.peekAgent || !state.data){ panel.hidden = true; return; }
+    var agent = state.peekAgent;
+    var r = (state.data.residents || []).filter(function(x){ return x.agent === agent; })[0];
+    if (!r){ panel.hidden = true; return; }
+    var st = roomStateFor(r);
+    el("peek-avatar").textContent = r.emoji || "";
+    el("peek-name").textContent = r.agent;
+    el("peek-role").textContent = r.role || "";
+    var timeStr = st.ts ? (st.tsMode === "dur" ? durText(st.ts) : relTime(st.ts)) : "";
+    el("peek-status").textContent = st.label + (timeStr ? " · " + timeStr : "");
+    var list = el("peek-list");
+    list.innerHTML = "";
+    var recent = (state.data.heartbeats || []).filter(function(b){
+      return b.agent === agent && b.status !== "running";
+    }).slice(0, 4);
+    if (recent.length === 0){
+      list.innerHTML = '<li class="peek-empty">这窗口期还没有记录,房间收拾得很干净</li>';
+    } else {
+      recent.forEach(function(b){
+        var li = document.createElement("li");
+        var t = document.createElement("span");
+        t.className = "stream-time";
+        t.setAttribute("data-ts", b.started_at);
+        t.textContent = relTime(b.started_at);
+        var txt = document.createElement("span");
+        txt.textContent = voiceCore(b);
+        li.appendChild(t); li.appendChild(txt);
+        list.appendChild(li);
+      });
+    }
+    panel.hidden = false;
+  }
+  document.querySelectorAll(".room").forEach(function(room){
+    function toggle(){
+      var agent = room.getAttribute("data-agent");
+      state.peekAgent = (state.peekAgent === agent) ? null : agent;
+      renderPeek();
+    }
+    room.addEventListener("click", toggle);
+    room.addEventListener("keydown", function(e){
+      if (e.key === "Enter" || e.key === " "){ e.preventDefault(); toggle(); }
+    });
+  });
+  el("peek-close").addEventListener("click", function(){
+    state.peekAgent = null;
+    renderPeek();
+  });
+
+  /* ---------- 家庭日志(折叠/去重/声线,逻辑原样) ---------- */
   function buildFeedGroups(heartbeats){
     var feed = [];
     var seenKeys = new Set();
@@ -901,8 +1082,8 @@
     list.appendChild(frag);
   }
 
-  /* ---------- 24h 活动条:首屏长出来;当前小时有真实心跳才脉动 ---------- */
-  function renderActivityBar(heartbeats){
+  /* ---------- 日晷:24 小时心跳沿日月轨迹摆点 ---------- */
+  function renderSunTrack(heartbeats){
     var now = Date.now();
     var buckets = new Array(24).fill(0);
     (heartbeats || []).forEach(function(b){
@@ -912,33 +1093,46 @@
       if (hoursAgo >= 0 && hoursAgo < 24) buckets[23 - hoursAgo]++;
     });
     var max = Math.max.apply(null, buckets.concat([1]));
-    var bar = el("activity-bar");
-    bar.innerHTML = "";
+    var track = el("sun-track");
+    track.innerHTML = "";
     var frag = document.createDocumentFragment();
-    buckets.forEach(function(count, i){
+    for (var i = 0; i < 24; i++){
+      var fracPos = i / 23;
+      var ang = Math.PI * (1 - fracPos);
+      var x = 50 + 43 * Math.cos(ang);
+      var y = 86 - 62 * Math.sin(ang);
+      var count = buckets[i];
       var hoursAgo = 23 - i;
-      var col = document.createElement("div");
-      col.className = "activity-col";
-      if (i === 23 && count > 0) col.classList.add("is-now");
-      var fill = document.createElement("div");
-      fill.className = "activity-fill";
-      if (state.first){
-        fill.classList.add("grow");
-        fill.style.setProperty("--i", i);
-      }
-      var pct = Math.round((count / max) * 100);
-      fill.style.height = Math.max(pct, count > 0 ? 6 : 2) + "%";
-      col.title = (hoursAgo === 0 ? "这一小时" : hoursAgo + " 小时前") + "：" + count + " 次心跳";
-      col.appendChild(fill);
-      frag.appendChild(col);
-    });
-    bar.appendChild(frag);
+      var dot = document.createElement("span");
+      dot.className = "sun-dot";
+      dot.style.left = x + "%";
+      dot.style.top = y + "%";
+      var s = count > 0 ? Math.max(0.5, Math.min(1.6, 0.5 + (count / max) * 1.1)) : 0.3;
+      dot.style.transform = "translate(-50%,-50%) scale(" + s + ")";
+      dot.style.opacity = count > 0 ? String(0.45 + 0.55 * (count / max)) : "0.14";
+      dot.title = (hoursAgo === 0 ? "这一小时" : hoursAgo + " 小时前") + "：" + count + " 次心跳";
+      frag.appendChild(dot);
+    }
+    /* 「此刻」的标记:按访客本地时间挂太阳或月亮 */
+    var h = HOUR_OVERRIDE !== null ? HOUR_OVERRIDE : new Date().getHours();
+    var marker = document.createElement("span");
+    marker.className = "sun-marker";
+    marker.textContent = (h >= 6 && h < 19) ? "☀️" : "🌙";
+    marker.style.left = "93%";
+    marker.style.top = "24%";
+    marker.title = "此刻";
+    frag.appendChild(marker);
+    track.appendChild(frag);
   }
 
-  /* ---------- 相对时间自走(每 30s),不用等刷新 ---------- */
+  /* ---------- 时间自走 ---------- */
   function tickTimes(){
-    /* 居民卡整体重算:让「正在忙 30 分钟」到点自动翻成「已经忙了 X」 */
-    if (state.data) renderResidents(state.data.residents);
+    applyDaylight();
+    if (state.data){
+      var counts = renderRooms(state.data.residents);
+      setCaption(counts.lit, true);
+      if (state.peekAgent) renderPeek();
+    }
     document.querySelectorAll("[data-ts]").forEach(function(node){
       node.textContent = relTime(node.getAttribute("data-ts"));
     });
@@ -949,7 +1143,6 @@
   }
 
   function weakSignal(){
-    /* 有缓存数据:只标弱信号,内容留着(时间照走,这是诚实的旧数据) */
     var lu = el("last-updated");
     if (state.data){
       lu.classList.add("weak");
@@ -960,25 +1153,23 @@
       lu.appendChild(s);
       return;
     }
-    /* 完全没数据:优雅骨架态 */
-    heroEl.textContent = "?";
-    heroEl.classList.remove("breathe", "pop");
     lu.textContent = "心跳信号弱";
     lu.classList.add("weak");
-    setEmbers(0);
+    setCaption(0, false);
+    el("chimney").classList.remove("smoking");
+    document.querySelectorAll(".room").forEach(function(room){
+      room.classList.remove("lit", "working", "resting", "sleeping", "mess");
+      room.classList.add("tidy");
+      room.querySelector(".mood").textContent = "";
+      room.title = room.getAttribute("data-agent") + " · 信号弱";
+    });
     el("ecg-note").textContent = "信号弱";
     el("stream-list").innerHTML =
       '<li class="stream-empty">信号断了一小会儿，听不见家里的心跳 · 先当全家都在打盹，稍后再来敲门</li>';
-    document.querySelectorAll(".resident-card").forEach(function(card){
-      card.classList.remove("is-running", "is-failed");
-      card.querySelector(".status-dot").className = "status-dot dot-quiet";
-      card.querySelector(".status-text").textContent = "信号弱";
-    });
   }
 
   function render(data){
     var beats = data.heartbeats || [];
-    /* 找出真正新到的心跳(首屏不算新,避免开屏全场乱闪) */
     var newKeys = new Set();
     if (state.seen){
       beats.forEach(function(b){
@@ -991,12 +1182,9 @@
     if (state.seen.size > 800) state.seen = new Set(beats.map(bkey));
     state.lastNewCount = state.first ? 0 : newKeys.size;
 
-    var activeN = (data.stats && typeof data.stats.active_now === "number") ? data.stats.active_now : 0;
-    setHero(activeN);
-    setEmbers(activeN);
-    if (data.home && data.home.name) el("home-name").textContent = data.home.name;
-    if (data.home && data.home.tagline) el("tagline").textContent = data.home.tagline;
+    state.data = data;
 
+    if (data.home && data.home.name) el("home-name").textContent = data.home.name;
     var lu = el("last-updated");
     lu.classList.remove("weak");
     lu.textContent = "最后更新 ";
@@ -1005,11 +1193,14 @@
     s.textContent = data.generated_at ? relTime(data.generated_at) : "";
     lu.appendChild(s);
 
-    renderResidents(data.residents);
-    renderStream(beats, state.first ? null : newKeys);
-    renderActivityBar(beats);
+    applyDaylight();
+    var counts = renderRooms(data.residents);
+    setCaption(counts.lit, true);   /* 真值同步先写 */
+    if (state.peekAgent) renderPeek();
 
-    /* 心电图数据:真实时间戳 + 状态,新跳标记闪烁 */
+    renderStream(beats, state.first ? null : newKeys);
+    renderSunTrack(beats);
+
     var now = Date.now();
     var ecgBeats = [];
     beats.forEach(function(b){
@@ -1021,7 +1212,6 @@
     var in4h = ecgBeats.filter(function(b){ return now - b.t <= 4*3600*1000; }).length;
     el("ecg-note").textContent = in4h ? "" : "这一段很安静";
 
-    state.data = data;
     state.first = false;
   }
 
@@ -1034,22 +1224,22 @@
       .catch(weakSignal);
   }
 
-  /* 恢复可见:立即全量重算一帧(hidden 期间 interval 被节流,时间/卡片可能已过期);
-     数据也过期就顺手重拉。ECG 的 rAF 重启由它自己的 visibilitychange 监听负责 */
   document.addEventListener("visibilitychange", function(){
     if (document.hidden) return;
     tickTimes();
     if (Date.now() - lastFetchAt > FETCH_MS) load();
   });
 
+  applyDaylight();
   load();
   setInterval(load, FETCH_MS);
   setInterval(tickTimes, TICK_MS);
 
-  /* 自测钩子(只读,便于验收) */
+  /* 自测钩子(只读) */
   window.__hbDebug = {
     get frames(){ return ecg.frames(); },
     get lastNew(){ return state.lastNewCount; },
+    get lit(){ return document.querySelectorAll(".room.lit").length; },
     tick: tickTimes,
     reload: load,
     step: function(){ ecg.debugStep(); }
