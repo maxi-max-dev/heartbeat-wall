@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>心跳墙 · 唯一碳基之家</title>
+<meta name="description" content="Strava for AI agents —— 直播这个家里的 agent 编制在干什么,只晒活动,不晒产出。">
+<style>
+  :root{
+    --bg:#18120d;
+    --bg-elevated:#221a13;
+    --bg-card:#2a2018;
+    --border:#3c2f24;
+    --text:#f5ead9;
+    --text-dim:#c2ac93;
+    --text-faint:#8a7561;
+    --accent:#ff9d5c;
+    --accent-soft:rgba(255,157,92,.16);
+    --gold:#e8b84b;
+    --green:#6fcf7d;
+    --red:#e8735c;
+    --shadow:rgba(0,0,0,.45);
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(255,157,92,.10), transparent),
+      radial-gradient(ellipse 700px 500px at 100% 0%, rgba(232,184,75,.08), transparent),
+      var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",
+                "Helvetica Neue",Arial,sans-serif;
+    line-height:1.55;
+    overflow-x:hidden;
+    min-height:100vh;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:20px 18px 60px}
+  a{color:var(--accent)}
+
+  /* ---------- hero ---------- */
+  .hero-top{
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;
+    font-size:13px;color:var(--text-faint);margin-bottom:28px;
+  }
+  .home-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    background:var(--bg-card);border:1px solid var(--border);
+    padding:6px 12px;border-radius:999px;color:var(--text-dim);font-weight:600;
+  }
+  .last-updated{white-space:nowrap}
+  .last-updated.weak{color:var(--red)}
+
+  .hero-main{text-align:center;margin:18px 0 10px}
+  .big-number{
+    font-size:clamp(72px,20vw,148px);
+    font-weight:800;
+    line-height:1;
+    letter-spacing:-.03em;
+    background:linear-gradient(180deg,var(--gold),var(--accent));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 8px 40px var(--accent-soft);
+  }
+  .big-number-label{
+    font-size:clamp(15px,3.6vw,19px);color:var(--text-dim);font-weight:600;margin-top:4px;
+  }
+  .tagline{
+    text-align:center;color:var(--text-faint);font-size:15px;margin:14px 0 40px;
+  }
+  .home-name{color:var(--text);font-weight:700}
+
+  h2.section-title{
+    font-size:15px;color:var(--text-dim);font-weight:700;margin:0 0 14px;
+    display:flex;align-items:center;gap:8px;
+  }
+  h2.section-title::before{content:"";width:4px;height:16px;background:var(--accent);border-radius:2px;display:inline-block}
+  section{margin-bottom:38px}
+
+  /* ---------- residents ---------- */
+  .resident-grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;
+  }
+  .resident-card{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:14px 14px 12px;box-shadow:0 4px 18px var(--shadow);
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .resident-card:hover{transform:translateY(-2px);border-color:var(--accent)}
+  .resident-emoji{font-size:26px;line-height:1}
+  .resident-name{font-weight:700;margin-top:8px;font-size:15px}
+  .resident-role{color:var(--text-faint);font-size:12px;margin-top:1px}
+  .resident-status{
+    display:flex;align-items:center;gap:6px;margin-top:10px;font-size:12px;color:var(--text-dim);
+  }
+  .status-dot{width:8px;height:8px;border-radius:50%;flex:none;background:var(--text-faint)}
+  .status-dot.dot-running{background:var(--green);box-shadow:0 0 0 0 rgba(111,207,125,.6);animation:pulse 1.8s infinite}
+  .status-dot.dot-done{background:var(--gold)}
+  .status-dot.dot-failed{background:var(--red)}
+  .status-dot.dot-quiet{background:var(--text-faint)}
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(111,207,125,.55)}
+    70%{box-shadow:0 0 0 7px rgba(111,207,125,0)}
+    100%{box-shadow:0 0 0 0 rgba(111,207,125,0)}
+  }
+
+  /* ---------- stream ---------- */
+  .stream-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+  .stream-item{
+    display:flex;align-items:baseline;gap:9px;padding:9px 4px;
+    border-bottom:1px solid var(--border);font-size:14px;flex-wrap:wrap;
+  }
+  .stream-item:last-child{border-bottom:none}
+  .stream-dot{width:7px;height:7px;border-radius:50%;flex:none;position:relative;top:-1px}
+  .stream-dot.dot-running{background:var(--green)}
+  .stream-dot.dot-done{background:var(--gold)}
+  .stream-dot.dot-failed{background:var(--red)}
+  .stream-time{color:var(--text-faint);font-size:12.5px;white-space:nowrap}
+  .stream-sep{color:var(--text-faint)}
+  .stream-text{color:var(--text-dim)}
+  .stream-empty,.resident-empty{color:var(--text-faint);font-size:13.5px;padding:8px 4px}
+
+  /* ---------- activity bar ---------- */
+  .activity-bar{
+    display:flex;align-items:flex-end;gap:3px;height:64px;
+    background:var(--bg-card);border:1px solid var(--border);border-radius:12px;
+    padding:10px 10px 8px;
+  }
+  .activity-col{flex:1;height:100%;display:flex;align-items:flex-end;cursor:default}
+  .activity-fill{
+    width:100%;background:linear-gradient(180deg,var(--accent),var(--gold));
+    border-radius:3px 3px 1px 1px;min-height:3px;opacity:.85;
+    transition:opacity .15s;
+  }
+  .activity-col:hover .activity-fill{opacity:1}
+  .activity-caption{display:flex;justify-content:space-between;font-size:11px;color:var(--text-faint);margin-top:6px}
+
+  /* ---------- showcase ---------- */
+  .showcase-grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;
+  }
+  .showcase-card{
+    display:flex;align-items:center;gap:10px;
+    background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:14px;text-decoration:none;color:var(--text);
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .showcase-card:hover{transform:translateY(-2px);border-color:var(--gold)}
+  .showcase-emoji{font-size:22px}
+  .showcase-name{font-size:14px;font-weight:600}
+
+  /* ---------- footer ---------- */
+  .site-footer{
+    text-align:center;color:var(--text-faint);font-size:12.5px;
+    border-top:1px solid var(--border);padding-top:22px;margin-top:10px;
+  }
+  .site-footer p{margin:4px 0}
+  .site-footer a{color:var(--text-faint);text-decoration:underline}
+
+  @media (max-width:420px){
+    .wrap{padding:16px 14px 44px}
+    .resident-grid{grid-template-columns:repeat(auto-fill,minmax(128px,1fr))}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero-top">
+    <span class="home-badge">🏠 <span class="home-name" id="home-name">唯一碳基之家</span></span>
+    <span class="last-updated" id="last-updated">心跳读取中…</span>
+  </div>
+
+  <div class="hero-main">
+    <div class="big-number" id="active-now">–</div>
+    <div class="big-number-label">此刻在干活的 agent</div>
+  </div>
+  <p class="tagline" id="tagline">一个人类，一屋子硅基，全天候造东西</p>
+
+  <section aria-label="家庭成员">
+    <h2 class="section-title">家里住着谁</h2>
+    <div class="resident-grid" id="resident-grid">
+      <!-- 静态兜底名册：emoji/名字/角色都是公开信息，直接写死，JS 只负责补状态点和相对时间 -->
+      <div class="resident-card" data-agent="泛音">
+        <div class="resident-emoji">🎼</div>
+        <div class="resident-name">泛音</div>
+        <div class="resident-role">总工程师 · 造物</div>
+        <div class="resident-status"><span class="status-dot"></span><span class="status-text">读取中…</span></div>
+      </div>
+      <div class="resident-card" data-agent="Jarvis">
+        <div class="resident-emoji">🤵</div>
+        <div class="resident-name">Jarvis</div>
+        <div class="resident-role">管家</div>
+        <div class="resident-status"><span class="status-dot"></span><span class="status-text">读取中…</span></div>
+      </div>
+      <div class="resident-card" data-agent="Watcher">
+        <div class="resident-emoji">📡</div>
+        <div class="resident-name">Watcher</div>
+        <div class="resident-role">情报员</div>
+        <div class="resident-status"><span class="status-dot"></span><span class="status-text">读取中…</span></div>
+      </div>
+      <div class="resident-card" data-agent="Mobile">
+        <div class="resident-emoji">📱</div>
+        <div class="resident-name">Mobile</div>
+        <div class="resident-role">外勤</div>
+        <div class="resident-status"><span class="status-dot"></span><span class="status-text">读取中…</span></div>
+      </div>
+      <div class="resident-card" data-agent="MiroFish">
+        <div class="resident-emoji">🔮</div>
+        <div class="resident-name">MiroFish</div>
+        <div class="resident-role">占卜师</div>
+        <div class="resident-status"><span class="status-dot"></span><span class="status-text">读取中…</span></div>
+      </div>
+      <div class="resident-card" data-agent="哨兵">
+        <div class="resident-emoji">🛰️</div>
+        <div class="resident-name">哨兵</div>
+        <div class="resident-role">瞭望员</div>
+        <div class="resident-status"><span class="status-dot"></span><span class="status-text">读取中…</span></div>
+      </div>
+      <div class="resident-card" data-agent="采集员">
+        <div class="resident-emoji">📊</div>
+        <div class="resident-name">采集员</div>
+        <div class="resident-role">雷达</div>
+        <div class="resident-status"><span class="status-dot"></span><span class="status-text">读取中…</span></div>
+      </div>
+      <div class="resident-card" data-agent="备份员">
+        <div class="resident-emoji">🗄️</div>
+        <div class="resident-name">备份员</div>
+        <div class="resident-role">档案馆</div>
+        <div class="resident-status"><span class="status-dot"></span><span class="status-text">读取中…</span></div>
+      </div>
+      <div class="resident-card" data-agent="牧场主">
+        <div class="resident-emoji">🐄</div>
+        <div class="resident-name">牧场主</div>
+        <div class="resident-role">额度牧场</div>
+        <div class="resident-status"><span class="status-dot"></span><span class="status-text">读取中…</span></div>
+      </div>
+      <div class="resident-card" data-agent="门房">
+        <div class="resident-emoji">🔔</div>
+        <div class="resident-name">门房</div>
+        <div class="resident-role">访客与提醒</div>
+        <div class="resident-status"><span class="status-dot"></span><span class="status-text">读取中…</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-label="最近心跳">
+    <h2 class="section-title">最近在忙什么</h2>
+    <ul class="stream-list" id="stream-list">
+      <li class="stream-empty">心跳读取中…</li>
+    </ul>
+  </section>
+
+  <section aria-label="24小时活动密度">
+    <h2 class="section-title">过去 24 小时</h2>
+    <div class="activity-bar" id="activity-bar"></div>
+    <div class="activity-caption"><span>24 小时前</span><span>此刻</span></div>
+  </section>
+
+  <section aria-label="他们做过的东西">
+    <h2 class="section-title">顺便看看家里出过什么</h2>
+    <div class="showcase-grid">
+      <a class="showcase-card" href="https://maxi-max-dev.github.io/museum-of-feelings/" target="_blank" rel="noopener">
+        <span class="showcase-emoji">🖼️</span><span class="showcase-name">感觉博物馆</span>
+      </a>
+      <a class="showcase-card" href="https://github.com/maxi-max-dev/vibe-trophy" target="_blank" rel="noopener">
+        <span class="showcase-emoji">🏆</span><span class="showcase-name">vibe-trophy</span>
+      </a>
+      <a class="showcase-card" href="https://maxi-max-dev.github.io/pack-coach/" target="_blank" rel="noopener">
+        <span class="showcase-emoji">📦</span><span class="showcase-name">打包教练</span>
+      </a>
+      <a class="showcase-card" href="https://maxi-max-dev.github.io" target="_blank" rel="noopener">
+        <span class="showcase-emoji">🗂️</span><span class="showcase-name">作品集</span>
+      </a>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <p>只晒干活，不晒产出 · 心跳每 15 分钟更新 · 想让你家 agent 也入住？敬请期待</p>
+    <p class="repo-link"><a href="https://github.com/maxi-max-dev/heartbeat-wall" target="_blank" rel="noopener">github.com/maxi-max-dev/heartbeat-wall</a></p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var VERBS = {
+    "造物": {running:"正在专心造东西", done:"完成了一次创作",   failed:"这次创作卡住了"},
+    "管家": {running:"正在张罗家里的事", done:"处理完一件家务",   failed:"这件事没弄成"},
+    "情报": {running:"正在打探消息",     done:"交回一份情报",     failed:"这趟打探扑了个空"},
+    "外勤": {running:"正在外面跑腿",     done:"跑完一趟外勤",     failed:"外勤遇到点状况"},
+    "占卜": {running:"正在掐指推演",     done:"完成了一次占卜",   failed:"这卦没算明白"},
+    "瞭望": {running:"正在盯梢",         done:"巡了一圈回来",     failed:"瞭望没扫到东西"},
+    "采集": {running:"正在扫描动态",     done:"收了一网数据",     failed:"这次扫描没扫着"},
+    "备份": {running:"正在打包备份",     done:"存好了一份档",     failed:"备份没存住"},
+    "牧场": {running:"正在照看额度",     done:"巡了一轮牧场",     failed:"牧场这次出了点岔子"},
+    "值守": {running:"正在门口守着",     done:"应了一次门",       failed:"没能及时应门"}
+  };
+  var STATUS_TEXT = {running:"正在忙", done:"刚忙完", failed:"刚碰了个钉子"};
+  var DATA_URL = "./data/heartbeats.json";
+  var REFRESH_MS = 60000;
+
+  function relTime(iso){
+    var then = new Date(iso).getTime();
+    if (isNaN(then)) return "";
+    var diff = Math.round((Date.now() - then) / 1000);
+    if (diff < 0) diff = 0;
+    if (diff < 60) return "刚刚";
+    if (diff < 3600) return Math.floor(diff/60) + " 分钟前";
+    if (diff < 86400) return Math.floor(diff/3600) + " 小时前";
+    return Math.floor(diff/86400) + " 天前";
+  }
+
+  function sentenceFor(beat){
+    var table = VERBS[beat.category];
+    var verb = table && table[beat.status];
+    if (!verb) verb = beat.status === "running" ? "正在忙活" : beat.status === "failed" ? "这次没顺利" : "干完了一件事";
+    return beat.agent + " " + verb;
+  }
+
+  function dotClass(status){
+    if (status === "running") return "dot-running";
+    if (status === "failed") return "dot-failed";
+    if (status === "done") return "dot-done";
+    return "dot-quiet";
+  }
+
+  function renderResidents(residents){
+    var map = {};
+    (residents || []).forEach(function(r){ map[r.agent] = r; });
+    var cards = document.querySelectorAll(".resident-card");
+    cards.forEach(function(card){
+      var agent = card.getAttribute("data-agent");
+      var r = map[agent];
+      var dot = card.querySelector(".status-dot");
+      var text = card.querySelector(".status-text");
+      dot.className = "status-dot";
+      if (!r || !r.last_beat_at){
+        dot.classList.add("dot-quiet");
+        text.textContent = "最近没消息";
+        return;
+      }
+      dot.classList.add(dotClass(r.last_status));
+      text.textContent = (STATUS_TEXT[r.last_status] || "") + " · " + relTime(r.last_beat_at);
+    });
+  }
+
+  function renderStream(heartbeats){
+    var list = document.getElementById("stream-list");
+    list.innerHTML = "";
+    var beats = (heartbeats || []).slice(0, 40);
+    if (beats.length === 0){
+      list.innerHTML = '<li class="stream-empty">这窗口期还没有心跳</li>';
+      return;
+    }
+    var frag = document.createDocumentFragment();
+    beats.forEach(function(b){
+      var li = document.createElement("li");
+      li.className = "stream-item";
+
+      var dot = document.createElement("span");
+      dot.className = "stream-dot " + dotClass(b.status);
+
+      var time = document.createElement("span");
+      time.className = "stream-time";
+      time.textContent = relTime(b.started_at);
+
+      var sep = document.createElement("span");
+      sep.className = "stream-sep";
+      sep.textContent = "·";
+
+      var text = document.createElement("span");
+      text.className = "stream-text";
+      text.textContent = sentenceFor(b);
+
+      li.appendChild(dot); li.appendChild(time); li.appendChild(sep); li.appendChild(text);
+      frag.appendChild(li);
+    });
+    list.appendChild(frag);
+  }
+
+  function renderActivityBar(heartbeats){
+    var now = Date.now();
+    var buckets = new Array(24).fill(0);
+    (heartbeats || []).forEach(function(b){
+      var t = new Date(b.started_at).getTime();
+      if (isNaN(t)) return;
+      var hoursAgo = Math.floor((now - t) / 3600000);
+      if (hoursAgo >= 0 && hoursAgo < 24) buckets[23 - hoursAgo]++;
+    });
+    var max = Math.max.apply(null, buckets.concat([1]));
+    var bar = document.getElementById("activity-bar");
+    bar.innerHTML = "";
+    var frag = document.createDocumentFragment();
+    buckets.forEach(function(count, i){
+      var hoursAgo = 23 - i;
+      var col = document.createElement("div");
+      col.className = "activity-col";
+      var fill = document.createElement("div");
+      fill.className = "activity-fill";
+      var pct = Math.round((count / max) * 100);
+      fill.style.height = Math.max(pct, count > 0 ? 6 : 2) + "%";
+      col.title = (hoursAgo === 0 ? "这一小时" : hoursAgo + " 小时前") + "：" + count + " 次心跳";
+      col.appendChild(fill);
+      frag.appendChild(col);
+    });
+    bar.appendChild(frag);
+  }
+
+  function weakSignal(){
+    document.getElementById("active-now").textContent = "?";
+    var lu = document.getElementById("last-updated");
+    lu.textContent = "心跳信号弱";
+    lu.classList.add("weak");
+    document.getElementById("stream-list").innerHTML =
+      '<li class="stream-empty">暂时连不上心跳数据，稍后再来看看</li>';
+    document.querySelectorAll(".resident-card").forEach(function(card){
+      card.querySelector(".status-dot").className = "status-dot dot-quiet";
+      card.querySelector(".status-text").textContent = "信号弱";
+    });
+  }
+
+  function render(data){
+    document.getElementById("active-now").textContent =
+      (data.stats && typeof data.stats.active_now === "number") ? data.stats.active_now : "0";
+    if (data.home && data.home.name) document.getElementById("home-name").textContent = data.home.name;
+    if (data.home && data.home.tagline) document.getElementById("tagline").textContent = data.home.tagline;
+    var lu = document.getElementById("last-updated");
+    lu.classList.remove("weak");
+    lu.textContent = data.generated_at ? ("最后更新 " + relTime(data.generated_at)) : "";
+    renderResidents(data.residents);
+    renderStream(data.heartbeats);
+    renderActivityBar(data.heartbeats);
+  }
+
+  function load(){
+    fetch(DATA_URL, {cache:"no-store"})
+      .then(function(res){ if (!res.ok) throw new Error("http " + res.status); return res.json(); })
+      .then(render)
+      .catch(weakSignal);
+  }
+
+  load();
+  setInterval(load, REFRESH_MS);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+{
+  "_comment": "心跳墙居民白名单。不在此册的数据源一律丢弃，永不自动新增居民。export.py 只读此文件做映射，改居民请改这里。",
+  "home": {
+    "id": "onlycarbon",
+    "name": "唯一碳基之家",
+    "tagline": "一个人类，一屋子硅基，全天候造东西"
+  },
+  "residents": [
+    {
+      "agent": "泛音",
+      "emoji": "🎼",
+      "role": "总工程师",
+      "category": "造物",
+      "sources": { "cc_sessions": true, "cron_names": [], "launchd_labels": [] }
+    },
+    {
+      "agent": "Jarvis",
+      "emoji": "🤵",
+      "role": "管家",
+      "category": "管家",
+      "sources": {
+        "cc_sessions": false,
+        "cron_names": ["daily-retro-evolution", "每日Dream"],
+        "launchd_labels": ["ai.openclaw.gateway"]
+      }
+    },
+    {
+      "agent": "Watcher",
+      "emoji": "📡",
+      "role": "情报员",
+      "category": "情报",
+      "sources": { "cc_sessions": false, "cron_names": [], "launchd_labels": [] }
+    },
+    {
+      "agent": "Mobile",
+      "emoji": "📱",
+      "role": "外勤",
+      "category": "外勤",
+      "sources": { "cc_sessions": false, "cron_names": [], "launchd_labels": [] }
+    },
+    {
+      "agent": "MiroFish",
+      "emoji": "🔮",
+      "role": "占卜师",
+      "category": "占卜",
+      "sources": { "cc_sessions": false, "cron_names": ["mirofish-daily"], "launchd_labels": [] }
+    },
+    {
+      "agent": "哨兵",
+      "emoji": "🛰️",
+      "role": "瞭望员",
+      "category": "瞭望",
+      "sources": { "cc_sessions": false, "cron_names": [], "launchd_labels": ["com.max.feishu-groupwatch"] }
+    },
+    {
+      "agent": "采集员",
+      "emoji": "📊",
+      "role": "雷达",
+      "category": "采集",
+      "sources": { "cc_sessions": false, "cron_names": [], "launchd_labels": ["com.max.creator-radar"] }
+    },
+    {
+      "agent": "备份员",
+      "emoji": "🗄️",
+      "role": "档案馆",
+      "category": "备份",
+      "sources": { "cc_sessions": false, "cron_names": [], "launchd_labels": ["com.max.icloud-backup"] }
+    },
+    {
+      "agent": "牧场主",
+      "emoji": "🐄",
+      "role": "额度牧场",
+      "category": "牧场",
+      "sources": { "cc_sessions": false, "cron_names": [], "launchd_labels": ["com.max.token-governor", "com.max.token-governor-resume"] }
+    },
+    {
+      "agent": "门房",
+      "emoji": "🔔",
+      "role": "访客与提醒",
+      "category": "值守",
+      "sources": { "cc_sessions": false, "cron_names": [], "launchd_labels": ["com.max.access-watch"] }
+    }
+  ],
+  "excluded_examples": [
+    "com.max.xhs-keepalive",
+    "com.max.feishu-fanyin-bridge",
+    "com.max.quota-window-ping",
+    "com.max.agent-cockpit-collect",
+    "com.max.agent-cockpit-server",
+    "com.max.heartbeat-push",
+    "com.max.application-reminder",
+    "com.max.rsshub",
+    "com.max.wifi-keepalive"
+  ]
+}
