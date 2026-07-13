@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-13T04:05:40Z",
+  "generated_at": "2026-07-13T04:20:42Z",
   "home": {
     "id": "onlycarbon",
     "name": "唯一碳基之家",
@@ -12,15 +12,15 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-07-13T03:53:22Z",
-      "last_status": "done"
+      "last_beat_at": "2026-07-13T04:20:00Z",
+      "last_status": "running"
     },
     {
       "agent": "Jarvis",
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-13T03:57:11Z",
+      "last_beat_at": "2026-07-13T04:12:14Z",
       "last_status": "running"
     },
     {
@@ -84,16 +84,80 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-13T03:57:11Z",
+      "last_beat_at": "2026-07-13T04:12:14Z",
       "last_status": "running"
     }
   ],
   "stats": {
-    "beats_24h": 80,
+    "beats_24h": 88,
     "active_now": 3,
-    "last_beat_at": "2026-07-13T03:57:11Z"
+    "last_beat_at": "2026-07-13T04:20:00Z"
   },
   "heartbeats": [
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "running",
+      "started_at": "2026-07-13T04:20:00Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-13T04:18:55Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-13T04:17:50Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-13T04:14:55Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-13T04:12:14Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-13T04:12:14Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-13T04:11:16Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-13T04:11:11Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "Jarvis",
       "category": "管家",
