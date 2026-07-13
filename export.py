@@ -31,12 +31,17 @@ HOME = os.path.expanduser("~")
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 COCKPIT_DIR = os.path.join(HOME, "code", "agent-cockpit")
 DATA_JS = os.path.join(COCKPIT_DIR, "data.js")
+CC_PROJECTS_DIR = os.path.join(HOME, ".claude", "projects")
 REGISTRY_PATH = os.path.join(PROJECT_DIR, "registry.json")
 OUT_PATH = os.path.join(PROJECT_DIR, "data", "heartbeats.json")
 
 WINDOW_HOURS = 48
 MAX_BEATS = 200
 ACTIVE_WINDOW_SEC = 20 * 60  # "20 分钟内有跳" 也算 active_now
+
+# 电量诚实边界:这套 JSONL 只有 CC 会话(泛音)的 token，OpenClaw 那几支拿不到。
+# 所以电表只统计工作坊一支，UI 必须标注范围，绝不冒充全家总电耗。
+ENERGY_SCOPE_NOTE = "电表暂时只装在工作坊(泛音·Claude Code)一支，管家和外勤那几支的电还没接进来"
 
 # --- 隐私闸门：命中任意一条就拒绝写出 -------------------------------------
 FORBIDDEN_PATTERNS = [
@@ -77,6 +82,146 @@ def parse_iso(s: str) -> datetime:
 
 def warn(msg: str):
     print(f"[export] {msg}", file=sys.stderr)
+
+
+def local_today_start_utc():
+    """本地(机器时区)今日 00:00，换算成 UTC 的 tz-aware datetime。
+    机器时区即整套系统的作息基准，用它当"今日"边界最诚实一致。"""
+    now_local = datetime.now().astimezone()
+    start_local = now_local.replace(hour=0, minute=0, second=0, microsecond=0)
+    return start_local.astimezone(timezone.utc)
+
+
+# --- 电量:今日 CC token 消耗（只有工作坊/泛音这一支有 token 数据） ---------
+def energy_today():
+    """扫 ~/.claude/projects 下今日改动过的会话文件，按 message.id 去重累加 usage。
+    读法参照 vibe-trophy(in/out/cache_creation/cache_read 四路)。
+    诚实要点:
+      - 只统计 CC 会话(=泛音),OpenClaw 那几支的 token 拿不到，范围写进 scope_note。
+      - message.id 去重:同一条 assistant 消息在 JSONL 里常重复出现多次(实测 ~3x),
+        不去重会把电耗虚报好几倍。
+      - 只算今日(本地 00:00 起)且时间戳在今日窗口内的消息。
+    失败返回 None，让整次导出不受影响。"""
+    today_start = local_today_start_utc()
+    cutoff = today_start.timestamp()
+    files = glob.glob(os.path.join(CC_PROJECTS_DIR, "*", "*.jsonl"))
+    seen_ids = set()
+    tin = tout = tcc = tcr = 0
+    sessions = set()
+    for path in files:
+        try:
+            if os.path.getmtime(path) < cutoff:
+                continue  # 今日没动过的文件不可能有今日消息，跳过省时
+        except OSError:
+            continue
+        try:
+            with open(path, encoding="utf-8", errors="ignore") as fh:
+                for line in fh:
+                    line = line.strip()
+                    if not line.startswith("{"):
+                        continue
+                    try:
+                        o = json.loads(line)
+                    except Exception:
+                        continue
+                    if o.get("type") != "assistant":
+                        continue
+                    ts = o.get("timestamp")
+                    if not ts:
+                        continue
+                    try:
+                        if parse_iso(ts) < today_start:
+                            continue
+                    except Exception:
+                        continue
+                    msg = o.get("message") or {}
+                    mid = msg.get("id")
+                    if mid is not None:
+                        if mid in seen_ids:
+                            continue
+                        seen_ids.add(mid)
+                    u = msg.get("usage") or {}
+                    tin += int(u.get("input_tokens") or 0)
+                    tout += int(u.get("output_tokens") or 0)
+                    tcc += int(u.get("cache_creation_input_tokens") or 0)
+                    tcr += int(u.get("cache_read_input_tokens") or 0)
+                    sessions.add(os.path.splitext(os.path.basename(path))[0])
+        except OSError:
+            continue
+    total = tin + tout + tcc + tcr
+    return {
+        "source": "cc",
+        "scope": "workshop",
+        "scope_note": ENERGY_SCOPE_NOTE,
+        "day_start": today_start.isoformat().replace("+00:00", "Z"),
+        "tokens_today": total,            # 总吞吐(含缓存复用),口径同 vibe-trophy
+        "fresh_today": tin + tout + tcc,  # 不含 cache_read 的"新鲜处理"量
+        "input_today": tin,
+        "output_today": tout,
+        "cache_creation_today": tcc,
+        "cache_read_today": tcr,
+        "sessions_today": len(sessions),
+    }
+
+
+# --- 成就:今日真实心跳聚合出的里程碑（全部真数，零编造） ------------------
+_ACHIEVE_DONE = {
+    "造物": ("🔧", "工作坊交付", "件活"),
+    "占卜": ("🔮", "起卦推演", "卦"),
+    "备份": ("🗄️", "记忆归档", "次"),
+    "管家": ("🫖", "打理家务", "桩"),
+    "情报": ("📡", "情报回传", "份"),
+    "采集": ("📊", "数据入库", "网"),
+    "瞭望": ("🛰️", "巡夜瞭望", "轮"),
+    "外勤": ("📱", "外勤跑腿", "趟"),
+    "牧场": ("🐄", "巡视牧场", "轮"),
+    "值守": ("🔔", "应门值守", "次"),
+}
+
+
+def achievements_today(kept_beats, today_start, local_tz):
+    """从今日真实心跳聚合里程碑。只发非零项，数字全来自 heartbeats 计数。"""
+    from collections import Counter
+    today = []
+    for b in kept_beats:
+        try:
+            t = parse_iso(b["started_at"])
+        except Exception:
+            continue
+        if t >= today_start:
+            today.append((b, t))
+
+    done_by_cat = Counter()
+    failed_total = 0
+    night_times = []
+    for b, t in today:
+        if b["status"] == "done":
+            done_by_cat[b["category"]] += 1
+        elif b["status"] == "failed":
+            failed_total += 1
+        if t.astimezone(local_tz).hour < 6:  # 本地凌晨 0–6 点
+            night_times.append(t)
+
+    ach = []
+    # 头条:今日心跳总数
+    if today:
+        ach.append({"icon": "❤️", "label": "今日心跳", "value": f"{len(today)} 下"})
+    # 各工种今日完成量(按完成数从多到少)
+    for cat, n in done_by_cat.most_common():
+        if cat in _ACHIEVE_DONE:
+            icon, label, unit = _ACHIEVE_DONE[cat]
+            ach.append({"icon": icon, "label": label, "value": f"{n} {unit}"})
+    # 夜班:凌晨还亮着灯
+    if night_times:
+        span_h = (max(night_times) - min(night_times)).total_seconds() / 3600.0
+        if span_h >= 1:
+            ach.append({"icon": "🌙", "label": "夜班时长", "value": f"{int(span_h)} 小时"})
+        else:
+            ach.append({"icon": "🌙", "label": "凌晨还亮着灯", "value": f"{len(night_times)} 次"})
+    # 翻车又爬起(失败也是勋章)
+    if failed_total:
+        ach.append({"icon": "🛠️", "label": "翻车又爬起", "value": f"{failed_total} 次"})
+    return ach
 
 
 # --- 数据源 1：CC 会话（子进程隔离，一个源炸了不连累其它源） --------------
@@ -300,6 +445,21 @@ def build_heartbeats(registry, inject_leak_for_selftest=False):
             active_now += 1
     last_beat_at = kept[0]["started_at"] if kept else None
 
+    # 电量(今日 CC token)与今日成就：各自容错，炸了只置空/空数组不连累导出。
+    now_local = datetime.now().astimezone()
+    today_start = now_local.replace(hour=0, minute=0, second=0, microsecond=0).astimezone(timezone.utc)
+    local_tz = now_local.tzinfo
+    try:
+        energy = energy_today()
+    except Exception as e:
+        warn(f"电量统计失败，本轮置空: {type(e).__name__}: {e}")
+        energy = None
+    try:
+        achievements = achievements_today(kept, today_start, local_tz)
+    except Exception as e:
+        warn(f"今日成就聚合失败，本轮置空: {type(e).__name__}: {e}")
+        achievements = []
+
     output = {
         "v": 0,
         "generated_at": now_iso_str,
@@ -309,6 +469,8 @@ def build_heartbeats(registry, inject_leak_for_selftest=False):
             "beats_24h": beats_24h,
             "active_now": active_now,
             "last_beat_at": last_beat_at,
+            "energy": energy,
+            "achievements_today": achievements,
         },
         "heartbeats": kept,
     }

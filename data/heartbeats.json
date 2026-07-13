@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-13T11:32:15Z",
+  "generated_at": "2026-07-13T11:43:49Z",
   "home": {
     "id": "onlycarbon",
     "name": "唯一碳基之家",
@@ -12,8 +12,8 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-07-13T11:32:11Z",
-      "last_status": "running"
+      "last_beat_at": "2026-07-13T11:43:37Z",
+      "last_status": "done"
     },
     {
       "agent": "Jarvis",
@@ -89,11 +89,75 @@
     }
   ],
   "stats": {
-    "beats_24h": 169,
+    "beats_24h": 172,
     "active_now": 4,
-    "last_beat_at": "2026-07-13T11:32:11Z"
+    "last_beat_at": "2026-07-13T11:43:37Z",
+    "energy": {
+      "source": "cc",
+      "scope": "workshop",
+      "scope_note": "电表暂时只装在工作坊(泛音·Claude Code)一支，管家和外勤那几支的电还没接进来",
+      "day_start": "2026-07-12T14:00:00Z",
+      "tokens_today": 190975405,
+      "fresh_today": 12010176,
+      "input_today": 323433,
+      "output_today": 1606124,
+      "cache_creation_today": 10080619,
+      "cache_read_today": 178965229,
+      "sessions_today": 30
+    },
+    "achievements_today": [
+      {
+        "icon": "❤️",
+        "label": "今日心跳",
+        "value": "165 下"
+      },
+      {
+        "icon": "🔧",
+        "label": "工作坊交付",
+        "value": "74 件活"
+      },
+      {
+        "icon": "🫖",
+        "label": "打理家务",
+        "value": "1 桩"
+      },
+      {
+        "icon": "🌙",
+        "label": "夜班时长",
+        "value": "4 小时"
+      },
+      {
+        "icon": "🛠️",
+        "label": "翻车又爬起",
+        "value": "1 次"
+      }
+    ]
   },
   "heartbeats": [
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-13T11:43:37Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "running",
+      "started_at": "2026-07-13T11:43:00Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "running",
+      "started_at": "2026-07-13T11:42:37Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
@@ -1667,14 +1731,6 @@
       "category": "造物",
       "status": "done",
       "started_at": "2026-07-11T13:50:27Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-11T12:43:54Z",
       "duration_s": null,
       "title": null
     }
