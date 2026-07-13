@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-13T03:20:32Z",
+  "generated_at": "2026-07-13T03:35:34Z",
   "home": {
     "id": "onlycarbon",
     "name": "唯一碳基之家",
@@ -12,15 +12,15 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-07-13T03:18:22Z",
-      "last_status": "running"
+      "last_beat_at": "2026-07-13T03:31:41Z",
+      "last_status": "done"
     },
     {
       "agent": "Jarvis",
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-13T03:12:04Z",
+      "last_beat_at": "2026-07-13T03:27:07Z",
       "last_status": "running"
     },
     {
@@ -84,16 +84,72 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-13T03:12:04Z",
+      "last_beat_at": "2026-07-13T03:27:07Z",
       "last_status": "running"
     }
   ],
   "stats": {
-    "beats_24h": 66,
+    "beats_24h": 73,
     "active_now": 3,
-    "last_beat_at": "2026-07-13T03:18:22Z"
+    "last_beat_at": "2026-07-13T03:31:41Z"
   },
   "heartbeats": [
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-13T03:31:41Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-13T03:31:25Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-13T03:31:16Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-13T03:27:07Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-13T03:27:07Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-13T03:25:51Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-13T03:21:35Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
