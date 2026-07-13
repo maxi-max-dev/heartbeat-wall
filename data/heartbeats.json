@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-13T04:30:02Z",
+  "generated_at": "2026-07-13T04:31:07Z",
   "home": {
     "id": "onlycarbon",
     "name": "唯一碳基之家",
@@ -12,8 +12,8 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-07-13T04:22:21Z",
-      "last_status": "done"
+      "last_beat_at": "2026-07-13T04:30:49Z",
+      "last_status": "running"
     },
     {
       "agent": "Jarvis",
@@ -89,11 +89,27 @@
     }
   ],
   "stats": {
-    "beats_24h": 91,
+    "beats_24h": 93,
     "active_now": 3,
-    "last_beat_at": "2026-07-13T04:27:16Z"
+    "last_beat_at": "2026-07-13T04:30:49Z"
   },
   "heartbeats": [
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "running",
+      "started_at": "2026-07-13T04:30:49Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-13T04:30:14Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "Jarvis",
       "category": "管家",
