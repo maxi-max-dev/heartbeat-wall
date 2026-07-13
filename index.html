@@ -724,24 +724,30 @@
   heroEl.addEventListener("animationend", function(e){
     if (e.animationName === "pop") heroEl.classList.remove("pop");
   });
+  /* count-up 只是可见时的增强;rAF 若中途冻结,setTimeout 兜底把真值强制到位 */
   function countUp(target, dur){
-    var t0 = performance.now();
+    var t0 = performance.now(), settled = false;
     requestAnimationFrame(function step(ts){
+      if (settled) return;
       var p = Math.min(1, (ts - t0) / dur);
       var e = 1 - Math.pow(1 - p, 3);
       heroEl.textContent = Math.round(e * target);
-      if (p < 1) requestAnimationFrame(step);
+      if (p < 1) requestAnimationFrame(step); else settled = true;
     });
+    setTimeout(function(){
+      if (!settled){ settled = true; heroEl.textContent = target; }
+    }, dur + 120);
   }
   function setHero(n){
     var prev = state.heroN;
     state.heroN = n;
     heroEl.classList.toggle("breathe", n > 0);
-    if (state.first && !REDUCED && n > 0){
-      countUp(n, 700);
+    /* 真值同步先写:内容不依赖 rAF(后台标签/爬虫/静态截图都要拿到真数字) */
+    heroEl.textContent = n;
+    if (state.first && !REDUCED && n > 0 && !document.hidden){
+      countUp(n, 700);   /* 可见时的增强:从 0 数上来,数完仍是真值 */
       return;
     }
-    heroEl.textContent = n;
     if (prev !== null && prev !== n && !REDUCED){
       heroEl.classList.remove("pop");
       void heroEl.offsetWidth;
@@ -1019,12 +1025,22 @@
     state.first = false;
   }
 
+  var lastFetchAt = 0;
   function load(){
+    lastFetchAt = Date.now();
     return fetch(DATA_URL, {cache:"no-store"})
       .then(function(res){ if (!res.ok) throw new Error("http " + res.status); return res.json(); })
       .then(render)
       .catch(weakSignal);
   }
+
+  /* 恢复可见:立即全量重算一帧(hidden 期间 interval 被节流,时间/卡片可能已过期);
+     数据也过期就顺手重拉。ECG 的 rAF 重启由它自己的 visibilitychange 监听负责 */
+  document.addEventListener("visibilitychange", function(){
+    if (document.hidden) return;
+    tickTimes();
+    if (Date.now() - lastFetchAt > FETCH_MS) load();
+  });
 
   load();
   setInterval(load, FETCH_MS);
