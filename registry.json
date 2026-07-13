@@ -21,7 +21,8 @@
       "sources": {
         "cc_sessions": false,
         "cron_names": ["daily-retro-evolution", "每日Dream"],
-        "launchd_labels": ["ai.openclaw.gateway"]
+        "launchd_labels": ["ai.openclaw.gateway"],
+        "openclaw_agent": "main"
       }
     },
     {

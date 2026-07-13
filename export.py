@@ -164,6 +164,124 @@ def energy_today():
     }
 
 
+# --- 电表细分：每个居民今日 token（某某房间的电费） ------------------------
+def _cc_token_sum(recursive):
+    """今日 CC token 汇总。recursive=True 连子代理嵌套会话一起算
+    （=泛音派出去的手脚烧的电也算主人头上，Max 2026-07-14 拍板"算"）。"""
+    today_start = local_today_start_utc()
+    cutoff = today_start.timestamp()
+    if recursive:
+        files = glob.glob(os.path.join(CC_PROJECTS_DIR, "**", "*.jsonl"), recursive=True)
+    else:
+        files = glob.glob(os.path.join(CC_PROJECTS_DIR, "*", "*.jsonl"))
+    seen = set()
+    tot = 0
+    for path in files:
+        try:
+            if os.path.getmtime(path) < cutoff:
+                continue
+        except OSError:
+            continue
+        try:
+            with open(path, encoding="utf-8", errors="ignore") as fh:
+                for line in fh:
+                    line = line.strip()
+                    if not line.startswith("{"):
+                        continue
+                    try:
+                        o = json.loads(line)
+                    except Exception:
+                        continue
+                    if o.get("type") != "assistant":
+                        continue
+                    ts = o.get("timestamp")
+                    if not ts:
+                        continue
+                    try:
+                        if parse_iso(ts) < today_start:
+                            continue
+                    except Exception:
+                        continue
+                    msg = o.get("message") or {}
+                    mid = msg.get("id")
+                    if mid is not None:
+                        if mid in seen:
+                            continue
+                        seen.add(mid)
+                    u = msg.get("usage") or {}
+                    tot += (int(u.get("input_tokens") or 0) + int(u.get("output_tokens") or 0)
+                            + int(u.get("cache_creation_input_tokens") or 0)
+                            + int(u.get("cache_read_input_tokens") or 0))
+        except OSError:
+            continue
+    return tot
+
+
+def _openclaw_token_sum(agent_dir):
+    """今日某 OpenClaw agent 的 token 汇总（message.usage 四路，兼容 in/out/cacheWrite/cacheRead 别名）。"""
+    base = os.path.expanduser(os.path.join("~", ".openclaw", "agents", agent_dir, "sessions"))
+    today_start = local_today_start_utc()
+    cutoff = today_start.timestamp()
+    tot = 0
+    for path in glob.glob(os.path.join(base, "*.jsonl")):
+        if ".trajectory." in path:
+            continue
+        try:
+            if os.path.getmtime(path) < cutoff:
+                continue
+        except OSError:
+            continue
+        try:
+            with open(path, encoding="utf-8", errors="ignore") as fh:
+                for line in fh:
+                    line = line.strip()
+                    if not line.startswith("{"):
+                        continue
+                    try:
+                        o = json.loads(line)
+                    except Exception:
+                        continue
+                    if o.get("type") != "message":
+                        continue
+                    ts = o.get("timestamp")
+                    if not ts:
+                        continue
+                    try:
+                        if parse_iso(ts) < today_start:
+                            continue
+                    except Exception:
+                        continue
+                    u = (o.get("message") or {}).get("usage") or {}
+                    tot += (int(u.get("input_tokens") or u.get("input") or 0)
+                            + int(u.get("output_tokens") or u.get("output") or 0)
+                            + int(u.get("cache_creation_input_tokens") or u.get("cacheWrite") or 0)
+                            + int(u.get("cache_read_input_tokens") or u.get("cacheRead") or 0))
+        except OSError:
+            continue
+    return tot
+
+
+def energy_by_resident(residents):
+    """每个居民今日 token（细分到各屋的电费）。
+    泛音=CC 全量含子代理；有 openclaw_agent 的走该 agent 的 OpenClaw 会话。
+    没有 token 源的居民不进列表（诚实：那间屋还没接上电表）。"""
+    out = []
+    for r in residents:
+        toks = None
+        prov = None
+        if r["sources"].get("cc_sessions"):
+            toks = _cc_token_sum(recursive=True)
+            prov = "claude"
+        elif r["sources"].get("openclaw_agent"):
+            toks = _openclaw_token_sum(r["sources"]["openclaw_agent"])
+            prov = "openclaw"
+        if toks is None:
+            continue
+        out.append({"agent": r["agent"], "emoji": r["emoji"], "tokens": toks, "provider": prov})
+    out.sort(key=lambda x: x["tokens"], reverse=True)
+    return out
+
+
 # --- 成就:今日真实心跳聚合出的里程碑（全部真数，零编造） ------------------
 _ACHIEVE_DONE = {
     "造物": ("🔧", "工作坊交付", "件活"),
@@ -571,6 +689,18 @@ def build_heartbeats(registry, inject_leak_for_selftest=False):
     except Exception as e:
         warn(f"电量统计失败，本轮置空: {type(e).__name__}: {e}")
         energy = None
+    # 电表细分（加法式，不动上面的 workshop 口径字段，供各屋电费 UI 用）
+    if energy is not None:
+        try:
+            br = energy_by_resident(residents)
+            energy["by_resident"] = br
+            energy["whole_house_tokens"] = sum(x["tokens"] for x in br)
+            energy["scope_note_v2"] = (
+                "细分到各屋：泛音（工作坊，含它派出去的子代理）+管家/情报/外勤已接表，"
+                "其余几间还没接上；跨模型 token 只是吞吐量，不等价电费"
+            )
+        except Exception as e:
+            warn(f"电表细分失败，本轮跳过: {type(e).__name__}: {e}")
     try:
         achievements = achievements_today(kept, today_start, local_tz)
     except Exception as e:
