@@ -36,8 +36,31 @@
     overflow-x:hidden;
     min-height:100vh;
   }
-  .wrap{max-width:880px;margin:0 auto;padding:20px 18px 60px}
+  .wrap{max-width:880px;margin:0 auto;padding:20px 18px 60px;position:relative;z-index:1}
   a{color:var(--accent)}
+
+  /* ---------- 壁炉余烬(数量与 active_now 挂钩,0 在忙 = 无火星) ---------- */
+  .embers{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+  .embers i{
+    position:absolute;bottom:-8px;left:var(--x);width:var(--s);height:var(--s);border-radius:50%;
+    background:radial-gradient(circle,#ffd9a8 0%,rgba(255,157,92,.7) 40%,transparent 70%);
+    opacity:0;animation:emberRise var(--d) linear infinite;animation-delay:var(--dl);
+  }
+  .embers i:nth-child(1){--x:8%; --s:4px;--d:23s;--dl:-4s; --o:.32;--sw:26px}
+  .embers i:nth-child(2){--x:21%;--s:3px;--d:29s;--dl:-12s;--o:.25;--sw:-20px}
+  .embers i:nth-child(3){--x:36%;--s:5px;--d:26s;--dl:-8s; --o:.28;--sw:14px}
+  .embers i:nth-child(4){--x:52%;--s:3px;--d:31s;--dl:-18s;--o:.24;--sw:-28px}
+  .embers i:nth-child(5){--x:67%;--s:4px;--d:24s;--dl:-2s; --o:.31;--sw:22px}
+  .embers i:nth-child(6){--x:80%;--s:3px;--d:28s;--dl:-14s;--o:.23;--sw:-16px}
+  .embers i:nth-child(7){--x:92%;--s:4px;--d:33s;--dl:-22s;--o:.28;--sw:30px}
+  @keyframes emberRise{
+    0%{transform:translate3d(0,0,0);opacity:0}
+    6%{opacity:var(--o)}
+    80%{opacity:calc(var(--o)*.55)}
+    100%{transform:translate3d(var(--sw),-104vh,0);opacity:0}
+  }
+  body[data-embers="none"] .embers{display:none}
+  body[data-embers="low"] .embers i:nth-child(n+5){display:none}
 
   /* ---------- hero ---------- */
   .hero-top{
@@ -61,14 +84,35 @@
     background:linear-gradient(180deg,var(--gold),var(--accent));
     -webkit-background-clip:text;background-clip:text;color:transparent;
     text-shadow:0 8px 40px var(--accent-soft);
+    display:inline-block;
   }
+  .big-number.breathe{animation:breathe 4.6s ease-in-out infinite}
+  .big-number.pop{animation:pop .5s cubic-bezier(.34,1.56,.64,1)}
+  @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+  @keyframes pop{0%{transform:scale(1)}35%{transform:scale(1.16)}100%{transform:scale(1)}}
   .big-number-label{
     font-size:clamp(15px,3.6vw,19px);color:var(--text-dim);font-weight:600;margin-top:4px;
   }
   .tagline{
-    text-align:center;color:var(--text-faint);font-size:15px;margin:14px 0 40px;
+    text-align:center;color:var(--text-faint);font-size:15px;margin:14px 0 22px;
   }
   .home-name{color:var(--text);font-weight:700}
+
+  /* ---------- 心电监护仪 ---------- */
+  .ecg-card{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:12px 14px 10px;margin:0 0 42px;box-shadow:0 4px 18px var(--shadow);
+  }
+  .ecg-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+  .ecg-title{font-size:12.5px;color:var(--text-dim);font-weight:600;letter-spacing:.02em}
+  .ecg-legend{display:flex;gap:10px;font-size:11px;color:var(--text-faint)}
+  .ecg-legend .lg{display:inline-flex;align-items:center;gap:4px}
+  .ecg-legend i{width:7px;height:7px;border-radius:50%;display:inline-block}
+  .li-done{background:var(--gold)}
+  .li-running{background:var(--green)}
+  .li-failed{background:var(--red)}
+  #ecg{width:100%;height:96px;display:block}
+  .ecg-caption{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--text-faint);margin-top:4px}
 
   h2.section-title{
     font-size:15px;color:var(--text-dim);font-weight:700;margin:0 0 14px;
@@ -84,10 +128,11 @@
   .resident-card{
     background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
     padding:14px 14px 12px;box-shadow:0 4px 18px var(--shadow);
-    transition:transform .15s ease, border-color .15s ease;
+    transition:transform .15s ease, border-color .15s ease, opacity .3s ease;
+    position:relative;
   }
   .resident-card:hover{transform:translateY(-2px);border-color:var(--accent)}
-  .resident-emoji{font-size:26px;line-height:1}
+  .resident-emoji{font-size:26px;line-height:1;display:inline-block}
   .resident-name{font-weight:700;margin-top:8px;font-size:15px}
   .resident-role{color:var(--text-faint);font-size:12px;margin-top:1px}
   .resident-status{
@@ -103,14 +148,32 @@
     70%{box-shadow:0 0 0 7px rgba(111,207,125,0)}
     100%{box-shadow:0 0 0 0 rgba(111,207,125,0)}
   }
+  /* running = 灯亮:光晕呼吸 + emoji 轻点头。只有真的 running 才有 */
+  .resident-card.is-running{border-color:rgba(111,207,125,.4)}
+  .resident-card.is-running::after{
+    content:"";position:absolute;inset:-1px;border-radius:var(--radius);pointer-events:none;
+    box-shadow:0 0 22px rgba(111,207,125,.22), inset 0 0 14px rgba(111,207,125,.06);
+    opacity:.3;animation:glowPulse 2.8s ease-in-out infinite;
+  }
+  @keyframes glowPulse{0%,100%{opacity:.22}50%{opacity:.9}}
+  .resident-card.is-running .resident-emoji{animation:bob 2.4s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+  /* 没消息 = 睡着:静止 + 调暗,睡眠的诚实表达就是不动 */
+  .resident-card.is-quiet{opacity:.7}
+  .resident-card.is-failed{border-color:rgba(232,115,92,.35)}
 
   /* ---------- stream ---------- */
   .stream-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
   .stream-item{
-    display:flex;align-items:baseline;gap:9px;padding:9px 4px;
+    display:flex;align-items:baseline;gap:9px;padding:9px 6px;
     border-bottom:1px solid var(--border);font-size:14px;flex-wrap:wrap;
+    border-radius:8px;
   }
   .stream-item:last-child{border-bottom:none}
+  .stream-item.enter{animation:streamIn .5s ease-out both;animation-delay:calc(var(--i)*45ms)}
+  .stream-item.is-new{animation:streamIn .5s ease-out both, newFlash 2.2s ease-out}
+  @keyframes streamIn{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:none}}
+  @keyframes newFlash{0%{background:var(--accent-soft)}100%{background:transparent}}
   .stream-dot{width:7px;height:7px;border-radius:50%;flex:none;position:relative;top:-1px}
   .stream-dot.dot-running{background:var(--green)}
   .stream-dot.dot-done{background:var(--gold)}
@@ -133,6 +196,11 @@
     transition:opacity .15s;
   }
   .activity-col:hover .activity-fill{opacity:1}
+  .activity-fill.grow{transform-origin:bottom;animation:growUp .7s cubic-bezier(.22,1,.36,1) backwards;animation-delay:calc(var(--i)*20ms)}
+  @keyframes growUp{from{transform:scaleY(0)}}
+  /* 当前小时有真实心跳才脉动 */
+  .activity-col.is-now .activity-fill{transform-origin:bottom;animation:sparkPulse 1.7s ease-in-out infinite}
+  @keyframes sparkPulse{0%,100%{transform:scaleY(1);opacity:.85}50%{transform:scaleY(1.15);opacity:1}}
   .activity-caption{display:flex;justify-content:space-between;font-size:11px;color:var(--text-faint);margin-top:6px}
 
   /* ---------- showcase ---------- */
@@ -161,9 +229,18 @@
     .wrap{padding:16px 14px 44px}
     .resident-grid{grid-template-columns:repeat(auto-fill,minmax(128px,1fr))}
   }
+
+  /* ---------- reduced motion:全部降级为静态 ---------- */
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation:none !important;transition:none !important}
+    .embers{display:none !important}
+  }
+  html.force-reduced *,html.force-reduced *::before,html.force-reduced *::after{animation:none !important;transition:none !important}
+  html.force-reduced .embers{display:none !important}
 </style>
 </head>
-<body>
+<body data-embers="none">
+<div class="embers" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
 <div class="wrap">
 
   <div class="hero-top">
@@ -177,10 +254,23 @@
   </div>
   <p class="tagline" id="tagline">一个人类，一屋子硅基，全天候造东西</p>
 
+  <div class="ecg-card">
+    <div class="ecg-head">
+      <span class="ecg-title">心跳监护 · 最近 4 小时</span>
+      <span class="ecg-legend" aria-hidden="true">
+        <span class="lg"><i class="li-done"></i>完成</span>
+        <span class="lg"><i class="li-running"></i>进行中</span>
+        <span class="lg"><i class="li-failed"></i>出状况</span>
+      </span>
+    </div>
+    <canvas id="ecg" role="img" aria-label="最近 4 小时的真实心跳波形"></canvas>
+    <div class="ecg-caption"><span>4 小时前</span><span id="ecg-note"></span><span>此刻</span></div>
+  </div>
+
   <section aria-label="家庭成员">
     <h2 class="section-title">家里住着谁</h2>
     <div class="resident-grid" id="resident-grid">
-      <!-- 静态兜底名册：emoji/名字/角色都是公开信息，直接写死，JS 只负责补状态点和相对时间 -->
+      <!-- 静态兜底名册:emoji/名字/角色都是公开信息,直接写死,JS 只负责补状态点和相对时间 -->
       <div class="resident-card" data-agent="泛音">
         <div class="resident-emoji">🎼</div>
         <div class="resident-name">泛音</div>
@@ -286,6 +376,15 @@
 (function(){
   "use strict";
 
+  /* reduced-motion:系统设置 或 ?reduce 测试开关,全部动画降级为静态 */
+  var FORCE = /[?&]reduce\b/.test(location.search);
+  var REDUCED = FORCE, mq = null;
+  try{
+    mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    REDUCED = FORCE || mq.matches;
+  }catch(e){}
+  if (FORCE) document.documentElement.classList.add("force-reduced");
+
   var VERBS = {
     "造物": {running:"正在专心造东西", done:"完成了一次创作",   failed:"这次创作卡住了"},
     "管家": {running:"正在张罗家里的事", done:"处理完一件家务",   failed:"这件事没弄成"},
@@ -300,7 +399,13 @@
   };
   var STATUS_TEXT = {running:"正在忙", done:"刚忙完", failed:"刚碰了个钉子"};
   var DATA_URL = "./data/heartbeats.json";
-  var REFRESH_MS = 60000;
+  var FETCH_MS = 60000;   /* 数据每 60s 重取(源头 15 分钟一更) */
+  var TICK_MS  = 30000;   /* 相对时间每 30s 自己走,不依赖刷新 */
+
+  var state = {data:null, seen:null, heroN:null, first:true, lastNewCount:0};
+
+  function el(id){ return document.getElementById(id); }
+  function bkey(b){ return b.agent + "|" + b.status + "|" + b.started_at; }
 
   function relTime(iso){
     var then = new Date(iso).getTime();
@@ -327,28 +432,263 @@
     return "dot-quiet";
   }
 
+  /* ---------- 心电监护仪(主秀点):波形 100% 来自真实心跳时间戳与状态 ---------- */
+  function EcgMonitor(canvas){
+    if (!canvas || !canvas.getContext) return {setBeats:function(){},refresh:function(){},setReduced:function(){},frames:function(){return 0;}};
+    var ctx = canvas.getContext("2d");
+    var DPR = Math.min(window.devicePixelRatio || 1, 2);
+    var W = 0, H = 0, BASE = 0, STEP = 2, samples = null, N = 0;
+    var beats = [], draws = [];
+    var WINDOW = 4*3600*1000, SWEEP = 9000, TRAILF = 0.30;
+    var reduced = REDUCED, pageVis = !document.hidden, inView = true, rafId = null, frameCount = 0;
+    var C = {done:"#e8b84b", running:"#6fcf7d", failed:"#e8735c"};
+
+    function resize(){
+      var w = canvas.clientWidth, h = canvas.clientHeight;
+      if (!w || !h){ samples = null; return; }
+      W = w; H = h; BASE = Math.round(H * 0.62);
+      canvas.width = Math.round(W * DPR); canvas.height = Math.round(H * DPR);
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      N = Math.ceil(W / STEP) + 1; samples = new Float32Array(N);
+      redrawIdle();
+    }
+    /* 动画循环没在跑(后台标签/滚出视口/reduced)时,至少画一帧静态波形垫底,不留空白 */
+    function redrawIdle(){
+      if (rafId === null) drawStatic();
+    }
+    /* QRS 波形状(px 偏移,负=向上)。amp 为主峰高度 */
+    function shape(dx, amp){
+      if (dx < -13 || dx >= 13) return 0;
+      if (dx < -7)  return -3 * Math.sin((dx + 13) / 6 * Math.PI);   /* P 波 */
+      if (dx < -4)  return 4 * ((dx + 7) / 3);                        /* Q 谷 */
+      if (dx < -1)  return 4 - ((dx + 4) / 3) * (amp + 4);            /* R 峰上冲 */
+      if (dx < 2)   return -amp + ((dx + 1) / 3) * (amp + 6);         /* 回落过冲 */
+      if (dx < 4)   return 6 - ((dx - 2) / 2) * 6;                    /* S 回正 */
+      if (dx < 5)   return 0;
+      return -4 * Math.sin((dx - 5) / 8 * Math.PI);                   /* T 波 */
+    }
+    function rebuild(nowMs, perfMs){
+      if (!samples) return;
+      samples.fill(0); draws.length = 0;
+      var t0 = nowMs - WINDOW, scale = W / WINDOW;
+      for (var k = 0; k < beats.length; k++){
+        var b = beats[k];
+        if (b.t < t0 - 20000 || b.t > nowMs + 60000) continue;
+        var cx = (b.t - t0) * scale;
+        var amp = b.status === "running" ? 28 : (b.status === "done" ? 23 : 22);
+        var dir = b.status === "failed" ? -1 : 1;   /* 出状况的跳朝下 */
+        var i0 = Math.max(0, Math.floor((cx - 13) / STEP));
+        var i1 = Math.min(N - 1, Math.ceil((cx + 13) / STEP));
+        if (i1 <= i0) continue;
+        for (var i = i0; i <= i1; i++){
+          var v = dir * shape(i * STEP - cx, amp);
+          if (Math.abs(v) > Math.abs(samples[i])) samples[i] = v;
+        }
+        draws.push({i0:i0, i1:i1, c:C[b.status] || C.done, pulse: b.newUntil && perfMs < b.newUntil});
+      }
+    }
+    function path(i0, i1){
+      ctx.beginPath();
+      ctx.moveTo(i0 * STEP, BASE + samples[i0]);
+      for (var i = i0 + 1; i <= i1; i++) ctx.lineTo(i * STEP, BASE + samples[i]);
+    }
+    function grid(){
+      ctx.strokeStyle = "rgba(255,163,97,0.08)"; ctx.lineWidth = 1;
+      for (var k = 1; k < 4; k++){
+        var x = Math.round(W * k / 4) + 0.5;
+        ctx.beginPath(); ctx.moveTo(x, 6); ctx.lineTo(x, H - 6); ctx.stroke();
+      }
+    }
+    function drawFrame(nowMs, perfMs){
+      rebuild(nowMs, perfMs);
+      ctx.clearRect(0, 0, W, H);
+      grid();
+      ctx.lineJoin = "round"; ctx.lineCap = "round";
+      /* 底层:全程暗线 */
+      ctx.strokeStyle = "rgba(255,163,97,0.30)"; ctx.lineWidth = 1.4;
+      path(0, N - 1); ctx.stroke();
+      var k, d;
+      for (k = 0; k < draws.length; k++){
+        d = draws[k];
+        ctx.globalAlpha = 0.45; ctx.strokeStyle = d.c; ctx.lineWidth = 1.6;
+        path(d.i0, d.i1); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+      /* 扫描辉尾:三段渐亮 */
+      var sw = ((perfMs % SWEEP) / SWEEP) * W, trail = W * TRAILF;
+      var bands = [[sw - trail, sw - trail*0.5, 0.30], [sw - trail*0.5, sw - trail*0.18, 0.6], [sw - trail*0.18, sw, 1]];
+      for (var j = 0; j < bands.length; j++){
+        var x0 = bands[j][0], x1 = bands[j][1], a = bands[j][2];
+        if (x1 <= 0) continue;
+        ctx.save();
+        ctx.beginPath(); ctx.rect(Math.max(-20, x0), 0, x1 - Math.max(-20, x0), H); ctx.clip();
+        ctx.globalAlpha = a;
+        ctx.strokeStyle = "rgba(255,196,140,0.9)"; ctx.lineWidth = 2;
+        path(0, N - 1); ctx.stroke();
+        for (k = 0; k < draws.length; k++){
+          d = draws[k];
+          ctx.strokeStyle = d.c; ctx.lineWidth = 2.2;
+          path(d.i0, d.i1); ctx.stroke();
+        }
+        ctx.restore();
+      }
+      ctx.globalAlpha = 1;
+      /* 新到的真实心跳:短暂闪烁 3 秒 */
+      for (k = 0; k < draws.length; k++){
+        d = draws[k];
+        if (!d.pulse) continue;
+        ctx.globalAlpha = 0.35 + 0.35 * Math.sin(perfMs / 130);
+        ctx.strokeStyle = d.c; ctx.lineWidth = 3;
+        path(d.i0, d.i1); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+      /* 扫描点 */
+      var si = Math.max(0, Math.min(N - 1, Math.round(sw / STEP)));
+      var dy = BASE + samples[si];
+      var g = ctx.createRadialGradient(sw, dy, 0, sw, dy, 12);
+      g.addColorStop(0, "rgba(255,214,160,0.55)"); g.addColorStop(1, "rgba(255,214,160,0)");
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(sw, dy, 12, 0, 6.2832); ctx.fill();
+      ctx.fillStyle = "#ffddb0"; ctx.beginPath(); ctx.arc(sw, dy, 2.6, 0, 6.2832); ctx.fill();
+      frameCount++;
+      window.__hbFrames = frameCount;
+    }
+    function drawStatic(){
+      if (!samples) return;
+      rebuild(Date.now(), 0);
+      ctx.clearRect(0, 0, W, H);
+      grid();
+      ctx.lineJoin = "round"; ctx.lineCap = "round";
+      ctx.strokeStyle = "rgba(255,196,140,0.75)"; ctx.lineWidth = 1.8;
+      path(0, N - 1); ctx.stroke();
+      for (var k = 0; k < draws.length; k++){
+        var d = draws[k];
+        ctx.globalAlpha = 0.9; ctx.strokeStyle = d.c; ctx.lineWidth = 2.2;
+        path(d.i0, d.i1); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    }
+    function loop(ts){
+      rafId = null;
+      if (reduced || !pageVis || !inView || !samples) return;
+      drawFrame(Date.now(), ts);
+      rafId = requestAnimationFrame(loop);
+    }
+    function ensure(){
+      if (!reduced && pageVis && inView && samples && rafId === null) rafId = requestAnimationFrame(loop);
+    }
+    document.addEventListener("visibilitychange", function(){
+      pageVis = !document.hidden;
+      if (!pageVis && rafId !== null){ cancelAnimationFrame(rafId); rafId = null; }
+      ensure();
+    });
+    if ("IntersectionObserver" in window){
+      new IntersectionObserver(function(entries){
+        inView = entries[0].isIntersecting;
+        if (!inView && rafId !== null){ cancelAnimationFrame(rafId); rafId = null; }
+        ensure();
+      }).observe(canvas);
+    }
+    var rt = null;
+    window.addEventListener("resize", function(){
+      clearTimeout(rt);
+      rt = setTimeout(function(){ resize(); ensure(); }, 160);
+    });
+    resize(); ensure();
+    return {
+      setBeats: function(arr, newKeys){
+        var pn = performance.now();
+        beats = arr;
+        if (newKeys){
+          for (var i = 0; i < beats.length; i++)
+            if (newKeys.has(beats[i].key)) beats[i].newUntil = pn + 3200;
+        }
+        if (reduced){ drawStatic(); }
+        else { ensure(); redrawIdle(); }
+      },
+      refresh: function(){ if (reduced || rafId === null) drawStatic(); },
+      debugStep: function(){ if (samples) drawFrame(Date.now(), performance.now()); },
+      setReduced: function(r){
+        reduced = r;
+        if (r){ if (rafId !== null){ cancelAnimationFrame(rafId); rafId = null; } drawStatic(); }
+        else ensure();
+      },
+      frames: function(){ return frameCount; }
+    };
+  }
+
+  var ecg = EcgMonitor(el("ecg"));
+  if (mq){
+    var onMq = function(e){ REDUCED = FORCE || e.matches; ecg.setReduced(REDUCED); };
+    if (mq.addEventListener) mq.addEventListener("change", onMq);
+    else if (mq.addListener) mq.addListener(onMq);
+  }
+
+  /* ---------- hero 大数字:呼吸(有人干活才呼吸)+数字变化弹跳+首屏数数 ---------- */
+  var heroEl = el("active-now");
+  heroEl.addEventListener("animationend", function(e){
+    if (e.animationName === "pop") heroEl.classList.remove("pop");
+  });
+  function countUp(target, dur){
+    var t0 = performance.now();
+    requestAnimationFrame(function step(ts){
+      var p = Math.min(1, (ts - t0) / dur);
+      var e = 1 - Math.pow(1 - p, 3);
+      heroEl.textContent = Math.round(e * target);
+      if (p < 1) requestAnimationFrame(step);
+    });
+  }
+  function setHero(n){
+    var prev = state.heroN;
+    state.heroN = n;
+    heroEl.classList.toggle("breathe", n > 0);
+    if (state.first && !REDUCED && n > 0){
+      countUp(n, 700);
+      return;
+    }
+    heroEl.textContent = n;
+    if (prev !== null && prev !== n && !REDUCED){
+      heroEl.classList.remove("pop");
+      void heroEl.offsetWidth;
+      heroEl.classList.add("pop");
+    }
+  }
+
+  function setEmbers(n){
+    document.body.setAttribute("data-embers", n <= 0 ? "none" : (n < 3 ? "low" : "high"));
+  }
+
+  /* ---------- 居民卡 ---------- */
   function renderResidents(residents){
     var map = {};
     (residents || []).forEach(function(r){ map[r.agent] = r; });
-    var cards = document.querySelectorAll(".resident-card");
-    cards.forEach(function(card){
+    document.querySelectorAll(".resident-card").forEach(function(card){
       var agent = card.getAttribute("data-agent");
       var r = map[agent];
       var dot = card.querySelector(".status-dot");
       var text = card.querySelector(".status-text");
+      card.classList.remove("is-running", "is-quiet", "is-failed");
       dot.className = "status-dot";
+      text.textContent = "";
       if (!r || !r.last_beat_at){
         dot.classList.add("dot-quiet");
-        text.textContent = "最近没消息";
+        text.textContent = "最近没消息 💤";
+        card.classList.add("is-quiet");
         return;
       }
       dot.classList.add(dotClass(r.last_status));
-      text.textContent = (STATUS_TEXT[r.last_status] || "") + " · " + relTime(r.last_beat_at);
+      if (r.last_status === "running") card.classList.add("is-running");
+      else if (r.last_status === "failed") card.classList.add("is-failed");
+      text.textContent = (STATUS_TEXT[r.last_status] || "") + " · ";
+      var t = document.createElement("span");
+      t.setAttribute("data-ts", r.last_beat_at);
+      t.textContent = relTime(r.last_beat_at);
+      text.appendChild(t);
     });
   }
 
-  function renderStream(heartbeats){
-    var list = document.getElementById("stream-list");
+  /* ---------- 心跳流:首屏依次浮入;之后只有真正新到的心跳才闪 ---------- */
+  function renderStream(heartbeats, newKeys){
+    var list = el("stream-list");
     list.innerHTML = "";
     var beats = (heartbeats || []).slice(0, 40);
     if (beats.length === 0){
@@ -356,31 +696,34 @@
       return;
     }
     var frag = document.createDocumentFragment();
-    beats.forEach(function(b){
+    beats.forEach(function(b, i){
       var li = document.createElement("li");
       li.className = "stream-item";
-
+      if (state.first){
+        li.classList.add("enter");
+        li.style.setProperty("--i", Math.min(i, 14));
+      } else if (newKeys && newKeys.has(bkey(b))){
+        li.classList.add("is-new");
+      }
       var dot = document.createElement("span");
       dot.className = "stream-dot " + dotClass(b.status);
-
       var time = document.createElement("span");
       time.className = "stream-time";
+      time.setAttribute("data-ts", b.started_at);
       time.textContent = relTime(b.started_at);
-
       var sep = document.createElement("span");
       sep.className = "stream-sep";
       sep.textContent = "·";
-
       var text = document.createElement("span");
       text.className = "stream-text";
       text.textContent = sentenceFor(b);
-
       li.appendChild(dot); li.appendChild(time); li.appendChild(sep); li.appendChild(text);
       frag.appendChild(li);
     });
     list.appendChild(frag);
   }
 
+  /* ---------- 24h 活动条:首屏长出来;当前小时有真实心跳才脉动 ---------- */
   function renderActivityBar(heartbeats){
     var now = Date.now();
     var buckets = new Array(24).fill(0);
@@ -391,15 +734,20 @@
       if (hoursAgo >= 0 && hoursAgo < 24) buckets[23 - hoursAgo]++;
     });
     var max = Math.max.apply(null, buckets.concat([1]));
-    var bar = document.getElementById("activity-bar");
+    var bar = el("activity-bar");
     bar.innerHTML = "";
     var frag = document.createDocumentFragment();
     buckets.forEach(function(count, i){
       var hoursAgo = 23 - i;
       var col = document.createElement("div");
       col.className = "activity-col";
+      if (i === 23 && count > 0) col.classList.add("is-now");
       var fill = document.createElement("div");
       fill.className = "activity-fill";
+      if (state.first){
+        fill.classList.add("grow");
+        fill.style.setProperty("--i", i);
+      }
       var pct = Math.round((count / max) * 100);
       fill.style.height = Math.max(pct, count > 0 ? 6 : 2) + "%";
       col.title = (hoursAgo === 0 ? "这一小时" : hoursAgo + " 小时前") + "：" + count + " 次心跳";
@@ -409,41 +757,110 @@
     bar.appendChild(frag);
   }
 
+  /* ---------- 相对时间自走(每 30s),不用等刷新 ---------- */
+  function tickTimes(){
+    document.querySelectorAll("[data-ts]").forEach(function(node){
+      node.textContent = relTime(node.getAttribute("data-ts"));
+    });
+    ecg.refresh();
+  }
+
   function weakSignal(){
-    document.getElementById("active-now").textContent = "?";
-    var lu = document.getElementById("last-updated");
+    /* 有缓存数据:只标弱信号,内容留着(时间照走,这是诚实的旧数据) */
+    var lu = el("last-updated");
+    if (state.data){
+      lu.classList.add("weak");
+      lu.textContent = "信号弱 · 更新于 ";
+      var s = document.createElement("span");
+      s.setAttribute("data-ts", state.data.generated_at);
+      s.textContent = relTime(state.data.generated_at);
+      lu.appendChild(s);
+      return;
+    }
+    /* 完全没数据:优雅骨架态 */
+    heroEl.textContent = "?";
+    heroEl.classList.remove("breathe", "pop");
     lu.textContent = "心跳信号弱";
     lu.classList.add("weak");
-    document.getElementById("stream-list").innerHTML =
+    setEmbers(0);
+    el("ecg-note").textContent = "信号弱";
+    el("stream-list").innerHTML =
       '<li class="stream-empty">暂时连不上心跳数据，稍后再来看看</li>';
     document.querySelectorAll(".resident-card").forEach(function(card){
+      card.classList.remove("is-running", "is-failed");
       card.querySelector(".status-dot").className = "status-dot dot-quiet";
       card.querySelector(".status-text").textContent = "信号弱";
     });
   }
 
   function render(data){
-    document.getElementById("active-now").textContent =
-      (data.stats && typeof data.stats.active_now === "number") ? data.stats.active_now : "0";
-    if (data.home && data.home.name) document.getElementById("home-name").textContent = data.home.name;
-    if (data.home && data.home.tagline) document.getElementById("tagline").textContent = data.home.tagline;
-    var lu = document.getElementById("last-updated");
+    var beats = data.heartbeats || [];
+    /* 找出真正新到的心跳(首屏不算新,避免开屏全场乱闪) */
+    var newKeys = new Set();
+    if (state.seen){
+      beats.forEach(function(b){
+        var k = bkey(b);
+        if (!state.seen.has(k)) newKeys.add(k);
+      });
+    }
+    if (!state.seen) state.seen = new Set();
+    beats.forEach(function(b){ state.seen.add(bkey(b)); });
+    if (state.seen.size > 800) state.seen = new Set(beats.map(bkey));
+    state.lastNewCount = state.first ? 0 : newKeys.size;
+
+    var activeN = (data.stats && typeof data.stats.active_now === "number") ? data.stats.active_now : 0;
+    setHero(activeN);
+    setEmbers(activeN);
+    if (data.home && data.home.name) el("home-name").textContent = data.home.name;
+    if (data.home && data.home.tagline) el("tagline").textContent = data.home.tagline;
+
+    var lu = el("last-updated");
     lu.classList.remove("weak");
-    lu.textContent = data.generated_at ? ("最后更新 " + relTime(data.generated_at)) : "";
+    lu.textContent = "最后更新 ";
+    var s = document.createElement("span");
+    s.setAttribute("data-ts", data.generated_at || "");
+    s.textContent = data.generated_at ? relTime(data.generated_at) : "";
+    lu.appendChild(s);
+
     renderResidents(data.residents);
-    renderStream(data.heartbeats);
-    renderActivityBar(data.heartbeats);
+    renderStream(beats, state.first ? null : newKeys);
+    renderActivityBar(beats);
+
+    /* 心电图数据:真实时间戳 + 状态,新跳标记闪烁 */
+    var now = Date.now();
+    var ecgBeats = [];
+    beats.forEach(function(b){
+      var t = Date.parse(b.started_at);
+      if (isNaN(t)) return;
+      ecgBeats.push({t:t, status:b.status, key:bkey(b)});
+    });
+    ecg.setBeats(ecgBeats, state.first ? null : newKeys);
+    var in4h = ecgBeats.filter(function(b){ return now - b.t <= 4*3600*1000; }).length;
+    el("ecg-note").textContent = in4h ? "" : "这一段很安静";
+
+    state.data = data;
+    state.first = false;
   }
 
   function load(){
-    fetch(DATA_URL, {cache:"no-store"})
+    return fetch(DATA_URL, {cache:"no-store"})
       .then(function(res){ if (!res.ok) throw new Error("http " + res.status); return res.json(); })
       .then(render)
       .catch(weakSignal);
   }
 
   load();
-  setInterval(load, REFRESH_MS);
+  setInterval(load, FETCH_MS);
+  setInterval(tickTimes, TICK_MS);
+
+  /* 自测钩子(只读,便于验收) */
+  window.__hbDebug = {
+    get frames(){ return ecg.frames(); },
+    get lastNew(){ return state.lastNewCount; },
+    tick: tickTimes,
+    reload: load,
+    step: function(){ ecg.debugStep(); }
+  };
 })();
 </script>
 </body>
