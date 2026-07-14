@@ -43,6 +43,13 @@ ACTIVE_WINDOW_SEC = 20 * 60  # "20 分钟内有跳" 也算 active_now
 # 所以电表只统计工作坊一支，UI 必须标注范围，绝不冒充全家总电耗。
 ENERGY_SCOPE_NOTE = "电表暂时只装在工作坊(泛音·Claude Code)一支，管家和外勤那几支的电还没接进来"
 
+# 荣誉柜(vibe-trophy 终身成就):缓存和快照放 ~/.config,不进公开 repo。
+# 扫描一次约 10s,所以带 TTL,平时白拿缓存;解锁是稀罕事,6 小时新鲜度足够。
+TROPHY_TOOL = os.path.join(HOME, "Documents", "vibe-trophy", "vibe-trophy.js")
+TROPHY_CACHE = os.path.join(HOME, ".config", "heartbeat-wall", "trophies-cache.json")
+TROPHY_STATE = os.path.join(HOME, ".config", "heartbeat-wall", "trophy-state.json")
+TROPHY_TTL_SEC = 6 * 3600
+
 # --- 隐私闸门：命中任意一条就拒绝写出 -------------------------------------
 FORBIDDEN_PATTERNS = [
     re.compile(r"/Users/"),
@@ -295,6 +302,70 @@ _ACHIEVE_DONE = {
     "牧场": ("🐄", "巡视牧场", "轮"),
     "值守": ("🔔", "应门值守", "次"),
 }
+
+
+def trophies_block(local_tz):
+    """荣誉柜:vibe-trophy 终身成就 + 今日解锁 diff。
+
+    - 缓存过期才真跑扫描;失败抛异常由调用方降级(整块置 None,前端不渲染)
+    - "今日解锁"=对比上次快照新增的解锁,当天累积,跨天清零;
+      首次建快照时不把全部存量当"今日解锁"
+    - 隐藏成就没解锁就不出门,不剧透
+    """
+    fresh = os.path.exists(TROPHY_CACHE) and (time.time() - os.path.getmtime(TROPHY_CACHE) < TROPHY_TTL_SEC)
+    if not fresh:
+        os.makedirs(os.path.dirname(TROPHY_CACHE), exist_ok=True)
+        p = subprocess.run(
+            ["node", TROPHY_TOOL, "--json=" + TROPHY_CACHE],
+            capture_output=True, text=True, timeout=180,
+        )
+        if p.returncode != 0 or not os.path.exists(TROPHY_CACHE):
+            raise RuntimeError(f"vibe-trophy 扫描失败: {p.stderr.strip()[:200]}")
+
+    with open(TROPHY_CACHE, encoding="utf-8") as f:
+        data = json.load(f)
+    ach = data.get("achievements", [])
+    unlocked_names = [a["name"] for a in ach if a.get("ok")]
+
+    today_key = datetime.now(local_tz).strftime("%Y-%m-%d")
+    state = {}
+    if os.path.exists(TROPHY_STATE):
+        try:
+            with open(TROPHY_STATE, encoding="utf-8") as f:
+                state = json.load(f)
+        except Exception:
+            state = {}
+    prev = set(state.get("unlocked", []))
+    today_new = list(state.get("today_new", [])) if state.get("date") == today_key else []
+    if prev:
+        for n in unlocked_names:
+            if n not in prev and n not in today_new:
+                today_new.append(n)
+    with open(TROPHY_STATE, "w", encoding="utf-8") as f:
+        json.dump({"date": today_key, "unlocked": unlocked_names, "today_new": today_new},
+                  f, ensure_ascii=False)
+
+    badges = []
+    for a in ach:
+        if a.get("hidden") and not a.get("ok"):
+            continue  # 未解锁的隐藏成就不剧透
+        b = {"icon": a["icon"], "name": a["name"], "tier": a.get("tier"),
+             "g": a.get("g"), "ok": bool(a.get("ok")), "desc": a.get("desc")}
+        if a.get("ok"):
+            b["val"] = a.get("val")
+        else:
+            b["cur"], b["max"] = a.get("cur"), a.get("max")
+        badges.append(b)
+
+    return {
+        "source": "vibe-trophy",
+        "scanned_at": data.get("generated_at"),
+        "unlocked": data.get("unlocked"),
+        "total": data.get("total"),
+        "today_new": [b for b in badges if b["name"] in today_new],
+        "badges": badges,
+        "note": "终身成就,vibe-trophy 从本地日志实算,只算人类会话;今日解锁有才显示",
+    }
 
 
 def achievements_today(kept_beats, today_start, local_tz):
@@ -706,6 +777,11 @@ def build_heartbeats(registry, inject_leak_for_selftest=False):
     except Exception as e:
         warn(f"今日成就聚合失败，本轮置空: {type(e).__name__}: {e}")
         achievements = []
+    try:
+        trophies = trophies_block(local_tz)
+    except Exception as e:
+        warn(f"荣誉柜读取失败，本轮不渲染: {type(e).__name__}: {e}")
+        trophies = None
 
     output = {
         "v": 0,
@@ -718,6 +794,7 @@ def build_heartbeats(registry, inject_leak_for_selftest=False):
             "last_beat_at": last_beat_at,
             "energy": energy,
             "achievements_today": achievements,
+            "trophies": trophies,
         },
         "heartbeats": kept,
     }
