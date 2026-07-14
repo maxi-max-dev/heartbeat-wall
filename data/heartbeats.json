@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-14T20:07:14Z",
+  "generated_at": "2026-07-14T20:22:20Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-14T20:04:57Z",
+      "last_beat_at": "2026-07-14T20:19:59Z",
       "last_status": "running"
     },
     {
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-14T20:04:57Z",
+      "last_beat_at": "2026-07-14T20:19:59Z",
       "last_status": "running"
     }
   ],
   "stats": {
     "beats_24h": 200,
     "active_now": 2,
-    "last_beat_at": "2026-07-14T20:04:57Z",
+    "last_beat_at": "2026-07-14T20:19:59Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,7 +137,7 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "67 下"
+        "value": "69 下"
       },
       {
         "icon": "🔧",
@@ -167,7 +167,7 @@
     ],
     "trophies": {
       "source": "vibe-trophy",
-      "scanned_at": "2026-07-14T14:20:13.131Z",
+      "scanned_at": "2026-07-14T20:22:32.424Z",
       "unlocked": 36,
       "total": 37,
       "today_new": [],
@@ -233,7 +233,7 @@
           "g": "日常",
           "ok": true,
           "desc": "单条消息 500 字起步，这不是 prompt 是需求文档",
-          "val": "最长一条 151496 字，超500字共 2118 条"
+          "val": "最长一条 151496 字，超500字共 2119 条"
         },
         {
           "icon": "🤏",
@@ -278,7 +278,7 @@
           "g": "肝度",
           "ok": true,
           "desc": "02:00–06:00 还在 vibe，全世界只剩你和它的 loading",
-          "val": "43 个深夜"
+          "val": "44 个深夜"
         },
         {
           "icon": "🧛",
@@ -305,7 +305,7 @@
           "g": "肝度",
           "ok": true,
           "desc": "连续 7 天有会话。休息？那是模型维护日干的事",
-          "val": "最长连勤 41 天"
+          "val": "最长连勤 42 天"
         },
         {
           "icon": "🏃",
@@ -396,7 +396,7 @@
           "g": "钞能力",
           "ok": true,
           "desc": "缓存命中累计 10 亿 token，省下的都是赚的",
-          "val": "白嫖 187.7 亿"
+          "val": "白嫖 187.9 亿"
         },
         {
           "icon": "🚧",
@@ -511,6 +511,22 @@
     }
   },
   "heartbeats": [
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-14T20:19:59Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-14T20:19:59Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "Jarvis",
       "category": "管家",
@@ -2092,22 +2108,6 @@
       "category": "造物",
       "status": "running",
       "started_at": "2026-07-14T04:46:05Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-07-14T04:32:10Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-07-14T04:32:10Z",
       "duration_s": null,
       "title": null
     }
