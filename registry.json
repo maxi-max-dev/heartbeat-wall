@@ -1,8 +1,8 @@
 {
   "_comment": "心跳墙居民白名单。不在此册的数据源一律丢弃，永不自动新增居民。export.py 只读此文件做映射，改居民请改这里。",
   "home": {
-    "id": "onlycarbon",
-    "name": "唯一碳基之家",
+    "id": "home",
+    "name": "一屋硅基",
     "tagline": "一个人类，一屋子硅基，全天候造东西"
   },
   "residents": [
