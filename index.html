@@ -257,6 +257,40 @@
   .ach-chip b{color:var(--gold);font-weight:700;font-variant-numeric:tabular-nums}
   .ach-empty{font-size:12.5px;color:var(--text-faint);padding:4px 2px}
 
+  /* ================= 荣誉柜(vibe-trophy 终身成就) ================= */
+  .trophy-count{margin-left:auto;font-size:12.5px;color:var(--text-dim);font-weight:600;white-space:nowrap}
+  .trophy-count b{color:var(--gold);font-variant-numeric:tabular-nums}
+  .trophy-new{margin:0 0 14px;display:flex;flex-direction:column;gap:7px}
+  .trophy-new[hidden]{display:none}
+  .trophy-new-label{font-size:12.5px;color:var(--gold);font-weight:700}
+  .trophy-new-list{display:flex;flex-wrap:wrap;gap:8px}
+  .trophy-new-card{
+    display:flex;align-items:center;gap:8px;max-width:100%;
+    background:var(--accent-soft);border:1px solid var(--accent);border-radius:10px;
+    padding:8px 12px;
+  }
+  .trophy-new-card .tn-icon{font-size:18px;flex:none}
+  .trophy-new-card .tn-body{display:flex;flex-direction:column;min-width:0}
+  .trophy-new-card .tn-name{font-weight:700;font-size:13px;color:var(--text)}
+  .trophy-new-card .tn-desc{font-size:11.5px;color:var(--text-dim)}
+  .trophy-groups{display:flex;flex-direction:column;gap:10px}
+  .trophy-group-label{font-size:11px;color:var(--text-faint);font-weight:700;letter-spacing:.02em;margin-bottom:5px}
+  .trophy-wall{display:flex;flex-wrap:wrap;gap:7px}
+  .trophy-chip{
+    display:inline-flex;align-items:center;gap:5px;
+    background:var(--wood);border:1px solid var(--border);border-radius:999px;
+    padding:5px 10px;font-size:12px;color:var(--text-dim);
+  }
+  .trophy-chip .tc-icon{font-size:14px}
+  .trophy-chip .tc-progress{font-size:10.5px;color:var(--text-faint);margin-left:1px}
+  .trophy-chip.locked{opacity:.5;filter:grayscale(.65)}
+  .trophy-chip[data-tier="金"]{border-color:rgba(232,184,75,.55)}
+  .trophy-chip[data-tier="银"]{border-color:rgba(200,200,210,.5)}
+  .trophy-chip[data-tier="白金"]{border-color:rgba(190,225,255,.55)}
+  .trophy-chip[data-tier="铜"]{border-color:rgba(190,130,85,.5)}
+  .trophy-foot{font-size:11.5px;color:var(--text-faint);margin-top:12px}
+  .trophy-foot a{color:var(--text-faint);text-decoration:underline}
+
   /* ---------- footer ---------- */
   .site-footer{
     text-align:center;color:var(--text-faint);font-size:12.5px;
@@ -322,6 +356,19 @@
       <div class="meter-scope" id="energy-scope"></div>
     </div>
     <div class="ach-list" id="ach-list"></div>
+  </section>
+
+  <section aria-label="荣誉柜" id="trophy-section" hidden>
+    <h2 class="section-title">
+      <span>🏆 荣誉柜</span>
+      <span class="trophy-count" id="trophy-count"></span>
+    </h2>
+    <div class="trophy-new" id="trophy-new" hidden>
+      <div class="trophy-new-label">🆕 今日解锁</div>
+      <div class="trophy-new-list" id="trophy-new-list"></div>
+    </div>
+    <div class="trophy-groups" id="trophy-groups"></div>
+    <p class="trophy-foot" id="trophy-foot"></p>
   </section>
 
   <section aria-label="家庭日志">
@@ -583,7 +630,7 @@
 
   /* ================= 家园俯视图 ================= */
   function MapScene(canvas, onPick){
-    if (!canvas || !canvas.getContext) return {setResidents:function(){},setAchievements:function(){},setMeters:function(){},setTheme:function(){return false;},theme:function(){return "home";},themeList:function(){return [];},refresh:function(){},remeasure:function(){},setReduced:function(){},frames:function(){return 0;},lastDraw:function(){return "none";},actors:function(){return [];},achState:function(){return {byCategory:{},heart:0,night:null};}};
+    if (!canvas || !canvas.getContext) return {setResidents:function(){},setAchievements:function(){},setMeters:function(){},setTrophies:function(){},setTheme:function(){return false;},theme:function(){return "home";},themeList:function(){return [];},refresh:function(){},remeasure:function(){},setReduced:function(){},frames:function(){return 0;},lastDraw:function(){return "none";},actors:function(){return [];},achState:function(){return {byCategory:{},heart:0,night:null};}};
     var ctx = canvas.getContext("2d");
     var DPR = Math.min(window.devicePixelRatio || 1, 2);
     var WW = 640, WH = 430;
@@ -622,6 +669,7 @@
        锚点全部选在各屋 decorFor() 现有摆设的空白处(见部署前的坐标核对),不与床/桌/固定道具重叠。 */
     var achByCategory = {}, heartTotal = 0, nightAch = null;
     var meterByAgent = {};   /* {agent: tokens} 只收 tokens>0 的居民,没数据的屋不画不装 0 */
+    var trophyUnlocked = null;   /* 客厅奖杯柜角标:vibe-trophy stats.trophies.unlocked,null 则不画柜子 */
     var ACH_SPOT = {
       "MiroFish": {x:98,  y:10, dx:9,  dy:10, cols:4, cap:8, badge:[134,14]},   /* 星象室:星瓶架,右上空墙(角标放右侧,避开工位小人) */
       "Watcher":  {x:130, y:44, dx:9,  dy:10, cols:3, cap:8},   /* 电波室:纸条堆,右下空地 */
@@ -736,6 +784,23 @@
       if (agent === "门房" && heartTotal > 0){
         drawHeartPlaque(z.x + 56, z.y + 14, heartTotal);
       }
+    }
+    /* ---------- 客厅奖杯柜(vibe-trophy 终身成就,角标=真数,trophyUnlocked 为 null 不画) ---------- */
+    function drawTrophyCabinet(agent, z){    /* home 皮:木质奖杯柜+小金杯,靠右墙空位,不挡床/桌/名牌 */
+      if (agent !== "Jarvis" || trophyUnlocked == null) return;
+      var x = z.x + 92, y = z.y + 7;
+      ctx.fillStyle = "#5a3a24"; ctx.fillRect(x, y, 16, 20);
+      ctx.strokeStyle = "#2a1c10"; ctx.lineWidth = 1; ctx.strokeRect(x + 0.5, y + 0.5, 15, 19);
+      ctx.fillStyle = "rgba(200,225,255,.08)"; ctx.fillRect(x + 2, y + 2, 12, 16);
+      ctx.strokeStyle = "rgba(255,224,180,.2)"; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x + 2, y + 11); ctx.lineTo(x + 14, y + 11); ctx.stroke();
+      ctx.fillStyle = "#e8b84b";
+      ctx.beginPath(); ctx.arc(x + 8, y + 6.5, 2.2, 0, 3.14159); ctx.fill();
+      ctx.fillRect(x + 7, y + 8, 2, 2); ctx.fillRect(x + 6, y + 10, 4, 1);
+      ctx.fillStyle = "#c9a23a";
+      ctx.beginPath(); ctx.arc(x + 8, y + 14.5, 1.8, 0, 3.14159); ctx.fill();
+      ctx.fillRect(x + 7.2, y + 16, 1.6, 1.6);
+      drawCountBadge(x - 2, y + 21, trophyUnlocked);
     }
 
     /* ---------- 每屋电表:真实 token 读数(来自 energy.by_resident,tokens>0 才画) ---------- */
@@ -1467,6 +1532,24 @@
         ctx.fillStyle = "#e8735c"; ctx.fillText(txt, z.x+56, z.y+15);   /* 数字计数牌 */
       }
     }
+    function factoryTrophyCase(agent, z){    /* factory 皮:玻璃展示灯箱,同一个墙位 */
+      if (agent !== "Jarvis" || trophyUnlocked == null) return;
+      var x = z.x + 92, y = z.y + 7;
+      ctx.fillStyle = "#23272b"; ctx.fillRect(x, y, 16, 20);
+      ctx.strokeStyle = HAZ; ctx.lineWidth = 1; ctx.strokeRect(x + 0.5, y + 0.5, 15, 19);
+      ctx.fillStyle = "rgba(150,210,255,.12)"; ctx.fillRect(x + 2, y + 2, 12, 16);
+      ctx.globalCompositeOperation = "lighter";
+      var g = ctx.createRadialGradient(x + 8, y + 8, 0, x + 8, y + 8, 9);
+      g.addColorStop(0, "rgba(255,210,120,.35)"); g.addColorStop(1, "rgba(255,210,120,0)");
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x + 8, y + 8, 9, 0, 6.2832); ctx.fill();
+      ctx.globalCompositeOperation = "source-over";
+      ctx.fillStyle = "#ffd27a";
+      ctx.beginPath(); ctx.arc(x + 8, y + 7, 2.2, 0, 3.14159); ctx.fill();
+      ctx.fillRect(x + 7, y + 8.5, 2, 2); ctx.fillRect(x + 6, y + 10.5, 4, 1);
+      ctx.strokeStyle = "#565d64"; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x + 4, y + 18); ctx.lineTo(x + 12, y + 18); ctx.stroke();
+      drawCountBadge(x - 2, y + 21, trophyUnlocked);
+    }
     function factoryMeter(agent, z, tokens){
       var sp = MET_SPOT[agent] || [12, z.h - 18];
       var x = z.x + sp[0], y = z.y + sp[1];
@@ -1616,6 +1699,17 @@
         ctx.fillStyle = "#c8504a"; ctx.fillText(txt, z.x+57, z.y+15);
       }
     }
+    function farmTrophyBoard(agent, z){    /* farm 皮:挂墙奖牌+绶带板,同一个墙位 */
+      if (agent !== "Jarvis" || trophyUnlocked == null) return;
+      var x = z.x + 90, y = z.y + 7;
+      ctx.fillStyle = "#7a5230"; ctx.fillRect(x, y, 18, 16);
+      ctx.strokeStyle = "#4a3418"; ctx.lineWidth = 1; ctx.strokeRect(x + 0.5, y + 0.5, 17, 15);
+      ctx.fillStyle = "#c9a23a"; ctx.beginPath(); ctx.arc(x + 6, y + 6, 3, 0, 6.2832); ctx.fill();
+      ctx.fillStyle = "#8a5c32"; ctx.fillRect(x + 4.5, y + 8, 3, 6);
+      ctx.fillStyle = "#e8dcc0"; ctx.beginPath(); ctx.arc(x + 13, y + 7, 2.4, 0, 6.2832); ctx.fill();
+      ctx.fillStyle = "#8a5c32"; ctx.fillRect(x + 11.5, y + 9, 3, 5);
+      drawCountBadge(x - 2, y + 18, trophyUnlocked);
+    }
     function farmMeter(agent, z, tokens){
       var sp = MET_SPOT[agent] || [12, z.h - 18];
       var x = z.x + sp[0], y = z.y + sp[1];
@@ -1637,17 +1731,17 @@
       home: {
         id:"home", name:"温馨小家", icon:"🏠",
         ground: drawGround, commons: drawCommons, room: homeRoom,
-        resident: drawBlob, ach: drawAchProps, meter: homeMeter
+        resident: drawBlob, ach: drawAchProps, meter: homeMeter, trophy: drawTrophyCabinet
       },
       factory: {
         id:"factory", name:"工厂", icon:"🏭",
         ground: factoryGround, commons: factoryCommons, room: factoryRoom,
-        resident: factoryResident, ach: factoryAch, meter: factoryMeter
+        resident: factoryResident, ach: factoryAch, meter: factoryMeter, trophy: factoryTrophyCase
       },
       farm: {
         id:"farm", name:"农场", icon:"🌾",
         ground: farmGround, commons: farmCommons, room: farmRoom,
-        resident: farmResident, ach: farmAch, meter: farmMeter
+        resident: farmResident, ach: farmAch, meter: farmMeter, trophy: farmTrophyBoard
       }
     };
     var SKIN = SKINS[INIT_THEME] || SKINS.home;
@@ -1662,6 +1756,7 @@
         SKIN.room(agent, z, th, now);
         if (SKIN.ach) SKIN.ach(agent, z, th);
         if (SKIN.meter && meterByAgent[agent] != null) SKIN.meter(agent, z, meterByAgent[agent], th);
+        if (SKIN.trophy) SKIN.trophy(agent, z, th);
       });
       var sorted = actors.slice().sort(function(a, b){ return a.y - b.y; });
       for (var i = 0; i < sorted.length; i++) SKIN.resident(sorted[i], now);
@@ -1757,6 +1852,10 @@
       setMeters: function(list){    /* energy.by_resident → 每屋 token 读数,只收 tokens>0(不装 0) */
         meterByAgent = {};
         (list || []).forEach(function(r){ if (r && r.tokens > 0) meterByAgent[r.agent] = r.tokens; });
+        if (reduced){ drawStatic(); } else { ensure(); redrawIdle(); }
+      },
+      setTrophies: function(t){    /* stats.trophies.unlocked → 客厅奖杯柜角标;null/无字段则不画柜子 */
+        trophyUnlocked = (t && typeof t.unlocked === "number") ? t.unlocked : null;
         if (reduced){ drawStatic(); } else { ensure(); redrawIdle(); }
       },
       setTheme: function(id){
@@ -2170,6 +2269,97 @@
     });
   }
 
+  /* ---------- 荣誉柜(vibe-trophy 终身成就,纯 DOM 真值,trophies=null 整块不渲染) ---------- */
+  var TROPHY_GROUP_ORDER = ["日常", "肝度", "钞能力", "微操"];
+  function renderTrophies(t){
+    var section = el("trophy-section");
+    if (!t || typeof t.unlocked !== "number" || typeof t.total !== "number" ||
+        !t.badges || !t.badges.length){
+      section.hidden = true;
+      return;
+    }
+    section.hidden = false;
+    el("trophy-count").innerHTML = "已解锁 <b>" + t.unlocked + "</b>/" + t.total;
+
+    var newBox = el("trophy-new"), newList = el("trophy-new-list");
+    newList.innerHTML = "";
+    if (t.today_new && t.today_new.length){
+      t.today_new.forEach(function(b){
+        var card = document.createElement("div");
+        card.className = "trophy-new-card";
+        var ic = document.createElement("span");
+        ic.className = "tn-icon"; ic.textContent = b.icon || "🏆";
+        var body = document.createElement("div");
+        body.className = "tn-body";
+        var nm = document.createElement("span");
+        nm.className = "tn-name"; nm.textContent = b.name || "";
+        var ds = document.createElement("span");
+        ds.className = "tn-desc"; ds.textContent = b.desc || "";
+        body.appendChild(nm); body.appendChild(ds);
+        card.appendChild(ic); card.appendChild(body);
+        newList.appendChild(card);
+      });
+      newBox.hidden = false;
+    } else {
+      newBox.hidden = true;
+    }
+
+    var groupsBox = el("trophy-groups");
+    groupsBox.innerHTML = "";
+    var byGroup = {};
+    t.badges.forEach(function(b){
+      var g = b.g || "其它";
+      (byGroup[g] = byGroup[g] || []).push(b);
+    });
+    var groupNames = TROPHY_GROUP_ORDER.filter(function(g){ return byGroup[g]; })
+      .concat(Object.keys(byGroup).filter(function(g){ return TROPHY_GROUP_ORDER.indexOf(g) === -1; }));
+    groupNames.forEach(function(g){
+      var wrap = document.createElement("div");
+      var label = document.createElement("div");
+      label.className = "trophy-group-label"; label.textContent = g;
+      var wall = document.createElement("div");
+      wall.className = "trophy-wall";
+      byGroup[g].forEach(function(b){
+        var chip = document.createElement("span");
+        chip.className = "trophy-chip" + (b.ok ? "" : " locked");
+        chip.dataset.tier = b.tier || "";
+        var titleParts = [];
+        if (b.desc) titleParts.push(b.desc);
+        if (b.val) titleParts.push(b.val);
+        chip.title = titleParts.join(" · ");
+        var ic = document.createElement("span");
+        ic.className = "tc-icon"; ic.textContent = b.icon || "🏆";
+        chip.appendChild(ic);
+        var nm = document.createElement("span");
+        nm.textContent = (b.ok ? "" : "🔒") + (b.name || "");
+        chip.appendChild(nm);
+        if (!b.ok && b.cur != null && b.max != null){
+          var pr = document.createElement("span");
+          pr.className = "tc-progress";
+          pr.textContent = "(" + b.cur + "/" + b.max + ")";
+          chip.appendChild(pr);
+        }
+        wall.appendChild(chip);
+      });
+      wrap.appendChild(label); wrap.appendChild(wall);
+      groupsBox.appendChild(wrap);
+    });
+
+    var foot = el("trophy-foot");
+    foot.innerHTML = "";
+    if (t.note){
+      var noteSpan = document.createElement("span");
+      noteSpan.textContent = t.note;
+      foot.appendChild(noteSpan);
+      foot.appendChild(document.createTextNode(" · "));
+    }
+    var link = document.createElement("a");
+    link.href = "https://maxi-max-dev.github.io/vibe-trophy/demo.html";
+    link.target = "_blank"; link.rel = "noopener";
+    link.textContent = "去看全部成就卡 →";
+    foot.appendChild(link);
+  }
+
   /* ---------- 家庭日志 ---------- */
   function buildFeedGroups(heartbeats){
     var feed = [];
@@ -2345,8 +2535,10 @@
     map.setResidents(null);
     map.setAchievements(null);
     map.setMeters(null);
+    map.setTrophies(null);
     renderEnergy(null);
     renderAchievements(null);
+    renderTrophies(null);
     el("ecg-note").textContent = "信号弱";
     el("stream-list").innerHTML =
       '<li class="stream-empty">信号断了一小会儿，听不见家里的心跳 · 先当全家都在打盹，稍后再来敲门</li>';
@@ -2387,6 +2579,8 @@
     renderAchievements(stats.achievements_today);
     map.setAchievements(stats.achievements_today);   /* 成就进屋:同一份真数,static 帧里就已经画好 */
     map.setMeters(stats.energy && stats.energy.by_resident);   /* 每屋电表:by_resident 真读数 */
+    renderTrophies(stats.trophies);              /* 荣誉柜:trophies=null 整块不渲染 */
+    map.setTrophies(stats.trophies);              /* 客厅奖杯柜角标=真数 */
 
     renderStream(beats, state.first ? null : newKeys);
     renderSunTrack(beats);
@@ -2434,6 +2628,7 @@
     get energy(){ return state.data && state.data.stats && state.data.stats.energy; },
     get achievements(){ return state.data && state.data.stats && state.data.stats.achievements_today; },
     get achRooms(){ return map.achState(); },
+    get trophies(){ return state.data && state.data.stats && state.data.stats.trophies; },
     get theme(){ return map.theme(); },
     get themeList(){ return map.themeList(); },
     setTheme: function(id){ return map.setTheme(id); },
