@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-14T03:30:46Z",
+  "generated_at": "2026-07-14T03:45:51Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-14T03:16:58Z",
+      "last_beat_at": "2026-07-14T03:32:01Z",
       "last_status": "running"
     },
     {
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-14T03:16:58Z",
+      "last_beat_at": "2026-07-14T03:32:01Z",
       "last_status": "running"
     }
   ],
   "stats": {
     "beats_24h": 200,
     "active_now": 4,
-    "last_beat_at": "2026-07-14T03:26:20Z",
+    "last_beat_at": "2026-07-14T03:32:01Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -142,7 +142,7 @@
       {
         "icon": "🔧",
         "label": "工作坊交付",
-        "value": "47 件活"
+        "value": "46 件活"
       },
       {
         "icon": "🫖",
@@ -162,7 +162,7 @@
       {
         "icon": "🌙",
         "label": "夜班时长",
-        "value": "5 小时"
+        "value": "4 小时"
       },
       {
         "icon": "🛠️",
@@ -516,6 +516,22 @@
     }
   },
   "heartbeats": [
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-14T03:32:01Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-14T03:32:01Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
@@ -2097,22 +2113,6 @@
       "category": "造物",
       "status": "done",
       "started_at": "2026-07-13T14:53:17Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-13T14:49:13Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "running",
-      "started_at": "2026-07-13T14:46:56Z",
       "duration_s": null,
       "title": null
     }
