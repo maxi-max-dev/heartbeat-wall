@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-15T23:02:36Z",
+  "generated_at": "2026-07-15T23:17:40Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-15T22:54:45Z",
+      "last_beat_at": "2026-07-15T23:09:48Z",
       "last_status": "running"
     },
     {
@@ -60,7 +60,7 @@
       "emoji": "📊",
       "role": "雷达",
       "category": "采集",
-      "last_beat_at": "2026-07-15T22:54:45Z",
+      "last_beat_at": "2026-07-15T23:09:48Z",
       "last_status": "running"
     },
     {
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-15T22:54:45Z",
+      "last_beat_at": "2026-07-15T23:09:48Z",
       "last_status": "running"
     }
   ],
   "stats": {
     "beats_24h": 200,
-    "active_now": 4,
-    "last_beat_at": "2026-07-15T22:55:38Z",
+    "active_now": 3,
+    "last_beat_at": "2026-07-15T23:09:48Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,7 +137,7 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "104 下"
+        "value": "107 下"
       },
       {
         "icon": "🔧",
@@ -511,6 +511,30 @@
     }
   },
   "heartbeats": [
+    {
+      "agent": "采集员",
+      "category": "采集",
+      "status": "running",
+      "started_at": "2026-07-15T23:09:48Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-15T23:09:48Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-15T23:09:48Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
@@ -2084,30 +2108,6 @@
       "category": "管家",
       "status": "running",
       "started_at": "2026-07-15T07:21:55Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-07-15T07:21:55Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-15T07:19:32Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "running",
-      "started_at": "2026-07-15T07:11:16Z",
       "duration_s": null,
       "title": null
     }
