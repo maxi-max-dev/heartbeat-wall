@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-15T17:30:33Z",
+  "generated_at": "2026-07-15T17:45:39Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -20,8 +20,8 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-15T17:26:31Z",
-      "last_status": "done"
+      "last_beat_at": "2026-07-15T17:38:43Z",
+      "last_status": "running"
     },
     {
       "agent": "Watcher",
@@ -44,7 +44,7 @@
       "emoji": "🔮",
       "role": "占卜师",
       "category": "占卜",
-      "last_beat_at": "2026-07-14T17:00:00Z",
+      "last_beat_at": "2026-07-15T17:00:00Z",
       "last_status": "failed"
     },
     {
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-15T17:23:40Z",
+      "last_beat_at": "2026-07-15T17:38:43Z",
       "last_status": "running"
     }
   ],
   "stats": {
     "beats_24h": 200,
     "active_now": 2,
-    "last_beat_at": "2026-07-15T17:26:31Z",
+    "last_beat_at": "2026-07-15T17:38:43Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,7 +137,7 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "41 下"
+        "value": "44 下"
       },
       {
         "icon": "🔧",
@@ -158,6 +158,11 @@
         "icon": "🌙",
         "label": "夜班时长",
         "value": "3 小时"
+      },
+      {
+        "icon": "🛠️",
+        "label": "翻车又爬起",
+        "value": "1 次"
       }
     ],
     "trophies": {
@@ -509,6 +514,22 @@
     {
       "agent": "Jarvis",
       "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-15T17:38:43Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-15T17:38:43Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
       "status": "done",
       "started_at": "2026-07-15T17:26:31Z",
       "duration_s": null,
@@ -551,6 +572,14 @@
       "category": "值守",
       "status": "running",
       "started_at": "2026-07-15T17:08:38Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "MiroFish",
+      "category": "占卜",
+      "status": "failed",
+      "started_at": "2026-07-15T17:00:00Z",
       "duration_s": null,
       "title": null
     },
@@ -2079,30 +2108,6 @@
       "category": "造物",
       "status": "running",
       "started_at": "2026-07-15T02:09:07Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-07-15T02:06:00Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-07-15T02:06:00Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-15T02:04:28Z",
       "duration_s": null,
       "title": null
     }
