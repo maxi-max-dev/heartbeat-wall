@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-15T14:14:12Z",
+  "generated_at": "2026-07-15T14:29:17Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -12,15 +12,15 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-07-15T14:12:45Z",
-      "last_status": "running"
+      "last_beat_at": "2026-07-15T14:17:54Z",
+      "last_status": "done"
     },
     {
       "agent": "Jarvis",
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-15T14:08:06Z",
+      "last_beat_at": "2026-07-15T14:23:09Z",
       "last_status": "running"
     },
     {
@@ -84,31 +84,31 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-15T14:08:06Z",
+      "last_beat_at": "2026-07-15T14:23:09Z",
       "last_status": "running"
     }
   ],
   "stats": {
     "beats_24h": 200,
-    "active_now": 4,
-    "last_beat_at": "2026-07-15T14:12:45Z",
+    "active_now": 3,
+    "last_beat_at": "2026-07-15T14:23:09Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
       "scope_note": "电表暂时只装在工作坊(泛音·Claude Code)一支，管家和外勤那几支的电还没接进来",
       "day_start": "2026-07-15T14:00:00Z",
-      "tokens_today": 65784,
-      "fresh_today": 43121,
-      "input_today": 14,
-      "output_today": 10710,
-      "cache_creation_today": 32397,
-      "cache_read_today": 22663,
+      "tokens_today": 282935,
+      "fresh_today": 83597,
+      "input_today": 19,
+      "output_today": 29192,
+      "cache_creation_today": 54386,
+      "cache_read_today": 199338,
       "sessions_today": 2,
       "by_resident": [
         {
           "agent": "泛音",
           "emoji": "🎼",
-          "tokens": 65784,
+          "tokens": 282935,
           "provider": "claude"
         },
         {
@@ -130,14 +130,19 @@
           "provider": "openclaw"
         }
       ],
-      "whole_house_tokens": 65784,
+      "whole_house_tokens": 282935,
       "scope_note_v2": "细分到各屋：泛音（工作坊，含它派出去的子代理）+管家/情报/外勤已接表，其余几间还没接上；跨模型 token 只是吞吐量，不等价电费"
     },
     "achievements_today": [
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "5 下"
+        "value": "8 下"
+      },
+      {
+        "icon": "🔧",
+        "label": "工作坊交付",
+        "value": "2 件活"
       },
       {
         "icon": "🛰️",
@@ -145,19 +150,14 @@
         "value": "1 轮"
       },
       {
-        "icon": "🔧",
-        "label": "工作坊交付",
-        "value": "1 件活"
-      },
-      {
         "icon": "🌙",
         "label": "凌晨还亮着灯",
-        "value": "5 次"
+        "value": "8 次"
       }
     ],
     "trophies": {
       "source": "vibe-trophy",
-      "scanned_at": "2026-07-15T08:27:05.172Z",
+      "scanned_at": "2026-07-15T14:29:30.216Z",
       "unlocked": 36,
       "total": 37,
       "today_new": [],
@@ -205,7 +205,7 @@
           "g": "日常",
           "ok": true,
           "desc": "MCP 工具调用 500 次，工具比活儿多",
-          "val": "8203 次 MCP 调用"
+          "val": "8267 次 MCP 调用"
         },
         {
           "icon": "🖼️",
@@ -223,7 +223,7 @@
           "g": "日常",
           "ok": true,
           "desc": "单条消息 500 字起步，这不是 prompt 是需求文档",
-          "val": "最长一条 151496 字，超500字共 2124 条"
+          "val": "最长一条 151496 字，超500字共 2133 条"
         },
         {
           "icon": "🤏",
@@ -232,7 +232,7 @@
           "g": "日常",
           "ok": true,
           "desc": "两个字以内的指令发了 20 条，\"继续\"就是最强 prompt",
-          "val": "156 条极简指令"
+          "val": "158 条极简指令"
         },
         {
           "icon": "🔂",
@@ -241,7 +241,7 @@
           "g": "日常",
           "ok": true,
           "desc": "一字不差把同一句话再发一遍，共 5 次。再试一次，再试亿次",
-          "val": "114 次原句重发"
+          "val": "115 次原句重发"
         },
         {
           "icon": "🧭",
@@ -250,7 +250,7 @@
           "g": "日常",
           "ok": true,
           "desc": "甩了 50 个链接过去：\"你自己去看\"",
-          "val": "485 条带链接消息"
+          "val": "491 条带链接消息"
         },
         {
           "icon": "🪞",
@@ -350,7 +350,7 @@
           "g": "肝度",
           "ok": true,
           "desc": "午饭点和晚饭点都在线，共 10 天。干饭不如干活",
-          "val": "49 天午晚连线"
+          "val": "50 天午晚连线"
         },
         {
           "icon": "🌤️",
@@ -386,7 +386,7 @@
           "g": "钞能力",
           "ok": true,
           "desc": "缓存命中累计 10 亿 token，省下的都是赚的",
-          "val": "白嫖 188.5 亿"
+          "val": "白嫖 190.0 亿"
         },
         {
           "icon": "🚧",
@@ -404,7 +404,7 @@
           "g": "微操",
           "ok": true,
           "desc": "派出 100 个子代理，精通自己不干活的艺术",
-          "val": "已派 519 个分身"
+          "val": "已派 527 个分身"
         },
         {
           "icon": "🧨",
@@ -422,7 +422,7 @@
           "g": "微操",
           "ok": true,
           "desc": "被 AI 说过 50 次\"你说得对\"，而你确实说得对",
-          "val": "80 次"
+          "val": "81 次"
         },
         {
           "icon": "🛑",
@@ -494,13 +494,37 @@
           "g": "微操",
           "ok": true,
           "desc": "AI 答完干等你 2 小时起步，共 5 次。它不困，你先睡",
-          "val": "共 95 次，最长晾了 35.6 天"
+          "val": "共 96 次，最长晾了 35.6 天"
         }
       ],
       "note": "终身成就,vibe-trophy 从本地日志实算,只算人类会话;今日解锁有才显示"
     }
   },
   "heartbeats": [
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-15T14:23:09Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-15T14:23:09Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-15T14:17:54Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
@@ -2074,30 +2098,6 @@
       "category": "值守",
       "status": "running",
       "started_at": "2026-07-14T23:50:36Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-14T23:49:07Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "采集员",
-      "category": "采集",
-      "status": "running",
-      "started_at": "2026-07-14T23:35:33Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-07-14T23:35:33Z",
       "duration_s": null,
       "title": null
     }
