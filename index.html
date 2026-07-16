@@ -1729,6 +1729,7 @@
     var ISO_CX = WW / 2 - 105 * ISO_K;
     var ISO_CY = 128;
     var HQ_TH = "day", HQ_NOW = null;
+    var hqCache = null, hqCacheKey = "";
     function isoP(wx, wy){ return [ISO_CX + (wx - wy) * ISO_K, ISO_CY + (wx + wy) * ISO_K * 0.5]; }
     function isoUnproject(px, py){
       var a = (px - ISO_CX) / ISO_K;
@@ -1954,40 +1955,47 @@
       if (a.cond==="mess"){ ctx.fillStyle="#e8b34a"; hqEmoji(x,hy-24,"⚠️",12); }
     }
     function hqPillAt(x, y, dot, label){
-      ctx.font="bold 11px -apple-system,'PingFang SC',sans-serif";
-      var tw=ctx.measureText(label).width, w=tw+26, h=20;
+      var cw=canvas.width/DPR, fs=cw<520?10:11;
+      ctx.font="bold "+fs+"px -apple-system,'PingFang SC',sans-serif";
+      var tw=ctx.measureText(label).width, w=tw+24, h=fs+9;
+      x=Math.min(Math.max(x, w/2+3), cw-w/2-3);
       ctx.save(); ctx.shadowColor="rgba(60,80,110,0.22)"; ctx.shadowBlur=8; ctx.shadowOffsetY=2;
-      ctx.fillStyle="#ffffff"; hqRoundRect(x-w/2,y-h/2,w,h,10); ctx.fill(); ctx.restore();
-      ctx.fillStyle=dot; ctx.beginPath(); ctx.arc(x-w/2+12,y,4.5,0,6.283); ctx.fill();
-      ctx.fillStyle="#20252c"; ctx.textAlign="left"; ctx.textBaseline="middle"; ctx.fillText(label, x-w/2+21, y+0.5);
+      ctx.fillStyle="#ffffff"; hqRoundRect(x-w/2,y-h/2,w,h,h/2); ctx.fill(); ctx.restore();
+      ctx.fillStyle=dot; ctx.beginPath(); ctx.arc(x-w/2+11,y,4,0,6.283); ctx.fill();
+      ctx.fillStyle="#20252c"; ctx.textAlign="left"; ctx.textBaseline="middle"; ctx.fillText(label, x-w/2+19, y+0.5);
       ctx.textBaseline="alphabetic";
       ctx.strokeStyle="rgba(120,140,165,0.3)"; ctx.lineWidth=1; ctx.setLineDash([2,3]);
       ctx.beginPath(); ctx.moveTo(x,y+h/2); ctx.lineTo(x,y+h/2+10); ctx.stroke(); ctx.setLineDash([]);
+      return x;
     }
     function hqLabels(){
       ctx.save(); ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      var cw=canvas.width/DPR, narrow=cw<520;   /* 窄屏精简:只留部门药丸,电表/名牌/气泡在别处已有 */
       Object.keys(ZONES).forEach(function(agent){
         var z=ZONES[agent], zone=hqZoneOf(agent), p=isoP(z.x+z.w/2, z.y+4);
         var px2=p[0]*scale, py2=(p[1]-34)*scale;
-        hqPillAt(px2, py2, zone.dot, z.name);
-        if (meterByAgent[agent]>0){
+        var pc=hqPillAt(px2, py2, zone.dot, z.name);
+        if (!narrow && meterByAgent[agent]>0){
           ctx.font="bold 8.5px -apple-system,'PingFang SC',sans-serif";
           var mt="⚡"+bigNum(meterByAgent[agent]), mw=ctx.measureText(mt).width+10;
-          ctx.fillStyle="rgba(34,26,14,0.85)"; hqRoundRect(px2-mw/2, py2+11, mw, 13, 4); ctx.fill();
-          ctx.fillStyle="#ffce7a"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText(mt, px2, py2+18);
+          var mx=Math.min(Math.max(pc, mw/2+3), cw-mw/2-3);
+          ctx.fillStyle="rgba(34,26,14,0.85)"; hqRoundRect(mx-mw/2, py2+11, mw, 13, 4); ctx.fill();
+          ctx.fillStyle="#ffce7a"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText(mt, mx, py2+18);
           ctx.textAlign="left"; ctx.textBaseline="alphabetic";
         }
       });
-      ctx.font="9px -apple-system,'PingFang SC',sans-serif"; ctx.textAlign="center";
-      actors.forEach(function(a){
-        if (a.cond!=="resting") return;
-        var p=isoP(a.x, a.y), sx=p[0]*scale, sy=(p[1]-56)*scale;
-        var w=ctx.measureText(a.agent).width+8;
-        ctx.fillStyle="rgba(255,255,255,0.92)"; hqRoundRect(sx-w/2, sy-8, w, 13, 6); ctx.fill();
-        ctx.fillStyle="#3a424e"; ctx.textBaseline="middle"; ctx.fillText(a.agent, sx, sy-1); ctx.textBaseline="alphabetic";
-      });
-      var rec=actors.filter(function(a){ return a.agent==="门房"; })[0];
-      if (rec){ var rp=isoP(rec.x, rec.y); hqBubble(rp[0]*scale+14, (rp[1]-80)*scale, "欢迎回来 👋"); }
+      if (!narrow){
+        ctx.font="9px -apple-system,'PingFang SC',sans-serif"; ctx.textAlign="center";
+        actors.forEach(function(a){
+          if (a.cond!=="resting") return;
+          var p=isoP(a.x, a.y), sx=p[0]*scale, sy=(p[1]-56)*scale;
+          var w=ctx.measureText(a.agent).width+8;
+          ctx.fillStyle="rgba(255,255,255,0.92)"; hqRoundRect(sx-w/2, sy-8, w, 13, 6); ctx.fill();
+          ctx.fillStyle="#3a424e"; ctx.textBaseline="middle"; ctx.fillText(a.agent, sx, sy-1); ctx.textBaseline="alphabetic";
+        });
+        var rec=actors.filter(function(a){ return a.agent==="门房"; })[0];
+        if (rec){ var rp=isoP(rec.x, rec.y); hqBubble(rp[0]*scale+14, (rp[1]-80)*scale, "欢迎回来 👋"); }
+      }
       ctx.restore(); ctx.setTransform(DPR*scale, 0, 0, DPR*scale, 0, 0);
     }
     function hqLightPools(){
@@ -2021,8 +2029,7 @@
       ctx.fillStyle="#2a2f37"; ctx.textAlign="left"; ctx.textBaseline="middle"; ctx.fillText(text, x+9, y+12);
       ctx.textBaseline="alphabetic";
     }
-    function hqScene(th, now){
-      HQ_TH=th; HQ_NOW=now;
+    function hqDrawStatic(th){
       var g=ctx.createLinearGradient(0,0,0,WH);
       if (th==="night"){ g.addColorStop(0,"#2a3550"); g.addColorStop(1,"#1c2438"); }
       else if (th==="dusk"){ g.addColorStop(0,"#f0e2d8"); g.addColorStop(1,"#e0cdc0"); }
@@ -2037,6 +2044,22 @@
       var meterTotal=0; Object.keys(meterByAgent).forEach(function(k){ meterTotal+=meterByAgent[k]; });
       if (meterTotal>0) hqDashboard(468,636, WALLH, bigNum(meterTotal), "今日 token");
       else if (heartTotal>0) hqDashboard(468,636, WALLH, "❤ "+heartTotal, "今日心跳");
+    }
+    function hqBuildCache(th){
+      if (!hqCache) hqCache=document.createElement("canvas");
+      if (hqCache.width!==canvas.width || hqCache.height!==canvas.height){ hqCache.width=canvas.width; hqCache.height=canvas.height; }
+      var real=ctx; ctx=hqCache.getContext("2d");
+      ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,hqCache.width,hqCache.height);
+      ctx.setTransform(DPR*scale,0,0,DPR*scale,0,0);
+      HQ_TH=th; hqDrawStatic(th);
+      ctx=real;
+    }
+    function hqScene(th, now){
+      HQ_TH=th; HQ_NOW=now;
+      var meterTotal=0; Object.keys(meterByAgent).forEach(function(k){ meterTotal+=meterByAgent[k]; });
+      var key=th+"|"+canvas.width+"|"+meterTotal+"|"+heartTotal;
+      if (key!==hqCacheKey){ hqBuildCache(th); hqCacheKey=key; }
+      ctx.setTransform(1,0,0,1,0,0); ctx.drawImage(hqCache,0,0); ctx.setTransform(DPR*scale,0,0,DPR*scale,0,0);
       var condBy={}; actors.forEach(function(a){ condBy[a.agent]=a.cond; });
       var items=[];
       Object.keys(ZONES).forEach(function(agent){
