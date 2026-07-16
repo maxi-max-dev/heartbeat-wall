@@ -2588,6 +2588,8 @@
       s.setAttribute("data-ts", state.data.generated_at);
       s.textContent = relTime(state.data.generated_at);
       lu.appendChild(s);
+      /* 拿着旧数据断流:也要通知全屏 HUD(它会亮「信号弱」并按旧数据自然老化) */
+      if (window.__HB_EXT__ && window.__HB_EXT__.onData){ try { window.__HB_EXT__.onData(state.data); } catch(e){} }
       return;
     }
     lu.textContent = "心跳信号弱";
