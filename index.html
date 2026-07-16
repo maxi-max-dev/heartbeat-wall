@@ -1723,18 +1723,16 @@
       ctx.fillStyle = "#4a3a22"; ctx.fillText(txt, x+11, y+9);
     }
 
-    /* ================= 🏢 总部皮(hq):等距 2.5D 办公园区 =================
-       世界模型不动(WW×WH 俯视 2D),等距只是渲染投影:2:1 菱形。深度键 = wx+wy。
-       scene 钩子整场景接管(drawFrame 顶部守卫),绕过逐钩子管线与末尾 4 个全局覆盖层,
-       旧三皮零回归。所有真实数据(状态/电表/成就/奖杯/心跳)来自共享闭包变量,不编一个数。 */
+    /* ===== 🏢 总部皮(hq):等距 2.5D。世界模型不动,scene 钩子整场景接管(drawFrame 守卫),
+       2:1 菱形投影,painter 按 x+y 排;真值(状态/电表/成就/奖杯)全来自共享闭包变量,不编数。 ===== */
     var ISO_K = 0.52;
-    var ISO_CX = WW / 2 - 105 * ISO_K;   /* 让菱形水平居中(推导见施工计划 §1.2) */
-    var ISO_CY = 128;                     /* 顶部留白给玻璃墙 + 悬浮药丸 */
-    var HQ_TH = "day", HQ_NOW = null;     /* hq 场景态,helper 共读 */
+    var ISO_CX = WW / 2 - 105 * ISO_K;
+    var ISO_CY = 128;
+    var HQ_TH = "day", HQ_NOW = null;
     function isoP(wx, wy){ return [ISO_CX + (wx - wy) * ISO_K, ISO_CY + (wx + wy) * ISO_K * 0.5]; }
     function isoUnproject(px, py){
-      var a = (px - ISO_CX) / ISO_K;         /* = wx - wy */
-      var b = (py - ISO_CY) / (ISO_K * 0.5); /* = wx + wy */
+      var a = (px - ISO_CX) / ISO_K;
+      var b = (py - ISO_CY) / (ISO_K * 0.5);
       return [(a + b) / 2, (b - a) / 2];
     }
     var HQP = {
@@ -1745,7 +1743,6 @@
       robotBody:"#f6f8fb", robotShade:"#dfe5ee", robotFace:"#23282f",
       dash:"#20252e", dashGlow:"#5ad0a0", shadow:"rgba(70,90,120,0.16)"
     };
-    /* 5 大分区色系(hq 皮内部视觉映射,绝不动全局 category) */
     var HQ_ZONE = {
       green:  {soft:"rgba(124,197,154,0.16)", dot:"#57b985", edge:"rgba(90,170,120,0.5)"},
       blue:   {soft:"rgba(130,170,220,0.14)", dot:"#6f9fda", edge:"rgba(110,150,205,0.5)"},
@@ -1859,9 +1856,9 @@
         if (HQ_TH!=="day"){ ctx.fillStyle="rgba(120,230,180,0.16)"; ctx.beginPath(); ctx.ellipse(sx,sy-13,24,15,0,0,6.283); ctx.fill(); }
       }
     }
-    function hqDashboard(x1, x2, wallH, big, sub){    /* 贴后墙(y=0)平面,大数字=真值(token 总量) */
+    function hqDashboard(x1, x2, wallH, big, sub){
       var l=isoP(x1,0), r=isoP(x2,0), slope=(r[1]-l[1])/(r[0]-l[0]);
-      var pTop=wallH+12, pBot=6;     /* 大屏挂高,顶略高出隔断;数字压下部避开等距下斜的顶边 */
+      var pTop=wallH+12, pBot=6;
       function pt(fx, up){ var x=l[0]+(r[0]-l[0])*fx; var y=l[1]+(x-l[0])*slope - up; return [x,y]; }
       var A=pt(0,pTop), B=pt(1,pTop), C=pt(1,pBot), D=pt(0,pBot);
       ctx.beginPath(); ctx.moveTo(A[0],A[1]); ctx.lineTo(B[0],B[1]); ctx.lineTo(C[0],C[1]); ctx.lineTo(D[0],D[1]); ctx.closePath();
@@ -1879,7 +1876,7 @@
       var sp=pt(0.06, pBot+5); ctx.fillText(sub, sp[0]+5, sp[1]);
       ctx.restore();
     }
-    function hqTrophyCabinet(wx, wy){    /* 管理区奖杯柜,角标=trophyUnlocked 真数;null 不画 */
+    function hqTrophyCabinet(wx, wy){
       if (trophyUnlocked == null) return;
       var H=54, D=34;
       hqIsoBox(wx, wy, 14, D, H, "#f1eaf7","#cfbfe4","#bfaed9");
@@ -1901,7 +1898,7 @@
       ctx.fillStyle="#ffe9b0"; ctx.fillText(txt, bp[0], bp[1]);
       ctx.textAlign="left"; ctx.textBaseline="alphabetic";
     }
-    function hqAchStack(agent, z){    /* 今日成就实物:数量=achByCategory 真数,封顶留白+角标真数 */
+    function hqAchStack(agent, z){
       var cat=AGENT_CATEGORY[agent]; if (!cat) return;
       var n=achByCategory[cat]||0; if (n<=0) return;
       var zone=hqZoneOf(agent), p=isoP(z.x+z.w*0.72, z.y+z.h*0.42), cap=Math.min(n,6);
@@ -1916,7 +1913,7 @@
       ctx.fillStyle="rgba(30,30,40,0.7)"; hqRoundRect(p[0]+10, p[1]-8, w, 13, 5); ctx.fill();
       ctx.fillStyle="#fff"; ctx.fillText(txt, p[0]+14, p[1]-1); ctx.textBaseline="alphabetic";
     }
-    function hqRobot(a){    /* 小白机器人 billboard,四态由真实 cond 决定 */
+    function hqRobot(a){
       var p=isoP(a.x, a.y), x=p[0], y=p[1], now=HQ_NOW;
       var zone=hqZoneOf(a.agent), color=zone.dot;
       var alpha=(a.cond==="tidy")?0.55:1;
@@ -1949,10 +1946,14 @@
         if (a.cond==="working"){ ctx.fillStyle="rgba(255,140,120,0.5)"; ctx.beginPath(); ctx.arc(x-7,hy+5,1.8,0,6.283); ctx.fill(); ctx.beginPath(); ctx.arc(x+7,hy+5,1.8,0,6.283); ctx.fill(); }
       }
       ctx.restore();
-      if (a.cond==="sleeping"){ ctx.fillStyle="rgba(150,170,200,0.9)"; hqEmoji(x+13,hy-14,"💤",11); }
+      if (a.cond==="sleeping"){
+        ctx.fillStyle="rgba(120,140,170,0.55)"; hqRoundRect(x-9,y-3,18,5,2); ctx.fill();
+        ctx.fillStyle="#7fd6a0"; ctx.fillRect(x-6,y-2,4,3);
+        ctx.fillStyle="rgba(150,170,200,0.9)"; hqEmoji(x+13,hy-14,"💤",11);
+      }
       if (a.cond==="mess"){ ctx.fillStyle="#e8b34a"; hqEmoji(x,hy-24,"⚠️",12); }
     }
-    function hqPillAt(x, y, dot, label){    /* 屏幕空间药丸 */
+    function hqPillAt(x, y, dot, label){
       ctx.font="bold 11px -apple-system,'PingFang SC',sans-serif";
       var tw=ctx.measureText(label).width, w=tw+26, h=20;
       ctx.save(); ctx.shadowColor="rgba(60,80,110,0.22)"; ctx.shadowBlur=8; ctx.shadowOffsetY=2;
@@ -1963,23 +1964,33 @@
       ctx.strokeStyle="rgba(120,140,165,0.3)"; ctx.lineWidth=1; ctx.setLineDash([2,3]);
       ctx.beginPath(); ctx.moveTo(x,y+h/2); ctx.lineTo(x,y+h/2+10); ctx.stroke(); ctx.setLineDash([]);
     }
-    function hqLabels(){    /* 药丸 + 名牌:屏幕空间画(复刻 drawLabels 切屏幕坐标模式) */
+    function hqLabels(){
       ctx.save(); ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
       Object.keys(ZONES).forEach(function(agent){
         var z=ZONES[agent], zone=hqZoneOf(agent), p=isoP(z.x+z.w/2, z.y+4);
-        hqPillAt(p[0]*scale, (p[1]-34)*scale, zone.dot, z.name);
+        var px2=p[0]*scale, py2=(p[1]-34)*scale;
+        hqPillAt(px2, py2, zone.dot, z.name);
+        if (meterByAgent[agent]>0){
+          ctx.font="bold 8.5px -apple-system,'PingFang SC',sans-serif";
+          var mt="⚡"+bigNum(meterByAgent[agent]), mw=ctx.measureText(mt).width+10;
+          ctx.fillStyle="rgba(34,26,14,0.85)"; hqRoundRect(px2-mw/2, py2+11, mw, 13, 4); ctx.fill();
+          ctx.fillStyle="#ffce7a"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText(mt, px2, py2+18);
+          ctx.textAlign="left"; ctx.textBaseline="alphabetic";
+        }
       });
       ctx.font="9px -apple-system,'PingFang SC',sans-serif"; ctx.textAlign="center";
       actors.forEach(function(a){
-        if (a.cond!=="resting") return;   /* 只给漫游到中庭的居民加名牌,其余在自己有牌的屋里 */
+        if (a.cond!=="resting") return;
         var p=isoP(a.x, a.y), sx=p[0]*scale, sy=(p[1]-56)*scale;
         var w=ctx.measureText(a.agent).width+8;
         ctx.fillStyle="rgba(255,255,255,0.92)"; hqRoundRect(sx-w/2, sy-8, w, 13, 6); ctx.fill();
         ctx.fillStyle="#3a424e"; ctx.textBaseline="middle"; ctx.fillText(a.agent, sx, sy-1); ctx.textBaseline="alphabetic";
       });
+      var rec=actors.filter(function(a){ return a.agent==="门房"; })[0];
+      if (rec){ var rp=isoP(rec.x, rec.y); hqBubble(rp[0]*scale+14, (rp[1]-80)*scale, "欢迎回来 👋"); }
       ctx.restore(); ctx.setTransform(DPR*scale, 0, 0, DPR*scale, 0, 0);
     }
-    function hqLightPools(){    /* 夜态暖光池:只在真的有人干活/在场处亮(lighter 合成) */
+    function hqLightPools(){
       ctx.globalCompositeOperation="lighter";
       actors.forEach(function(a){
         var r=a.cond==="working"?60:(a.cond==="resting"?40:0); if (!r) return;
@@ -1989,6 +2000,26 @@
         ctx.fillStyle=g; ctx.beginPath(); ctx.ellipse(cx,cy,r*pulse,r*pulse*0.62,0,0,6.283); ctx.fill();
       });
       ctx.globalCompositeOperation="source-over";
+    }
+    function hqParticles(){
+      for (var i=0;i<particles.length;i++){
+        var p=particles[i], k=Math.max(0,p.life/p.max), q=isoP(p.x,p.y);
+        ctx.globalAlpha=k;
+        if (p.t==="ring"){ ctx.strokeStyle=p.c; ctx.lineWidth=1.4; ctx.beginPath(); ctx.ellipse(q[0],q[1],p.r,p.r*0.5,0,0,6.283); ctx.stroke(); }
+        else if (p.t==="steam"){ ctx.globalAlpha=1; ctx.fillStyle="rgba("+p.c+","+(k*0.45)+")"; ctx.beginPath(); ctx.arc(q[0],q[1],p.r,0,6.283); ctx.fill(); }
+        else { ctx.fillStyle=p.c; ctx.fillRect(q[0]-1.5,q[1]-2.5,3,3); }
+      }
+      ctx.globalAlpha=1;
+    }
+    function hqBubble(px2, py2, text){
+      ctx.font="11px -apple-system,'PingFang SC',sans-serif";
+      var w=ctx.measureText(text).width+18, x=px2, y=py2;
+      ctx.save(); ctx.shadowColor="rgba(60,80,110,0.22)"; ctx.shadowBlur=8; ctx.shadowOffsetY=2;
+      ctx.fillStyle="#ffffff"; hqRoundRect(x,y,w,24,12); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(x+8,y+21); ctx.lineTo(x+3,y+32); ctx.lineTo(x+18,y+22); ctx.closePath(); ctx.fill();
+      ctx.restore();
+      ctx.fillStyle="#2a2f37"; ctx.textAlign="left"; ctx.textBaseline="middle"; ctx.fillText(text, x+9, y+12);
+      ctx.textBaseline="alphabetic";
     }
     function hqScene(th, now){
       HQ_TH=th; HQ_NOW=now;
@@ -2003,28 +2034,23 @@
       var WALLH=56;
       hqGlassWall(0,0, WW,0, WALLH);
       hqGlassWall(0,0, 0,WH, WALLH);
-      /* 挂墙大屏(后墙「菜地」段,正前方无工位不被机器人顶到):优先 token 电表总量,退回今日心跳 */
       var meterTotal=0; Object.keys(meterByAgent).forEach(function(k){ meterTotal+=meterByAgent[k]; });
       if (meterTotal>0) hqDashboard(468,636, WALLH, bigNum(meterTotal), "今日 token");
       else if (heartTotal>0) hqDashboard(468,636, WALLH, "❤ "+heartTotal, "今日心跳");
-      /* 每屋 working 状态(桌屏亮灯真值) */
       var condBy={}; actors.forEach(function(a){ condBy[a.agent]=a.cond; });
-      /* 家具 + 居民合并成一张清单,按 wx+wy 深度排(远→近) */
       var items=[];
       Object.keys(ZONES).forEach(function(agent){
         var z=ZONES[agent];
         items.push({d:z.desk[0]+z.desk[1]-13, fn:(function(zz,ag){ return function(){ hqDesk(zz.desk[0], zz.desk[1], condBy[ag]==="working"); }; })(z,agent)});
         items.push({d:z.x+z.w*0.72+z.y+z.h*0.42, fn:(function(zz,ag){ return function(){ hqAchStack(ag,zz); }; })(z,agent)});
       });
-      /* 奖杯柜(管理区 Jarvis) */
       if (trophyUnlocked!=null) items.push({d:398+330, fn:function(){ hqTrophyCabinet(398,330); }});
-      /* 盆栽(固定世界点:中庭 + 菜地 + 各角落空档,纯氛围) */
       var plants=[[320,150],[250,240],[400,210],[96,100],[544,110],[300,300],[430,360],[150,250]];
       plants.forEach(function(pt){ items.push({d:pt[0]+pt[1], fn:(function(q){ return function(){ hqPlant(q[0],q[1]); }; })(pt)}); });
-      /* 居民 */
       actors.forEach(function(a){ items.push({d:a.x+a.y+0.5, fn:(function(ac){ return function(){ hqRobot(ac); }; })(a)}); });
       items.sort(function(p,q){ return p.d-q.d; });
       for (var i=0;i<items.length;i++) items[i].fn();
+      if (particles.length) hqParticles();
       if (th!=="day") hqLightPools();
       hqLabels();
     }
