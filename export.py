@@ -36,7 +36,7 @@ REGISTRY_PATH = os.path.join(PROJECT_DIR, "registry.json")
 OUT_PATH = os.path.join(PROJECT_DIR, "data", "heartbeats.json")
 
 WINDOW_HOURS = 48
-MAX_BEATS = 200
+MAX_BEATS = 400   # feed 截断上限;统计(beats_24h/成就)一律用未截断的 windowed 算,别再用它数数
 ACTIVE_WINDOW_SEC = 20 * 60  # "20 分钟内有跳" 也算 active_now
 
 # 电量诚实边界:这套 JSONL 只有 CC 会话(泛音)的 token，OpenClaw 那几支拿不到。
@@ -740,7 +740,8 @@ def build_heartbeats(registry, inject_leak_for_selftest=False):
         })
 
     beats_24h_cutoff = now - timedelta(hours=24)
-    beats_24h = sum(1 for b in kept if parse_iso(b["started_at"]) >= beats_24h_cutoff)
+    # 用未截断的窗口全量数,否则高产日(>MAX_BEATS 跳)读数会饱和在截断值上——2026-07-16 实锤过
+    beats_24h = sum(1 for b in windowed if parse_iso(b["started_at"]) >= beats_24h_cutoff)
     active_now = 0
     for r in residents_out:
         if r["last_beat_at"] is None:
@@ -773,7 +774,8 @@ def build_heartbeats(registry, inject_leak_for_selftest=False):
         except Exception as e:
             warn(f"电表细分失败，本轮跳过: {type(e).__name__}: {e}")
     try:
-        achievements = achievements_today(kept, today_start, local_tz)
+        # 同 beats_24h:成就计数用未截断窗口,免得高产日被 MAX_BEATS 饱和
+        achievements = achievements_today(windowed, today_start, local_tz)
     except Exception as e:
         warn(f"今日成就聚合失败，本轮置空: {type(e).__name__}: {e}")
         achievements = []

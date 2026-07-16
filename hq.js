@@ -392,5 +392,504 @@
     return { id:"hq", name:"总部", icon:"🏢", scene:hqScene, unproject:isoUnproject, project:isoP };
   }
 
-  window.__HB_EXT__ = { makeSkin: makeSkin };
+  /* ==========================================================================
+     全屏总控台 HUD(initHud 注入页面工具箱 H 后生效)
+     真值纪律:所有信息静态同步渲染,不依赖 rAF;时间戳挂 data-ts 由页面 tick 自刷。
+     门牌只读 #home-name(镜像端换牌后的 DOM),绝不读数据里的中性名。
+     ========================================================================== */
+  var H = null, hud = null, full = false, panelAgent = null;
+  var els = {}, clockTimer = null;
+
+  var DOT = { working:"#57b985", resting:"#e0a83a", mess:"#e0735c", sleeping:"#8b98a8", tidy:"#8b98a8" };
+  function zoneDot(agent){
+    if (AGENT_CATEGORY && CAT_ZONE[AGENT_CATEGORY[agent]]) return HQ_ZONE[CAT_ZONE[AGENT_CATEGORY[agent]]].dot;
+    return "#6f9fda";
+  }
+  function tone(){
+    var h = H.hourNow();
+    return (h >= 6 && h < 16) ? "day" : (h >= 16 && h < 19) ? "dusk" : "night";
+  }
+  function doorName(){
+    var n = document.getElementById("home-name");
+    return n ? n.textContent : "";
+  }
+  function clockText(){
+    var d = new Date();
+    return (d.getHours() < 10 ? "0" : "") + d.getHours() + ":" + (d.getMinutes() < 10 ? "0" : "") + d.getMinutes();
+  }
+  function mk(tag, cls, text){
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function tsSpan(iso, cls){
+    var s = mk("span", cls || "");
+    s.setAttribute("data-ts", iso);
+    s.textContent = H.relTime(iso);
+    return s;
+  }
+  function stripIds(node){
+    if (node.removeAttribute) node.removeAttribute("id");
+    var withId = node.querySelectorAll ? node.querySelectorAll("[id]") : [];
+    for (var i = 0; i < withId.length; i++) withId[i].removeAttribute("id");
+    return node;
+  }
+
+  var HUD_CSS = "" +
+    "html.hq-full,html.hq-full body{height:100%;overflow:hidden}" +
+    "html.hq-full .wrap{max-width:none;padding:0}" +
+    "html.hq-full .wrap>*{display:none}" +
+    "html.hq-full .wrap>.scene-card{display:block;margin:0}" +
+    "html.hq-full .scene-card .map-frame{position:fixed;inset:0;border:none;border-radius:0;box-shadow:none;background:transparent;z-index:40}" +
+    "html.hq-full .scene-caption,html.hq-full .scene-hint,html.hq-full .theme-switch,html.hq-full .peek{display:none}" +
+    "#hq-hud{position:fixed;inset:0;z-index:50;pointer-events:none;" +
+      "--hp-bg:rgba(255,255,255,.9);--hp-bg2:rgba(244,248,252,.85);--hp-tx:#242b35;--hp-dim:#5a6675;--hp-bd:rgba(120,140,165,.3);--hp-sh:0 4px 18px rgba(40,60,90,.16)}" +
+    "#hq-hud[data-tone=\"night\"]{--hp-bg:rgba(21,29,47,.92);--hp-bg2:rgba(30,40,62,.88);--hp-tx:#e8eefb;--hp-dim:#9fb0c8;--hp-bd:rgba(140,165,200,.28);--hp-sh:0 4px 18px rgba(0,0,10,.4)}" +
+    "#hq-hud[data-tone=\"dusk\"]{--hp-bg:rgba(252,244,238,.92);--hp-bg2:rgba(246,235,226,.88);--hp-tx:#3a2f28;--hp-dim:#7a6a5c;--hp-bd:rgba(170,140,110,.32)}" +
+    "#hq-hud[hidden]{display:none}" +
+    "#hq-hud .hqh-pe{pointer-events:auto}" +
+    "#hq-hud button{font-family:inherit}" +
+    ".hqh-card{background:var(--hp-bg);border:1px solid var(--hp-bd);border-radius:12px;box-shadow:var(--hp-sh);color:var(--hp-tx)}" +
+    ".hqh-top{position:absolute;top:10px;left:12px;right:12px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}" +
+    ".hqh-door{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;font-weight:800;font-size:14px}" +
+    ".hqh-chip{display:inline-flex;align-items:center;gap:5px;padding:7px 11px;font-size:12px;color:var(--hp-dim)}" +
+    ".hqh-chip b{color:var(--hp-tx);font-variant-numeric:tabular-nums;font-size:12.5px}" +
+    ".hqh-clock{font-variant-numeric:tabular-nums;font-weight:700;color:var(--hp-tx)}" +
+    ".hqh-skin{margin-left:auto;padding:8px 13px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--hp-tx)}" +
+    ".hqh-skin:hover{border-color:#e0a83a}" +
+    ".hqh-rail{position:absolute;left:12px;top:62px;bottom:66px;width:178px;display:flex;flex-direction:column;gap:3px;overflow-y:auto;padding:8px}" +
+    ".hqh-res{display:flex;align-items:center;gap:8px;background:transparent;border:1px solid transparent;border-radius:10px;padding:6px 8px;cursor:pointer;color:var(--hp-tx);font-size:12.5px;text-align:left;width:100%}" +
+    ".hqh-res:hover{border-color:var(--hp-bd);background:var(--hp-bg2)}" +
+    ".hqh-res.on{border-color:#e0a83a;background:var(--hp-bg2)}" +
+    ".hqh-res .e{font-size:16px;flex:none}" +
+    ".hqh-res .tx{display:flex;flex-direction:column;min-width:0}" +
+    ".hqh-res .n{font-weight:700;white-space:nowrap}" +
+    ".hqh-res .m{font-size:10px;color:var(--hp-dim);font-variant-numeric:tabular-nums;white-space:nowrap}" +
+    ".hqh-res .d{width:8px;height:8px;border-radius:50%;margin-left:auto;flex:none}" +
+    ".hqh-bottom{position:absolute;left:202px;right:72px;bottom:12px;display:flex;align-items:baseline;gap:8px;padding:9px 14px;font-size:12.5px;overflow:hidden;white-space:nowrap}" +
+    ".hqh-bottom .fd{width:7px;height:7px;border-radius:50%;flex:none;align-self:center}" +
+    ".hqh-bottom .ft{color:var(--hp-dim);font-size:11.5px;flex:none}" +
+    ".hqh-bottom .fx{overflow:hidden;text-overflow:ellipsis}" +
+    ".hqh-actions{position:absolute;right:12px;bottom:12px;display:flex;flex-direction:column;gap:7px}" +
+    "#hq-hud.panel-on .hqh-actions{right:356px}" +
+    ".hqh-act{width:44px;height:44px;border-radius:12px;font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}" +
+    ".hqh-act:hover{border-color:#e0a83a}" +
+    ".hqh-act[hidden]{display:none}" +
+    ".hqh-panel{position:absolute;top:62px;right:12px;bottom:66px;width:332px;overflow-y:auto;padding:14px 16px}" +
+    ".hqh-panel[hidden]{display:none}" +
+    ".hqh-ph{display:flex;align-items:center;gap:9px;padding-bottom:10px;border-bottom:1px dashed var(--hp-bd);margin-bottom:10px}" +
+    ".hqh-ph .pe{font-size:26px}" +
+    ".hqh-ph .pn{font-weight:800;font-size:16px}" +
+    ".hqh-ph .pr{font-size:11.5px;color:var(--hp-dim)}" +
+    ".hqh-ph .px{margin-left:auto;background:none;border:none;color:var(--hp-dim);font-size:15px;cursor:pointer;padding:4px 6px}" +
+    ".hqh-pstat{display:flex;align-items:center;gap:7px;font-size:13px;margin:2px 0 8px}" +
+    ".hqh-pstat .d{width:8px;height:8px;border-radius:50%}" +
+    ".hqh-plabel{font-size:10.5px;color:var(--hp-dim);font-weight:700;letter-spacing:.04em;margin:12px 0 5px}" +
+    ".hqh-pach{font-size:12px;color:#b8860b;font-weight:600}" +
+    "#hq-hud[data-tone=\"night\"] .hqh-pach{color:#e8c86a}" +
+    ".hqh-pmeter{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}" +
+    ".hqh-pmeter .un{font-weight:400;font-size:11px;color:var(--hp-dim)}" +
+    ".hqh-bars{display:flex;align-items:flex-end;gap:2px;height:34px;margin-top:4px}" +
+    ".hqh-bars i{flex:1;background:var(--hp-dim);opacity:.85;border-radius:1px;min-height:2px}" +
+    ".hqh-bars i.z{opacity:.18}" +
+    ".hqh-ev{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}" +
+    ".hqh-ev li{display:flex;gap:7px;align-items:baseline;font-size:12.5px}" +
+    ".hqh-ev .d{width:6px;height:6px;border-radius:50%;flex:none;position:relative;top:-1px}" +
+    ".hqh-ev .t{color:var(--hp-dim);font-size:11px;flex:none}" +
+    ".hqh-empty{font-size:12px;color:var(--hp-dim)}" +
+    ".hqh-menu{position:absolute;top:58px;right:12px;display:flex;flex-direction:column;gap:3px;padding:7px}" +
+    ".hqh-menu[hidden]{display:none}" +
+    ".hqh-menu button{display:flex;align-items:center;gap:8px;background:transparent;border:1px solid transparent;border-radius:9px;padding:7px 12px;font-size:13px;color:var(--hp-tx);cursor:pointer;text-align:left}" +
+    ".hqh-menu button:hover{background:var(--hp-bg2);border-color:var(--hp-bd)}" +
+    ".hqh-menu button.on{border-color:#e0a83a}" +
+    ".hqh-overlay{position:absolute;inset:0;background:rgba(8,12,22,.5);display:flex;align-items:center;justify-content:center;padding:22px}" +
+    ".hqh-overlay[hidden]{display:none}" +
+    ".hqh-sheet{background:#241b12;border:1px solid #3c2f24;border-radius:14px;max-width:720px;width:100%;max-height:84vh;overflow-y:auto;padding:16px 18px;color:#f5ead9;box-shadow:0 12px 40px rgba(0,0,0,.5)}" +
+    ".hqh-sheet-head{display:flex;align-items:center;margin-bottom:8px}" +
+    ".hqh-sheet-head b{font-size:14px}" +
+    ".hqh-sheet-head button{margin-left:auto;background:none;border:none;color:#8a7561;font-size:15px;cursor:pointer;padding:4px 6px}" +
+    ".hqh-sheet section{margin-bottom:0}" +
+    "@media (max-width:640px){" +
+      ".hqh-top{gap:4px}" +
+      ".hqh-door{padding:6px 10px;font-size:12.5px}" +
+      ".hqh-chip{padding:5px 8px;font-size:10.5px}" +
+      ".hqh-upd{display:none}" +
+      ".hqh-skin{padding:6px 9px;font-size:11.5px}" +
+      ".hqh-rail{left:8px;right:8px;top:86px;bottom:auto;width:auto;flex-direction:row;overflow-x:auto;overflow-y:hidden;padding:6px;gap:4px}" +
+      ".hqh-res{flex:none;width:auto;padding:5px 8px}" +
+      ".hqh-res .m{display:none}" +
+      ".hqh-res .d{margin-left:2px}" +
+      ".hqh-panel{left:8px;right:8px;top:auto;bottom:0;width:auto;max-height:62vh;border-radius:14px 14px 0 0}" +
+      ".hqh-bottom{left:8px;right:64px;font-size:11px;padding:7px 10px}" +
+      ".hqh-actions{gap:5px}" +
+      "#hq-hud.panel-on .hqh-actions{display:none}" +
+      ".hqh-act{width:38px;height:38px;font-size:16px;border-radius:10px}" +
+      ".hqh-menu{top:auto;bottom:60px;right:58px}" +
+    "}";
+
+  function buildHud(){
+    var st = document.createElement("style");
+    st.textContent = HUD_CSS;
+    document.head.appendChild(st);
+
+    hud = mk("div"); hud.id = "hq-hud"; hud.hidden = true;
+
+    var top = mk("div", "hqh-top");
+    els.door = mk("span", "hqh-door hqh-card hqh-pe");
+    els.doorTxt = mk("b"); els.door.appendChild(document.createTextNode("🏢 ")); els.door.appendChild(els.doorTxt);
+    els.clockChip = mk("span", "hqh-chip hqh-card hqh-pe");
+    els.clock = mk("span", "hqh-clock", clockText());
+    els.clockChip.appendChild(els.clock);
+    els.chipWork = mk("span", "hqh-chip hqh-card hqh-pe");
+    els.chipBeats = mk("span", "hqh-chip hqh-card hqh-pe");
+    els.chipEnergy = mk("span", "hqh-chip hqh-card hqh-pe");
+    els.chipUpd = mk("span", "hqh-chip hqh-card hqh-pe hqh-upd");
+    els.skinBtn = mk("button", "hqh-skin hqh-card hqh-pe", "🎨 换个家");
+    els.skinBtn.type = "button";
+    els.skinBtn.addEventListener("click", function(){ els.menu.hidden = !els.menu.hidden; });
+    top.appendChild(els.door); top.appendChild(els.clockChip);
+    top.appendChild(els.chipWork); top.appendChild(els.chipBeats);
+    top.appendChild(els.chipEnergy); top.appendChild(els.chipUpd);
+    top.appendChild(els.skinBtn);
+    hud.appendChild(top);
+
+    els.rail = mk("div", "hqh-rail hqh-card hqh-pe");
+    hud.appendChild(els.rail);
+
+    els.bottom = mk("div", "hqh-bottom hqh-card hqh-pe");
+    hud.appendChild(els.bottom);
+
+    var acts = mk("div", "hqh-actions");
+    function actBtn(icon, label, fn){
+      var b = mk("button", "hqh-act hqh-card hqh-pe", icon);
+      b.type = "button"; b.title = label; b.setAttribute("aria-label", label);
+      b.addEventListener("click", fn);
+      acts.appendChild(b);
+      return b;
+    }
+    els.actTrophy = actBtn("🏆", "荣誉柜", function(){ openOverlay("trophy"); });
+    els.actEnergy = actBtn("⚡", "今日电表", function(){ openOverlay("energy"); });
+    els.actLog    = actBtn("📜", "家庭日志", function(){ openOverlay("log"); });
+    els.actFrames = actBtn("🖼", "墙上的画框", function(){ openOverlay("frames"); });
+    hud.appendChild(acts);
+
+    els.panel = mk("div", "hqh-panel hqh-card hqh-pe");
+    els.panel.hidden = true;
+    hud.appendChild(els.panel);
+
+    els.menu = mk("div", "hqh-menu hqh-card hqh-pe");
+    els.menu.hidden = true;
+    hud.appendChild(els.menu);
+
+    els.overlay = mk("div", "hqh-overlay hqh-pe");
+    els.overlay.hidden = true;
+    var sheet = mk("div", "hqh-sheet");
+    var shead = mk("div", "hqh-sheet-head");
+    els.sheetTitle = mk("b");
+    var sx = mk("button", null, "✕"); sx.type = "button"; sx.setAttribute("aria-label", "关上");
+    sx.addEventListener("click", closeOverlay);
+    shead.appendChild(els.sheetTitle); shead.appendChild(sx);
+    els.sheetBody = mk("div");
+    sheet.appendChild(shead); sheet.appendChild(els.sheetBody);
+    els.overlay.appendChild(sheet);
+    els.overlay.addEventListener("click", function(e){ if (e.target === els.overlay) closeOverlay(); });
+    hud.appendChild(els.overlay);
+
+    document.body.appendChild(hud);
+
+    document.addEventListener("keydown", function(e){
+      if (!full || e.key !== "Escape") return;
+      if (!els.overlay.hidden) closeOverlay();
+      else if (!els.menu.hidden) els.menu.hidden = true;
+      else if (!els.panel.hidden) closePanel();
+    });
+  }
+
+  /* ---------- 渲染:全部真值,数据缺席就诚实说缺席 ---------- */
+  function chipSet(chip, icon, label, strong, tail){
+    chip.innerHTML = "";
+    chip.appendChild(document.createTextNode(icon + " " + label + " "));
+    var b = mk("b", null, strong);
+    chip.appendChild(b);
+    if (tail) chip.appendChild(document.createTextNode(" " + tail));
+    chip.hidden = false;
+  }
+  function renderTop(data){
+    els.doorTxt.textContent = doorName();
+    els.clock.textContent = clockText();
+    if (!data){
+      chipSet(els.chipWork, "📡", "", "信号弱", "");
+      els.chipBeats.hidden = true; els.chipEnergy.hidden = true; els.chipUpd.hidden = true;
+      return;
+    }
+    var working = 0;
+    (data.residents || []).forEach(function(r){ if (H.roomStateFor(r).cond === "working") working++; });
+    chipSet(els.chipWork, "🟢", "在岗", String(working) + "/" + (data.residents || []).length, "");
+    var stats = data.stats || {};
+    if (typeof stats.beats_24h === "number") chipSet(els.chipBeats, "❤", "24h", String(stats.beats_24h), "跳");
+    else els.chipBeats.hidden = true;
+    var br = stats.energy && stats.energy.by_resident;
+    if (br && br.length){
+      var sum = 0; br.forEach(function(x){ sum += (x.tokens || 0); });
+      chipSet(els.chipEnergy, "⚡", "今日", H.bigNum(sum), "token");
+    } else els.chipEnergy.hidden = true;
+    if (data.generated_at){
+      els.chipUpd.innerHTML = "";
+      els.chipUpd.appendChild(document.createTextNode("更新于 "));
+      els.chipUpd.appendChild(tsSpan(data.generated_at));
+      els.chipUpd.hidden = false;
+    } else els.chipUpd.hidden = true;
+  }
+  function renderRail(data){
+    els.rail.innerHTML = "";
+    if (!data){
+      els.rail.appendChild(mk("div", "hqh-empty", "信号弱,名册读不出来"));
+      return;
+    }
+    var br = (data.stats && data.stats.energy && data.stats.energy.by_resident) || [];
+    var meterOf = {};
+    br.forEach(function(x){ if (x.tokens > 0) meterOf[x.agent] = x.tokens; });
+    (data.residents || []).forEach(function(r){
+      var st = H.roomStateFor(r);
+      var b = mk("button", "hqh-res" + (panelAgent === r.agent && !els.panel.hidden ? " on" : ""));
+      b.type = "button";
+      b.title = st.label;
+      b.appendChild(mk("span", "e", r.emoji || ""));
+      var tx = mk("span", "tx");
+      tx.appendChild(mk("span", "n", r.agent));
+      if (meterOf[r.agent]) tx.appendChild(mk("span", "m", "⚡" + H.bigNum(meterOf[r.agent])));
+      b.appendChild(tx);
+      var d = mk("i", "d"); d.style.background = DOT[st.cond] || DOT.tidy;
+      b.appendChild(d);
+      b.addEventListener("click", function(){ togglePanel(r.agent); });
+      els.rail.appendChild(b);
+    });
+  }
+  function renderBottom(data){
+    els.bottom.innerHTML = "";
+    if (!data){
+      els.bottom.appendChild(mk("span", "hqh-empty", "信号断了一小会儿,听不见家里的心跳"));
+      return;
+    }
+    var groups = H.buildFeedGroups(data.heartbeats || []);
+    if (!groups.length){
+      els.bottom.appendChild(mk("span", "hqh-empty", "这窗口期还没有心跳"));
+      return;
+    }
+    var g = groups[0], newest = g.items[0];
+    var d = mk("i", "fd");
+    d.style.background = g.status === "failed" ? "#e0735c" : (g.status === "running" ? "#57b985" : "#e0a83a");
+    els.bottom.appendChild(d);
+    els.bottom.appendChild(tsSpan(newest.started_at, "ft"));
+    els.bottom.appendChild(mk("span", "fx", g.items.length === 1 ? H.voiceFor(newest) : H.voiceForGroup(g)));
+  }
+
+  /* ---------- 个人面板 ---------- */
+  function togglePanel(agent){
+    if (panelAgent === agent && !els.panel.hidden){ closePanel(); return; }
+    panelAgent = agent;
+    renderPanel(agent);
+    els.panel.hidden = false;
+    hud.classList.add("panel-on");
+    renderRail(H.getData());
+  }
+  function closePanel(){
+    els.panel.hidden = true;
+    hud.classList.remove("panel-on");
+    panelAgent = null;
+    renderRail(H.getData());
+  }
+  function renderPanel(agent){
+    var p = els.panel;
+    p.innerHTML = "";
+    var data = H.getData();
+    var r = data && (data.residents || []).filter(function(x){ return x.agent === agent; })[0];
+    var head = mk("div", "hqh-ph");
+    head.appendChild(mk("span", "pe", (r && r.emoji) || ""));
+    var nWrap = mk("span");
+    nWrap.appendChild(mk("div", "pn", agent));
+    nWrap.appendChild(mk("div", "pr", r ? ((r.role || "") + (r.category && r.category !== r.role ? " · " + r.category : "")) : ""));
+    head.appendChild(nWrap);
+    var x = mk("button", "px", "✕"); x.type = "button"; x.setAttribute("aria-label", "关上");
+    x.addEventListener("click", closePanel);
+    head.appendChild(x);
+    head.style.borderLeft = "3px solid " + zoneDot(agent);
+    head.style.paddingLeft = "8px";
+    p.appendChild(head);
+    if (!r){
+      p.appendChild(mk("div", "hqh-empty", "信号弱,这位住户的档案暂时读不出来"));
+      return;
+    }
+    var st = H.roomStateFor(r);
+    var stat = mk("div", "hqh-pstat");
+    var d = mk("i", "d"); d.style.background = DOT[st.cond] || DOT.tidy;
+    stat.appendChild(d);
+    stat.appendChild(mk("span", null, st.label));
+    if (st.ts){
+      stat.appendChild(document.createTextNode(" · "));
+      if (st.tsMode === "dur"){
+        var du = mk("span"); du.setAttribute("data-dur", st.ts); du.textContent = H.durText(st.ts);
+        stat.appendChild(du);
+      } else stat.appendChild(tsSpan(st.ts));
+    }
+    p.appendChild(stat);
+
+    var achTxt = H.achSentenceFor(agent);
+    if (achTxt){
+      p.appendChild(mk("div", "hqh-plabel", "今日成就"));
+      p.appendChild(mk("div", "hqh-pach", achTxt));
+    }
+
+    p.appendChild(mk("div", "hqh-plabel", "电表"));
+    var br = (data.stats && data.stats.energy && data.stats.energy.by_resident) || [];
+    var me = br.filter(function(x){ return x.agent === agent; })[0];
+    if (me && me.tokens > 0){
+      var mv = mk("div", "hqh-pmeter");
+      mv.appendChild(document.createTextNode("⚡ 今日 " + H.bigNum(me.tokens) + " "));
+      mv.appendChild(mk("span", "un", "token"));
+      p.appendChild(mv);
+    } else {
+      p.appendChild(mk("div", "hqh-empty", "这间屋还没接上电表,只看得到心跳"));
+    }
+
+    var beats = (data.heartbeats || []).filter(function(b){ return b.agent === agent; });
+    p.appendChild(mk("div", "hqh-plabel", "近 24 小时心跳"));
+    var buckets = new Array(24).fill(0), nowMs = Date.now(), got = 0;
+    beats.forEach(function(b){
+      var t = new Date(b.started_at).getTime();
+      if (isNaN(t)) return;
+      var ago = Math.floor((nowMs - t) / 3600000);
+      if (ago >= 0 && ago < 24){ buckets[23 - ago]++; got++; }
+    });
+    if (got){
+      var bars = mk("div", "hqh-bars");
+      var mx = Math.max.apply(null, buckets);
+      for (var i = 0; i < 24; i++){
+        var bar = mk("i", buckets[i] ? "" : "z");
+        bar.style.height = buckets[i] ? Math.max(12, Math.round(buckets[i] / mx * 100)) + "%" : "2px";
+        bar.title = (23 - i === 0 ? "这一小时" : (23 - i) + " 小时前") + ":" + buckets[i] + " 次";
+        bars.appendChild(bar);
+      }
+      p.appendChild(bars);
+    } else {
+      p.appendChild(mk("div", "hqh-empty", "近 24 小时没有心跳记录"));
+    }
+
+    p.appendChild(mk("div", "hqh-plabel", "最近动静"));
+    var list = mk("ul", "hqh-ev");
+    var shown = beats.slice(0, 7);
+    if (!shown.length){
+      p.appendChild(mk("div", "hqh-empty", "这窗口期还没有记录,屋里收拾得很干净"));
+    } else {
+      shown.forEach(function(b){
+        var li = mk("li");
+        var dd = mk("i", "d");
+        dd.style.background = b.status === "failed" ? "#e0735c" : (b.status === "running" ? "#57b985" : "#e0a83a");
+        li.appendChild(dd);
+        li.appendChild(tsSpan(b.started_at, "t"));
+        li.appendChild(mk("span", null, b.status === "running" ? "正在忙着,还没收工" : H.voiceCore(b)));
+        list.appendChild(li);
+      });
+      p.appendChild(list);
+    }
+  }
+
+  /* ---------- 浮层:直接克隆页面既有区块(链接/文案自动跟随镜像换牌) ---------- */
+  function openOverlay(kind){
+    var body = els.sheetBody;
+    body.innerHTML = "";
+    var src = null, title = "";
+    if (kind === "trophy"){ src = document.getElementById("trophy-section"); title = "🏆 荣誉柜"; }
+    else if (kind === "energy"){ src = document.querySelector('section[aria-label="今日电表"]'); title = "⚡ 今日电表"; }
+    else if (kind === "log"){ src = document.querySelector('section[aria-label="家庭日志"]'); title = "📜 家庭日志"; }
+    else if (kind === "frames"){ src = document.querySelector('section[aria-label="墙上的画框"]'); title = "🖼 墙上的画框"; }
+    if (!src) return;
+    var clone = stripIds(src.cloneNode(true));
+    clone.hidden = false;
+    body.appendChild(clone);
+    if (kind === "frames"){
+      var rp = document.querySelector(".repo-link");
+      if (rp) body.appendChild(stripIds(rp.cloneNode(true)));
+    }
+    els.sheetTitle.textContent = title;
+    els.menu.hidden = true;
+    els.overlay.hidden = false;
+  }
+  function closeOverlay(){ els.overlay.hidden = true; }
+
+  /* ---------- 换皮菜单:代理点击页面原生切换按钮(localStorage/aria 全由原逻辑管) ---------- */
+  function renderMenu(){
+    els.menu.innerHTML = "";
+    var themes = H.map.themeList();
+    var cur = H.map.theme();
+    var realBtns = document.querySelectorAll("#theme-switch .theme-btn");
+    themes.forEach(function(t, i){
+      var b = mk("button", t.id === cur ? "on" : "", t.icon + " " + t.name);
+      b.type = "button";
+      b.addEventListener("click", function(){
+        els.menu.hidden = true;
+        if (t.id === cur) return;
+        if (realBtns[i]) realBtns[i].click();
+        else H.map.setTheme(t.id);
+      });
+      els.menu.appendChild(b);
+    });
+  }
+
+  function renderAll(){
+    if (!full) return;
+    var data = H.getData();
+    hud.dataset.tone = tone();
+    renderTop(data);
+    renderRail(data);
+    renderBottom(data);
+    renderMenu();
+    var ts = document.getElementById("trophy-section");
+    els.actTrophy.hidden = !(ts && !ts.hidden);
+    if (panelAgent && !els.panel.hidden) renderPanel(panelAgent);
+  }
+
+  function enterFull(){
+    if (full) return;
+    full = true;
+    document.documentElement.classList.add("hq-full");
+    hud.hidden = false;
+    H.map.setFit("contain");
+    H.map.remeasure();
+    renderAll();
+    if (!clockTimer){
+      clockTimer = setInterval(function(){
+        if (!full) return;
+        els.clock.textContent = clockText();
+        var tn = tone();
+        if (hud.dataset.tone !== tn) hud.dataset.tone = tn;
+      }, 30000);
+    }
+  }
+  function exitFull(){
+    if (!full) return;
+    full = false;
+    document.documentElement.classList.remove("hq-full");
+    hud.hidden = true;
+    closePanel();
+    closeOverlay();
+    els.menu.hidden = true;
+    H.map.setFit("width");
+    H.map.remeasure();
+  }
+
+  function initHud(toolkit){
+    H = toolkit;
+    buildHud();
+    if (H.map.theme() === "hq") enterFull();
+  }
+
+  window.__HB_EXT__ = {
+    makeSkin: makeSkin,
+    initHud: initHud,
+    onTheme: function(id){ if (!H || !hud) return; if (id === "hq") enterFull(); else exitFull(); },
+    onData: function(){ if (full) renderAll(); },
+    pick: function(agent){ if (!full) return false; togglePanel(agent); return true; }
+  };
 })();
