@@ -468,6 +468,8 @@
     ".hqh-res .m{font-size:10px;color:var(--hp-dim);font-variant-numeric:tabular-nums;white-space:nowrap}" +
     ".hqh-res .d{width:8px;height:8px;border-radius:50%;margin-left:auto;flex:none}" +
     ".hqh-bottom{position:absolute;left:202px;right:72px;bottom:12px;display:flex;align-items:baseline;gap:8px;padding:9px 14px;font-size:12.5px;overflow:hidden;white-space:nowrap}" +
+    ".hqh-hint{position:absolute;left:202px;bottom:52px;padding:5px 10px;font-size:10.5px;color:var(--hp-dim);border-radius:9px}" +
+    ".hqh-hint[hidden]{display:none}" +
     ".hqh-bottom .fd{width:7px;height:7px;border-radius:50%;flex:none;align-self:center}" +
     ".hqh-bottom .ft{color:var(--hp-dim);font-size:11.5px;flex:none}" +
     ".hqh-bottom .fx{overflow:hidden;text-overflow:ellipsis}" +
@@ -559,6 +561,11 @@
 
     els.bottom = mk("div", "hqh-bottom hqh-card hqh-pe");
     hud.appendChild(els.bottom);
+
+    els.hint = mk("span", "hqh-hint hqh-card hqh-pe",
+      ("ontouchstart" in window) ? "🧭 单指转 · 双指缩" : "🧭 拖动环视 · 滚轮缩放");
+    els.hint.hidden = true;
+    hud.appendChild(els.hint);
 
     var acts = mk("div", "hqh-actions");
     function actBtn(icon, label, fn){
@@ -848,6 +855,7 @@
     var ts = document.getElementById("trophy-section");
     els.actTrophy.hidden = !(ts && !ts.hidden);
     if (panelAgent && !els.panel.hidden) renderPanel(panelAgent);
+    if (D3.ready && D3.wanted){ d3Sync(); d3Tone(); }
   }
 
   function enterFull(){
@@ -858,12 +866,13 @@
     H.map.setFit("contain");
     H.map.remeasure();
     renderAll();
+    d3Activate();
     if (!clockTimer){
       clockTimer = setInterval(function(){
         if (!full) return;
         els.clock.textContent = clockText();
         var tn = tone();
-        if (hud.dataset.tone !== tn) hud.dataset.tone = tn;
+        if (hud.dataset.tone !== tn){ hud.dataset.tone = tn; d3Tone(); }
       }, 30000);
     }
   }
@@ -875,9 +884,566 @@
     closePanel();
     closeOverlay();
     els.menu.hidden = true;
+    d3Deactivate();
     H.map.setFit("width");
     H.map.remeasure();
   }
+
+  /* ==========================================================================
+     3D 总部(v3):three.js 真三维环视。进 hq 皮时懒加载自托管 three.min.js,
+     建好后盖在 2D 画布上(2D 等距=真值首帧+WebGL 不可用时的永久兜底)。
+     真值纪律不变:机器人状态/电表/大屏数字全来自共享数据,动画只是氛围。
+     本模块同样零身份串;大屏与药丸文字全部来自数据与 registry 房名。
+     ========================================================================== */
+  /* roundRect 兜底(老 Safari):画不了圆角就画方角,不至于整个 3D 报废 */
+  if (typeof CanvasRenderingContext2D !== "undefined" && !CanvasRenderingContext2D.prototype.roundRect){
+    CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h){ this.rect(x, y, w, h); return this; };
+  }
+  var D3 = { wanted:false, loading:false, ready:false, failed:false,
+             renderer:null, scene:null, camera:null, controls:null, canvas:null,
+             raf:null, robots:{}, screens:{}, pills:{}, dash:null, dashCtx:null, dashTex:null,
+             lights:{}, toneNow:"", sprites:{}, clock0:0, interacted:false, pt:null };
+  var W2X = function(x){ return x - 320; }, W2Z = function(y){ return y - 215; };
+  var Z3HEX = { green:{tint:0x7cc59a, dot:0x57b985}, blue:{tint:0x82aadc, dot:0x6f9fda},
+                yellow:{tint:0xe8c14e, dot:0xe0a83a}, red:{tint:0xe8735c, dot:0xe0735c},
+                purple:{tint:0xb69ae0, dot:0x9a76d6} };
+  function z3Of(agent){ return Z3HEX[CAT_ZONE[AGENT_CATEGORY[agent]] || "blue"]; }
+
+  function d3Activate(){
+    D3.wanted = true;
+    if (D3.failed || !T) return;                 /* 兜底:留在 2D 等距 */
+    if (D3.ready){ d3Show(); return; }
+    if (D3.loading) return;
+    D3.loading = true;
+    if (window.THREE){ d3Boot(); return; }
+    var s = document.createElement("script");
+    s.src = "three.min.js";
+    s.onload = d3Boot;
+    s.onerror = function(){ D3.failed = true; D3.loading = false; };
+    document.head.appendChild(s);
+  }
+  function d3Boot(){
+    try { d3Build(); D3.ready = true; }
+    catch(e){ D3.failed = true; }
+    D3.loading = false;
+    if (D3.ready && D3.wanted && full) d3Show();
+  }
+  function d3Show(){
+    D3.canvas.style.display = "block";
+    var m = document.getElementById("map");
+    if (m) m.style.display = "none";             /* 2D 停画省电,IntersectionObserver 会自动停它的 rAF */
+    var hint = document.querySelector(".hqh-hint");
+    if (hint) hint.hidden = false;
+    d3Resize(); d3Tone(); d3Sync(); d3Loop();
+  }
+  function d3Deactivate(){
+    D3.wanted = false;
+    if (D3.raf){ cancelAnimationFrame(D3.raf); D3.raf = null; }
+    if (D3.canvas) D3.canvas.style.display = "none";
+    var m = document.getElementById("map");
+    if (m) m.style.display = "";
+    var hint = document.querySelector(".hqh-hint");
+    if (hint) hint.hidden = true;
+  }
+
+  /* ---------- 小工具:canvas 纹理精灵(药丸/气泡/表情) ---------- */
+  function d3CanvasTex(w, h, draw){
+    var cv = document.createElement("canvas");
+    cv.width = w; cv.height = h;
+    draw(cv.getContext("2d"), w, h);
+    var tex = new THREE.CanvasTexture(cv);
+    tex.minFilter = THREE.LinearFilter;
+    return tex;
+  }
+  function d3PillSprite(name, dotHex, meterTxt){
+    var tex = d3CanvasTex(512, 128, function(g, w, h){
+      g.clearRect(0, 0, w, h);
+      g.font = "bold 44px -apple-system,'PingFang SC',sans-serif";
+      var tw = g.measureText(name).width;
+      var mw = 0;
+      if (meterTxt){ g.font = "bold 30px -apple-system,'PingFang SC',sans-serif"; mw = g.measureText(meterTxt).width + 26; }
+      var pw = Math.min(w - 8, 44 + tw + 14 + mw + 20), px = (w - pw) / 2;
+      g.fillStyle = "rgba(30,40,55,.14)";
+      g.beginPath(); g.roundRect(px + 3, 26, pw, 76, 38); g.fill();
+      g.fillStyle = "#ffffff";
+      g.beginPath(); g.roundRect(px, 22, pw, 76, 38); g.fill();
+      g.fillStyle = "#" + ("000000" + dotHex.toString(16)).slice(-6);
+      g.beginPath(); g.arc(px + 30, 60, 11, 0, 6.283); g.fill();
+      g.fillStyle = "#20252c"; g.textBaseline = "middle";
+      g.font = "bold 44px -apple-system,'PingFang SC',sans-serif";
+      g.fillText(name, px + 50, 62);
+      if (meterTxt){
+        g.fillStyle = "rgba(34,26,14,.88)";
+        g.beginPath(); g.roundRect(px + 50 + tw + 12, 36, mw, 48, 12); g.fill();
+        g.fillStyle = "#ffce7a"; g.font = "bold 30px -apple-system,'PingFang SC',sans-serif";
+        g.fillText(meterTxt, px + 50 + tw + 24, 62);
+      }
+    });
+    return tex;
+  }
+  function d3TextBubble(text){
+    return d3CanvasTex(512, 128, function(g, w, h){
+      g.font = "bold 40px -apple-system,'PingFang SC',sans-serif";
+      var tw = g.measureText(text).width, pw = tw + 60, px = (w - pw) / 2;
+      g.fillStyle = "rgba(30,40,55,.14)"; g.beginPath(); g.roundRect(px + 3, 26, pw, 72, 34); g.fill();
+      g.fillStyle = "#ffffff"; g.beginPath(); g.roundRect(px, 22, pw, 72, 34); g.fill();
+      g.beginPath(); g.moveTo(px + 40, 92); g.lineTo(px + 26, 116); g.lineTo(px + 66, 94); g.closePath(); g.fill();
+      g.fillStyle = "#2a2f37"; g.textBaseline = "middle"; g.fillText(text, px + 30, 60);
+    });
+  }
+  function d3EmojiTex(emoji){
+    return d3CanvasTex(128, 128, function(g){
+      g.font = "88px -apple-system,'PingFang SC',sans-serif";
+      g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(emoji, 64, 70);
+    });
+  }
+  function d3Sprite(tex, sw, sh){
+    var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false }));
+    sp.scale.set(sw, sh, 1);
+    return sp;
+  }
+
+  /* ---------- 建场景 ---------- */
+  function d3Build(){
+    var frame = document.querySelector(".map-frame");
+    var r = new THREE.WebGLRenderer({ antialias: true });
+    r.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    D3.renderer = r;
+    D3.canvas = r.domElement;
+    D3.canvas.style.cssText = "position:absolute;inset:0;display:none;touch-action:none";
+    frame.appendChild(D3.canvas);
+
+    var sc = new THREE.Scene();
+    D3.scene = sc;
+    var cam = new THREE.PerspectiveCamera(38, 16 / 9, 1, 4000);
+    cam.position.set(430, 470, 560);
+    D3.camera = cam;
+    var ctl = new THREE.OrbitControls(cam, D3.canvas);
+    ctl.target.set(-30, 10, -14);
+    ctl.enableDamping = true; ctl.dampingFactor = 0.08;
+    ctl.minDistance = 240; ctl.maxDistance = 1100;
+    ctl.maxPolarAngle = 1.32; ctl.minPolarAngle = 0.12;
+    ctl.autoRotate = true; ctl.autoRotateSpeed = 0.5;
+    ctl.addEventListener("start", function(){ D3.interacted = true; ctl.autoRotate = false; });
+    ctl.addEventListener("change", function(){ if (D3.raf === null) d3Render(); });
+    D3.controls = ctl;
+
+    /* 灯光(强度随昼夜调) */
+    D3.lights.hemi = new THREE.HemisphereLight(0xf8fbff, 0xd8dde6, 1.0);
+    D3.lights.dir = new THREE.DirectionalLight(0xffffff, 0.5);
+    D3.lights.dir.position.set(300, 520, 240);
+    sc.add(D3.lights.hemi); sc.add(D3.lights.dir);
+    D3.lights.work = [];
+
+    var WOOD = 0xcdb79a, WOODD = 0xb39c7c;
+    var matWood = new THREE.MeshLambertMaterial({ color: WOOD });
+    var matWoodD = new THREE.MeshLambertMaterial({ color: WOODD });
+    var matGlass = new THREE.MeshLambertMaterial({ color: 0xbfd6e6, transparent: true, opacity: 0.26, side: THREE.DoubleSide });
+    var matWhite = new THREE.MeshLambertMaterial({ color: 0xf6f8fb });
+
+    /* 地板:厚板 + 棋盘格顶面 */
+    var slabMats = [];
+    for (var si = 0; si < 6; si++) slabMats.push(new THREE.MeshLambertMaterial({ color: si === 2 ? 0xf1f4f8 : 0xc9d0da }));
+    var slab = new THREE.Mesh(new THREE.BoxGeometry(720, 16, 500), slabMats);
+    slab.position.y = -8;
+    sc.add(slab);
+    var checker = d3CanvasTex(512, 512, function(g){
+      g.fillStyle = "#f1f4f8"; g.fillRect(0, 0, 512, 512);
+      g.fillStyle = "#e8edf3";
+      for (var cy = 0; cy < 8; cy++) for (var cx = 0; cx < 8; cx++)
+        if ((cx + cy) % 2) g.fillRect(cx * 64, cy * 64, 64, 64);
+    });
+    checker.wrapS = checker.wrapT = THREE.RepeatWrapping;
+    checker.repeat.set(9, 6.2);
+    var top = new THREE.Mesh(new THREE.PlaneGeometry(720, 500), new THREE.MeshLambertMaterial({ map: checker }));
+    top.rotation.x = -Math.PI / 2; top.position.y = 0.15;
+    sc.add(top);
+
+    /* 外围两面高玻璃墙(北+西)+ 木框 */
+    function tallWall(cx, cz, len, rotY){
+      var gp = new THREE.Group();
+      var glass = new THREE.Mesh(new THREE.PlaneGeometry(len, 104), matGlass);
+      glass.position.y = 52; gp.add(glass);
+      var beam = new THREE.Mesh(new THREE.BoxGeometry(len, 7, 7), matWood);
+      beam.position.y = 106; gp.add(beam);
+      var base = new THREE.Mesh(new THREE.BoxGeometry(len, 5, 5), matWoodD);
+      base.position.y = 2.5; gp.add(base);
+      for (var mx = -len / 2; mx <= len / 2; mx += 60){
+        var mull = new THREE.Mesh(new THREE.BoxGeometry(2.4, 104, 2.4), matWoodD);
+        mull.position.set(mx, 52, 0); gp.add(mull);
+      }
+      gp.position.set(cx, 0, cz); gp.rotation.y = rotY;
+      sc.add(gp);
+    }
+    tallWall(0, -250, 720, 0);
+    tallWall(-360, 0, 500, Math.PI / 2);
+
+    /* 分区色块 + 矮玻璃隔断(南侧留门) */
+    Object.keys(ZONES).forEach(function(agent){
+      var z = ZONES[agent], zc = z3Of(agent);
+      var cx = W2X(z.x + z.w / 2), cz = W2Z(z.y + z.h / 2);
+      var tint = new THREE.Mesh(new THREE.PlaneGeometry(z.w, z.h),
+        new THREE.MeshLambertMaterial({ color: zc.tint, transparent: true, opacity: 0.13 }));
+      tint.rotation.x = -Math.PI / 2;
+      tint.position.set(cx, 0.4, cz);
+      tint.userData.agent = agent;
+      sc.add(tint);
+      D3.pills["tint_" + agent] = tint;
+      var eg = new THREE.EdgesGeometry(new THREE.PlaneGeometry(z.w - 2, z.h - 2));
+      var line = new THREE.LineSegments(eg, new THREE.LineDashedMaterial({ color: zc.dot, dashSize: 6, gapSize: 5, transparent: true, opacity: 0.6 }));
+      line.computeLineDistances();
+      line.rotation.x = -Math.PI / 2; line.position.set(cx, 0.6, cz);
+      sc.add(line);
+      /* 矮隔断 */
+      function lowWall(x1, z1, x2, z2){
+        var len = Math.hypot(x2 - x1, z2 - z1);
+        if (len < 8) return;
+        var g2 = new THREE.Group();
+        var pane = new THREE.Mesh(new THREE.PlaneGeometry(len, 26), matGlass);
+        pane.position.y = 13; g2.add(pane);
+        var rail = new THREE.Mesh(new THREE.BoxGeometry(len, 3.2, 3.2), matWood);
+        rail.position.y = 27; g2.add(rail);
+        g2.position.set((x1 + x2) / 2, 0, (z1 + z2) / 2);
+        g2.rotation.y = -Math.atan2(z2 - z1, x2 - x1);
+        sc.add(g2);
+      }
+      var x0 = W2X(z.x), x1 = W2X(z.x + z.w), z0 = W2Z(z.y), z1 = W2Z(z.y + z.h);
+      lowWall(x0, z0, x1, z0);                       /* 北 */
+      lowWall(x0, z1, x0, z0);                       /* 西 */
+      lowWall(x1, z1, x1, z0);                       /* 东 */
+      var doorW = 34, mid = (x0 + x1) / 2;           /* 南墙留门 */
+      lowWall(x0, z1, mid - doorW / 2, z1);
+      lowWall(mid + doorW / 2, z1, x1, z1);
+
+      /* 大办公桌 + 大屏幕 */
+      var dx = W2X(z.desk[0]), dz = W2Z(z.desk[1]);
+      var desk = new THREE.Group();
+      var dtop = new THREE.Mesh(new THREE.BoxGeometry(64, 5, 30), matWhite);
+      dtop.position.y = 24; desk.add(dtop);
+      var leg1 = new THREE.Mesh(new THREE.BoxGeometry(5, 24, 26), new THREE.MeshLambertMaterial({ color: 0xdfe4ec }));
+      leg1.position.set(-26, 12, 0); desk.add(leg1);
+      var leg2 = leg1.clone(); leg2.position.x = 26; desk.add(leg2);
+      var mon = new THREE.Mesh(new THREE.BoxGeometry(44, 28, 3.6), new THREE.MeshLambertMaterial({ color: 0x2b313a }));
+      mon.position.set(0, 42, -8); desk.add(mon);
+      var scr = new THREE.Mesh(new THREE.PlaneGeometry(38, 22),
+        new THREE.MeshLambertMaterial({ color: 0x39414c, emissive: 0x000000 }));
+      scr.position.set(0, 42, -6.1); desk.add(scr);
+      var stand = new THREE.Mesh(new THREE.BoxGeometry(4, 8, 4), new THREE.MeshLambertMaterial({ color: 0xc3c9d2 }));
+      stand.position.set(0, 28, -8); desk.add(stand);
+      desk.position.set(dx, 0, dz);
+      sc.add(desk);
+      D3.screens[agent] = scr;
+
+      /* 休息垫(睡觉位) */
+      var mat = new THREE.Mesh(new THREE.BoxGeometry(30, 2.6, 18), new THREE.MeshLambertMaterial({ color: 0xdfe7f2 }));
+      mat.position.set(W2X(z.bed[0]), 1.3, W2Z(z.bed[1]));
+      sc.add(mat);
+
+      /* 房间药丸(billboard,大号) */
+      var pill = d3Sprite(d3PillSprite(z.name, zc.dot, null), 96, 24);
+      pill.position.set(cx, 62, cz);
+      sc.add(pill);
+      D3.pills[agent] = pill;
+    });
+
+    /* 盆栽(大号) */
+    var plantSpots = [[320, 150], [250, 240], [400, 210], [96, 100], [544, 110], [300, 300], [430, 360], [150, 250]];
+    plantSpots.forEach(function(p){
+      var g3 = new THREE.Group();
+      var pot = new THREE.Mesh(new THREE.CylinderGeometry(6.5, 8, 11, 12), new THREE.MeshLambertMaterial({ color: 0xc8a27a }));
+      pot.position.y = 5.5; g3.add(pot);
+      var f1 = new THREE.Mesh(new THREE.SphereGeometry(11, 14, 12), new THREE.MeshLambertMaterial({ color: 0x4a8a5c }));
+      f1.position.set(-3, 18, 1); g3.add(f1);
+      var f2 = new THREE.Mesh(new THREE.SphereGeometry(9, 14, 12), new THREE.MeshLambertMaterial({ color: 0x5fa872 }));
+      f2.position.set(4, 23, -2); g3.add(f2);
+      var f3 = new THREE.Mesh(new THREE.SphereGeometry(7.5, 14, 12), new THREE.MeshLambertMaterial({ color: 0x5fa872 }));
+      f3.position.set(-1, 29, 0); g3.add(f3);
+      g3.position.set(W2X(p[0]), 0, W2Z(p[1]));
+      sc.add(g3);
+    });
+
+    /* 荣誉柜(客厅旁,带真数角标) */
+    var tc = new THREE.Group();
+    var cab = new THREE.Mesh(new THREE.BoxGeometry(22, 54, 34), new THREE.MeshLambertMaterial({ color: 0xefe8f6 }));
+    cab.position.y = 27; tc.add(cab);
+    for (var sh = 0; sh < 2; sh++){
+      var shelf = new THREE.Mesh(new THREE.BoxGeometry(23, 1.4, 35), new THREE.MeshLambertMaterial({ color: 0xcfbfe4 }));
+      shelf.position.y = 18 + sh * 16; tc.add(shelf);
+      for (var tj = 0; tj < 2; tj++){
+        var cup = new THREE.Group();
+        var bowl = new THREE.Mesh(new THREE.SphereGeometry(3.4, 10, 8, 0, 6.283, 0, 1.7), new THREE.MeshLambertMaterial({ color: 0xeac24c }));
+        bowl.rotation.x = Math.PI; bowl.position.y = 5; cup.add(bowl);
+        var stem = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 1.6, 4, 8), new THREE.MeshLambertMaterial({ color: 0xd8b13c }));
+        stem.position.y = 2; cup.add(stem);
+        cup.position.set(0, 19.4 + sh * 16, -8 + tj * 16);
+        tc.add(cup);
+      }
+    }
+    tc.position.set(W2X(398), 0, W2Z(330));
+    sc.add(tc);
+    D3.sprites.trophy = d3Sprite(d3TextBubble("🏆 —"), 66, 16.5);
+    D3.sprites.trophy.position.set(W2X(398), 66, W2Z(330));
+    sc.add(D3.sprites.trophy);
+
+    /* 挂墙大屏(北墙,真数) */
+    var dashBox = new THREE.Mesh(new THREE.BoxGeometry(340, 140, 7), new THREE.MeshLambertMaterial({ color: 0x171b22 }));
+    dashBox.position.set(230, 88, -245);
+    sc.add(dashBox);
+    var dashCv = document.createElement("canvas");
+    dashCv.width = 1024; dashCv.height = 416;
+    D3.dashCtx = dashCv.getContext("2d");
+    D3.dashTex = new THREE.CanvasTexture(dashCv);
+    D3.dashTex.minFilter = THREE.LinearFilter;
+    var dashScr = new THREE.Mesh(new THREE.PlaneGeometry(330, 132),
+      new THREE.MeshBasicMaterial({ map: D3.dashTex }));
+    dashScr.position.set(230, 88, -241.2);
+    sc.add(dashScr);
+
+    /* 欢迎气泡(门厅) */
+    D3.sprites.hello = d3Sprite(d3TextBubble("欢迎回来 👋"), 78, 19.5);
+    D3.sprites.hello.position.set(W2X(252), 74, W2Z(352));
+    sc.add(D3.sprites.hello);
+
+    /* 十位机器人(大圆白,参考图形体) */
+    Object.keys(ZONES).forEach(function(agent){ d3MakeRobot(agent); });
+
+    /* 点选:按下→抬起位移小才算点 */
+    D3.pt = { x: 0, y: 0 };
+    D3.canvas.addEventListener("pointerdown", function(e){ D3.pt.x = e.clientX; D3.pt.y = e.clientY; });
+    D3.canvas.addEventListener("pointerup", function(e){
+      if (Math.hypot(e.clientX - D3.pt.x, e.clientY - D3.pt.y) > 7) return;
+      var agent = d3PickAt(e.clientX, e.clientY);
+      if (agent) togglePanel(agent);
+    });
+
+    window.addEventListener("resize", function(){ if (D3.ready && full) d3Resize(); });
+    D3.clock0 = (typeof performance !== "undefined" ? performance.now() : 0);
+
+    /* 验收用调试钩子(只读场景,不碰数据) */
+    window.__hq3d = {
+      get ready(){ return D3.ready; },
+      setView: function(azDeg, elDeg, dist){
+        var az = azDeg * Math.PI / 180, el = elDeg * Math.PI / 180;
+        D3.camera.position.set(dist * Math.cos(el) * Math.sin(az), dist * Math.sin(el), dist * Math.cos(el) * Math.cos(az));
+        D3.controls.update(); d3Render();
+      },
+      render: function(){ d3Render(); },
+      pickAt: function(x, y){ return d3PickAt(x, y); },
+      project: function(agent){
+        var r0 = D3.robots[agent]; if (!r0) return null;
+        var v = r0.g.position.clone(); v.y += 20; v.project(D3.camera);
+        var rect = D3.canvas.getBoundingClientRect();
+        return [rect.left + (v.x + 1) / 2 * rect.width, rect.top + (1 - (v.y + 1) / 2) * rect.height];
+      }
+    };
+  }
+
+  function d3MakeRobot(agent){
+    var zc = z3Of(agent);
+    var g = new THREE.Group();
+    var matBody = new THREE.MeshLambertMaterial({ color: 0xf6f8fb });
+    var shadow = new THREE.Mesh(new THREE.CircleGeometry(15, 20),
+      new THREE.MeshBasicMaterial({ color: 0x46506a, transparent: true, opacity: 0.16, depthWrite: false }));
+    shadow.rotation.x = -Math.PI / 2; shadow.position.y = 0.5;
+    g.add(shadow);
+    var pivot = new THREE.Group();                  /* 躺下时只旋转 pivot,影子留地上 */
+    g.add(pivot);
+    var body = new THREE.Mesh(new THREE.SphereGeometry(13, 24, 20), matBody);
+    body.scale.set(1, 1.18, 0.95); body.position.y = 17;
+    pivot.add(body);
+    var band = new THREE.Mesh(new THREE.CylinderGeometry(12.1, 12.8, 3.6, 20),
+      new THREE.MeshLambertMaterial({ color: zc.dot }));
+    band.position.y = 9.5; pivot.add(band);
+    var armL = new THREE.Mesh(new THREE.SphereGeometry(4.2, 12, 10), matBody);
+    armL.position.set(-14.3, 16, 0); pivot.add(armL);
+    var armR = armL.clone(); armR.position.x = 14.3; pivot.add(armR);
+    var face = new THREE.Mesh(new THREE.SphereGeometry(9.6, 18, 14),
+      new THREE.MeshLambertMaterial({ color: 0x23282f }));
+    face.scale.set(1, 0.82, 0.5); face.position.set(0, 22, 8.6);
+    pivot.add(face);
+    var eyeMat = new THREE.MeshBasicMaterial({ color: 0x6fe8bd });
+    var eyeL = new THREE.Mesh(new THREE.SphereGeometry(1.9, 8, 8), eyeMat);
+    eyeL.position.set(-3.6, 23, 12.6); pivot.add(eyeL);
+    var eyeR = eyeL.clone(); eyeR.position.x = 3.6; pivot.add(eyeR);
+    var ant = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.7, 6, 8),
+      new THREE.MeshLambertMaterial({ color: 0xd6dbe4 }));
+    ant.position.y = 35.5; pivot.add(ant);
+    var antTip = new THREE.Mesh(new THREE.SphereGeometry(2.3, 10, 8),
+      new THREE.MeshLambertMaterial({ color: zc.dot }));
+    antTip.position.y = 39.5; pivot.add(antTip);
+    var zz = d3Sprite(d3EmojiTex("💤"), 16, 16); zz.position.y = 44; zz.visible = false; g.add(zz);
+    var warn = d3Sprite(d3EmojiTex("⚠️"), 15, 15); warn.position.y = 46; warn.visible = false; g.add(warn);
+    g.userData.agent = agent;
+    body.userData.agent = agent;
+    D3.scene.add(g);
+    D3.robots[agent] = { g: g, pivot: pivot, body: body, eyeMat: eyeMat, zz: zz, warn: warn, mats: [matBody], phase: 0 };
+  }
+
+  function d3PickAt(cx, cy){
+    var rect = D3.canvas.getBoundingClientRect();
+    var v = new THREE.Vector2(((cx - rect.left) / rect.width) * 2 - 1, -((cy - rect.top) / rect.height) * 2 + 1);
+    var rc = new THREE.Raycaster();
+    rc.setFromCamera(v, D3.camera);
+    var bodies = Object.keys(D3.robots).map(function(a){ return D3.robots[a].body; });
+    var hit = rc.intersectObjects(bodies, false)[0];
+    if (hit) return hit.object.userData.agent;
+    var tints = Object.keys(ZONES).map(function(a){ return D3.pills["tint_" + a]; });
+    hit = rc.intersectObjects(tints, false)[0];
+    return hit ? hit.object.userData.agent : null;
+  }
+
+  /* ---------- 真值同步:状态/电表/大屏/奖杯,全来自共享数据 ---------- */
+  function d3Sync(){
+    if (!D3.ready) return;
+    var actors = T.actors(), meters = T.meters(), condBy = {};
+    actors.forEach(function(a){ condBy[a.agent] = a; });
+    Object.keys(D3.robots).forEach(function(agent){
+      var r = D3.robots[agent], a = condBy[agent], z = ZONES[agent];
+      var cond = a ? a.cond : "tidy";
+      var px, pz;
+      if (cond === "working"){ px = W2X(z.desk[0]); pz = W2Z(z.desk[1]) + 24; }
+      else if (cond === "mess"){ px = W2X(z.desk[0]) + 26; pz = W2Z(z.desk[1]) + 36; }
+      else if (cond === "resting" && a){ px = W2X(a.x); pz = W2Z(a.y); }
+      else { px = W2X(z.bed[0]); pz = W2Z(z.bed[1]); }
+      r.g.position.set(px, 0, pz);
+      r.phase = a ? a.phase || 0 : 0;
+      r.cond = cond;
+      var lying = (cond === "sleeping" || cond === "tidy");
+      r.pivot.rotation.x = lying ? -1.35 : 0;
+      r.pivot.position.y = lying ? 6 : 0;
+      r.g.rotation.y = (cond === "working" || cond === "mess") ? Math.PI : 0;  /* 干活面朝桌上大屏 */
+      r.eyeMat.color.setHex(cond === "mess" ? 0xff9a86 : (lying ? 0x2e3742 : 0x6fe8bd));
+      r.zz.visible = cond === "sleeping";
+      r.warn.visible = cond === "mess";
+      var op = cond === "tidy" ? 0.55 : 1;
+      r.mats.forEach(function(m){ m.transparent = op < 1; m.opacity = op; });
+      if (D3.screens[agent]){
+        var lit = cond === "working";
+        D3.screens[agent].material.color.setHex(lit ? 0x5fd6a2 : 0x39414c);
+        D3.screens[agent].material.emissive.setHex(lit ? 0x2e8f68 : 0x000000);
+      }
+      if (D3.pills[agent]){
+        var mtxt = meters[agent] > 0 ? "⚡" + bigNum(meters[agent]) : null;
+        if (r._pillTxt !== (z.name + "|" + mtxt)){
+          r._pillTxt = z.name + "|" + mtxt;
+          D3.pills[agent].material.map.dispose();
+          D3.pills[agent].material.map = d3PillSprite(z.name, z3Of(agent).dot, mtxt);
+          D3.pills[agent].material.needsUpdate = true;
+          D3.pills[agent].scale.set(mtxt ? 118 : 96, mtxt ? 29.5 : 24, 1);
+        }
+      }
+    });
+    /* 挂墙大屏 */
+    var meterTotal = 0;
+    Object.keys(meters).forEach(function(k){ meterTotal += meters[k]; });
+    var big = meterTotal > 0 ? bigNum(meterTotal) : (T.heartTotal() > 0 ? "❤ " + T.heartTotal() : "—");
+    var sub = meterTotal > 0 ? "今日 token" : "今日心跳";
+    var g = D3.dashCtx;
+    g.fillStyle = "#20252e"; g.fillRect(0, 0, 1024, 416);
+    var bars = [0.5, 0.75, 0.4, 0.9, 0.6, 0.8, 0.48, 0.7, 0.55, 0.85];
+    for (var i = 0; i < bars.length; i++){
+      g.fillStyle = "#5ad0a0"; g.fillRect(60 + i * 52, 200 - bars[i] * 130, 26, bars[i] * 130);
+    }
+    g.fillStyle = "#8fe8c4"; g.font = "bold 120px Menlo,monospace"; g.textBaseline = "alphabetic";
+    g.fillText(big, 56, 360);
+    var bw = g.measureText(big).width;
+    g.fillStyle = "rgba(143,232,196,.6)"; g.font = "44px -apple-system,'PingFang SC',sans-serif";
+    g.fillText(sub, 56 + bw + 30, 356);
+    D3.dashTex.needsUpdate = true;
+    /* 奖杯角标 */
+    var tu = T.trophyUnlocked();
+    if (D3.sprites.trophy){
+      if (D3._tuTxt !== tu){
+        D3._tuTxt = tu;
+        D3.sprites.trophy.visible = tu != null;
+        if (tu != null){
+          D3.sprites.trophy.material.map.dispose();
+          D3.sprites.trophy.material.map = d3TextBubble("🏆 " + tu);
+          D3.sprites.trophy.material.needsUpdate = true;
+        }
+      }
+    }
+    if (D3.raf === null) d3Render();
+  }
+
+  function d3Tone(){
+    if (!D3.ready) return;
+    var tn = tone();
+    if (D3.toneNow === tn) return;
+    D3.toneNow = tn;
+    var sc = D3.scene;
+    D3.lights.work.forEach(function(l){ sc.remove(l); });
+    D3.lights.work = [];
+    if (tn === "night"){
+      sc.background = new THREE.Color(0x1c2438);
+      sc.fog = new THREE.Fog(0x1c2438, 1100, 2100);
+      D3.lights.hemi.color.setHex(0x51628c); D3.lights.hemi.groundColor.setHex(0x1a2233);
+      D3.lights.hemi.intensity = 0.75;
+      D3.lights.dir.color.setHex(0x9fb2dd); D3.lights.dir.intensity = 0.22;
+      var actors = T.actors();
+      actors.forEach(function(a){
+        if (a.cond !== "working") return;
+        var z = ZONES[a.agent]; if (!z) return;
+        var pl = new THREE.PointLight(0xffc37a, 0.85, 150, 1.6);
+        pl.position.set(W2X(z.desk[0]), 46, W2Z(z.desk[1]) + 10);
+        sc.add(pl); D3.lights.work.push(pl);
+      });
+    } else if (tn === "dusk"){
+      sc.background = new THREE.Color(0xecdcd0);
+      sc.fog = new THREE.Fog(0xecdcd0, 1100, 2100);
+      D3.lights.hemi.color.setHex(0xffe9d5); D3.lights.hemi.groundColor.setHex(0xcdbcae);
+      D3.lights.hemi.intensity = 0.95;
+      D3.lights.dir.color.setHex(0xffd9b0); D3.lights.dir.intensity = 0.42;
+    } else {
+      sc.background = new THREE.Color(0xe9eef5);
+      sc.fog = new THREE.Fog(0xe9eef5, 1200, 2200);
+      D3.lights.hemi.color.setHex(0xf8fbff); D3.lights.hemi.groundColor.setHex(0xd8dde6);
+      D3.lights.hemi.intensity = 1.0;
+      D3.lights.dir.color.setHex(0xffffff); D3.lights.dir.intensity = 0.5;
+    }
+    if (D3.raf === null) d3Render();
+  }
+
+  function d3Resize(){
+    var frame = document.querySelector(".map-frame");
+    var w = frame.clientWidth || 1, h = frame.clientHeight || 1;
+    D3.renderer.setSize(w, h);
+    D3.camera.aspect = w / h;
+    D3.camera.updateProjectionMatrix();
+    if (!D3.interacted){
+      /* 用户还没接管镜头:竖屏自动拉远一档,整层楼装得下 */
+      var dist = (w / h < 0.8) ? 1020 : 850;
+      var dir = D3.camera.position.clone().sub(D3.controls.target).normalize();
+      D3.camera.position.copy(D3.controls.target.clone().add(dir.multiplyScalar(dist)));
+      D3.controls.update();
+    }
+    if (D3.raf === null) d3Render();
+  }
+  function d3Render(){ if (D3.ready) D3.renderer.render(D3.scene, D3.camera); }
+  function d3Loop(){
+    if (D3.raf){ cancelAnimationFrame(D3.raf); D3.raf = null; }
+    var reduced = false;
+    try { reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches || /[?&]reduce\b/.test(location.search); } catch(e){}
+    if (reduced || document.hidden){ d3Render(); D3.raf = null; return; }   /* 静态真值帧,交互靠 change 事件重画 */
+    var step = function(){
+      D3.raf = null;
+      if (!full || !D3.wanted || document.hidden) { d3Render(); return; }
+      var now = performance.now();
+      Object.keys(D3.robots).forEach(function(r0){
+        var r = D3.robots[r0];
+        if (r.cond === "working") r.pivot.position.y = Math.abs(Math.sin(now / 300 + r.phase)) * 1.6;
+        else if (r.cond === "resting") r.pivot.rotation.y = Math.sin(now / 900 + r.phase) * 0.22;
+      });
+      D3.controls.update();
+      d3Render();
+      D3.raf = requestAnimationFrame(step);
+    };
+    D3.raf = requestAnimationFrame(step);
+  }
+  document.addEventListener("visibilitychange", function(){
+    if (D3.ready && D3.wanted && full && !document.hidden){ d3Resize(); }   /* 后台建的 1×1 画布在此自愈 */
+    if (D3.ready && D3.wanted && full) d3Loop();
+  });
 
   function initHud(toolkit){
     H = toolkit;
