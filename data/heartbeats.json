@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-17T20:20:35Z",
+  "generated_at": "2026-07-17T20:35:41Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -12,7 +12,7 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-07-17T20:14:53Z",
+      "last_beat_at": "2026-07-17T20:35:32Z",
       "last_status": "done"
     },
     {
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-17T20:18:05Z",
+      "last_beat_at": "2026-07-17T20:33:08Z",
       "last_status": "running"
     },
     {
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-17T20:18:05Z",
+      "last_beat_at": "2026-07-17T20:33:08Z",
       "last_status": "running"
     }
   ],
   "stats": {
-    "beats_24h": 411,
+    "beats_24h": 410,
     "active_now": 3,
-    "last_beat_at": "2026-07-17T20:18:05Z",
+    "last_beat_at": "2026-07-17T20:35:32Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,12 +137,12 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "126 下"
+        "value": "129 下"
       },
       {
         "icon": "🔧",
         "label": "工作坊交付",
-        "value": "56 件活"
+        "value": "57 件活"
       },
       {
         "icon": "🫖",
@@ -540,6 +540,30 @@
     }
   },
   "heartbeats": [
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-17T20:35:32Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-17T20:33:08Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-17T20:33:08Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "Jarvis",
       "category": "管家",
@@ -3713,30 +3737,6 @@
       "category": "管家",
       "status": "running",
       "started_at": "2026-07-17T00:59:25Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-07-17T00:59:25Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-17T00:55:39Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-17T00:55:33Z",
       "duration_s": null,
       "title": null
     }
