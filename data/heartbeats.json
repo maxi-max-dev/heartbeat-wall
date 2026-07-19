@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-19T02:47:30Z",
+  "generated_at": "2026-07-19T03:02:35Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -12,15 +12,15 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-07-19T02:45:58Z",
-      "last_status": "done"
+      "last_beat_at": "2026-07-19T03:02:22Z",
+      "last_status": "running"
     },
     {
       "agent": "Jarvis",
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-19T02:44:29Z",
+      "last_beat_at": "2026-07-19T02:58:42Z",
       "last_status": "done"
     },
     {
@@ -28,7 +28,7 @@
       "emoji": "📡",
       "role": "情报员",
       "category": "情报",
-      "last_beat_at": "2026-07-19T00:02:09Z",
+      "last_beat_at": "2026-07-19T03:02:30Z",
       "last_status": "done"
     },
     {
@@ -84,43 +84,43 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-19T02:38:43Z",
+      "last_beat_at": "2026-07-19T02:53:45Z",
       "last_status": "running"
     }
   ],
   "stats": {
     "beats_24h": 409,
-    "active_now": 4,
-    "last_beat_at": "2026-07-19T02:45:58Z",
+    "active_now": 5,
+    "last_beat_at": "2026-07-19T03:02:30Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
       "scope_note": "电表暂时只装在工作坊(泛音·Claude Code)一支，管家和外勤那几支的电还没接进来",
       "day_start": "2026-07-18T14:00:00Z",
-      "tokens_today": 53419881,
-      "fresh_today": 1869259,
-      "input_today": 382,
-      "output_today": 194146,
-      "cache_creation_today": 1674731,
-      "cache_read_today": 51550622,
+      "tokens_today": 58106788,
+      "fresh_today": 1890616,
+      "input_today": 403,
+      "output_today": 204543,
+      "cache_creation_today": 1685670,
+      "cache_read_today": 56216172,
       "sessions_today": 9,
       "by_resident": [
         {
           "agent": "泛音",
           "emoji": "🎼",
-          "tokens": 55275989,
+          "tokens": 59962896,
           "provider": "claude"
         },
         {
           "agent": "Jarvis",
           "emoji": "🤵",
-          "tokens": 14383923,
+          "tokens": 15277062,
           "provider": "openclaw"
         },
         {
           "agent": "Watcher",
           "emoji": "📡",
-          "tokens": 96786,
+          "tokens": 3017678,
           "provider": "openclaw"
         },
         {
@@ -130,29 +130,29 @@
           "provider": "openclaw"
         }
       ],
-      "whole_house_tokens": 69756698,
+      "whole_house_tokens": 78257636,
       "scope_note_v2": "细分到各屋：泛音（工作坊，含它派出去的子代理）+管家/情报/外勤已接表，其余几间还没接上；跨模型 token 只是吞吐量，不等价电费"
     },
     "achievements_today": [
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "240 下"
+        "value": "248 下"
       },
       {
         "icon": "🔧",
         "label": "工作坊交付",
-        "value": "105 件活"
+        "value": "107 件活"
       },
       {
         "icon": "🫖",
         "label": "打理家务",
-        "value": "13 桩"
+        "value": "14 桩"
       },
       {
         "icon": "📡",
         "label": "情报回传",
-        "value": "2 份"
+        "value": "4 份"
       },
       {
         "icon": "📊",
@@ -177,7 +177,7 @@
     ],
     "trophies": {
       "source": "vibe-trophy",
-      "scanned_at": "2026-07-18T21:00:29.354Z",
+      "scanned_at": "2026-07-19T03:02:52.436Z",
       "unlocked": 37,
       "total": 41,
       "today_new": [],
@@ -216,7 +216,7 @@
           "g": "日常",
           "ok": true,
           "desc": "同时撩 10 个以上项目，每一个都说过\"这是主线\"",
-          "val": "217 个项目"
+          "val": "218 个项目"
         },
         {
           "icon": "🧰",
@@ -225,7 +225,7 @@
           "g": "日常",
           "ok": true,
           "desc": "MCP 调用 500 次。工欲善其事，必先装一堆 MCP",
-          "val": "9307 次 MCP 调用"
+          "val": "9311 次 MCP 调用"
         },
         {
           "icon": "🖼️",
@@ -243,7 +243,7 @@
           "g": "日常",
           "ok": true,
           "desc": "单条消息 500 字起步，这不是 prompt 是需求文档",
-          "val": "最长一条 151496 字，超500字共 2558 条"
+          "val": "最长一条 151496 字，超500字共 2651 条"
         },
         {
           "icon": "🤏",
@@ -252,7 +252,7 @@
           "g": "日常",
           "ok": true,
           "desc": "两个字以内的指令发了 20 条，\"继续\"就是最强 prompt",
-          "val": "163 条极简指令"
+          "val": "164 条极简指令"
         },
         {
           "icon": "🔂",
@@ -270,7 +270,7 @@
           "g": "日常",
           "ok": true,
           "desc": "甩了 50 个链接过去：\"你自己去看\"",
-          "val": "586 条带链接消息"
+          "val": "596 条带链接消息"
         },
         {
           "icon": "🪞",
@@ -406,7 +406,7 @@
           "g": "钞能力",
           "ok": true,
           "desc": "缓存命中累计 10 亿 token，省下的都是赚的",
-          "val": "白嫖 229.5 亿"
+          "val": "白嫖 238.1 亿"
         },
         {
           "icon": "🚧",
@@ -461,7 +461,7 @@
           "g": "微操",
           "ok": true,
           "desc": "按 20 次 Esc 打断输出。刹车是最后的尊严",
-          "val": "踩了 142 脚刹车"
+          "val": "踩了 143 脚刹车"
         },
         {
           "icon": "🚢",
@@ -550,6 +550,70 @@
     }
   },
   "heartbeats": [
+    {
+      "agent": "Watcher",
+      "category": "情报",
+      "status": "done",
+      "started_at": "2026-07-19T03:02:30Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Watcher",
+      "category": "情报",
+      "status": "done",
+      "started_at": "2026-07-19T03:02:27Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "running",
+      "started_at": "2026-07-19T03:02:22Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "done",
+      "started_at": "2026-07-19T02:58:42Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-19T02:55:40Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-19T02:55:35Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-19T02:53:45Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-19T02:53:45Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
@@ -3683,70 +3747,6 @@
       "category": "造物",
       "status": "done",
       "started_at": "2026-07-18T06:14:53Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-18T06:11:04Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-18T06:10:12Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "running",
-      "started_at": "2026-07-18T06:09:29Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-07-18T06:04:51Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-07-18T06:04:51Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-18T06:02:07Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-18T05:55:40Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-18T05:55:34Z",
       "duration_s": null,
       "title": null
     }
