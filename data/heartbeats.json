@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-19T17:38:45Z",
+  "generated_at": "2026-07-19T17:53:50Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -12,7 +12,7 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-07-19T17:35:33Z",
+      "last_beat_at": "2026-07-19T17:45:59Z",
       "last_status": "done"
     },
     {
@@ -20,8 +20,8 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-19T17:32:10Z",
-      "last_status": "done"
+      "last_beat_at": "2026-07-19T17:41:24Z",
+      "last_status": "running"
     },
     {
       "agent": "Watcher",
@@ -44,7 +44,7 @@
       "emoji": "🔮",
       "role": "占卜师",
       "category": "占卜",
-      "last_beat_at": "2026-07-18T17:00:00Z",
+      "last_beat_at": "2026-07-19T17:00:00Z",
       "last_status": "failed"
     },
     {
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-19T17:26:21Z",
+      "last_beat_at": "2026-07-19T17:41:24Z",
       "last_status": "running"
     }
   ],
   "stats": {
     "beats_24h": 407,
     "active_now": 3,
-    "last_beat_at": "2026-07-19T17:35:33Z",
+    "last_beat_at": "2026-07-19T17:45:59Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,12 +137,12 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "61 下"
+        "value": "66 下"
       },
       {
         "icon": "🔧",
         "label": "工作坊交付",
-        "value": "28 件活"
+        "value": "30 件活"
       },
       {
         "icon": "🫖",
@@ -158,6 +158,11 @@
         "icon": "🌙",
         "label": "夜班时长",
         "value": "3 小时"
+      },
+      {
+        "icon": "🛠️",
+        "label": "翻车又爬起",
+        "value": "1 次"
       }
     ],
     "trophies": {
@@ -539,6 +544,38 @@
       "agent": "泛音",
       "category": "造物",
       "status": "done",
+      "started_at": "2026-07-19T17:45:59Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-19T17:44:30Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-19T17:41:24Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-19T17:41:24Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
       "started_at": "2026-07-19T17:35:33Z",
       "duration_s": null,
       "title": null
@@ -612,6 +649,14 @@
       "category": "管家",
       "status": "done",
       "started_at": "2026-07-19T17:07:37Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "MiroFish",
+      "category": "占卜",
+      "status": "failed",
+      "started_at": "2026-07-19T17:00:00Z",
       "duration_s": null,
       "title": null
     },
@@ -3692,46 +3737,6 @@
       "category": "值守",
       "status": "running",
       "started_at": "2026-07-18T21:52:50Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-18T21:45:58Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-18T21:44:29Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-07-18T21:37:47Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-07-18T21:37:47Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-18T21:35:32Z",
       "duration_s": null,
       "title": null
     }
