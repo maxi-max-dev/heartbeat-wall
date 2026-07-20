@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-20T08:59:56Z",
+  "generated_at": "2026-07-20T09:15:01Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -12,7 +12,7 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-07-20T08:55:41Z",
+      "last_beat_at": "2026-07-20T09:14:55Z",
       "last_status": "done"
     },
     {
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-20T08:59:11Z",
+      "last_beat_at": "2026-07-20T09:14:13Z",
       "last_status": "running"
     },
     {
@@ -84,31 +84,31 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-20T08:59:11Z",
+      "last_beat_at": "2026-07-20T09:14:13Z",
       "last_status": "running"
     }
   ],
   "stats": {
-    "beats_24h": 412,
+    "beats_24h": 410,
     "active_now": 3,
-    "last_beat_at": "2026-07-20T08:59:11Z",
+    "last_beat_at": "2026-07-20T09:14:55Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
       "scope_note": "电表暂时只装在工作坊(泛音·Claude Code)一支，管家和外勤那几支的电还没接进来",
       "day_start": "2026-07-19T14:00:00Z",
-      "tokens_today": 201047334,
-      "fresh_today": 6047877,
-      "input_today": 1669,
-      "output_today": 538052,
-      "cache_creation_today": 5508156,
-      "cache_read_today": 194999457,
+      "tokens_today": 202126475,
+      "fresh_today": 6184386,
+      "input_today": 1682,
+      "output_today": 546817,
+      "cache_creation_today": 5635887,
+      "cache_read_today": 195942089,
       "sessions_today": 59,
       "by_resident": [
         {
           "agent": "泛音",
           "emoji": "🎼",
-          "tokens": 290947836,
+          "tokens": 292026977,
           "provider": "claude"
         },
         {
@@ -130,14 +130,14 @@
           "provider": "openclaw"
         }
       ],
-      "whole_house_tokens": 296500494,
+      "whole_house_tokens": 297579635,
       "scope_note_v2": "细分到各屋：泛音（工作坊，含它派出去的子代理）+管家/情报/外勤已接表，其余几间还没接上；跨模型 token 只是吞吐量，不等价电费"
     },
     "achievements_today": [
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "408 下"
+        "value": "406 下"
       },
       {
         "icon": "🔧",
@@ -177,7 +177,7 @@
     ],
     "trophies": {
       "source": "vibe-trophy",
-      "scanned_at": "2026-07-20T03:12:44.594Z",
+      "scanned_at": "2026-07-20T09:15:21.716Z",
       "unlocked": 37,
       "total": 41,
       "today_new": [],
@@ -216,7 +216,7 @@
           "g": "日常",
           "ok": true,
           "desc": "同时撩 10 个以上项目，每一个都说过\"这是主线\"",
-          "val": "228 个项目"
+          "val": "242 个项目"
         },
         {
           "icon": "🧰",
@@ -225,7 +225,7 @@
           "g": "日常",
           "ok": true,
           "desc": "MCP 调用 500 次。工欲善其事，必先装一堆 MCP",
-          "val": "9854 次 MCP 调用"
+          "val": "9954 次 MCP 调用"
         },
         {
           "icon": "🖼️",
@@ -243,7 +243,7 @@
           "g": "日常",
           "ok": true,
           "desc": "单条消息 500 字起步，这不是 prompt 是需求文档",
-          "val": "最长一条 151496 字，超500字共 3515 条"
+          "val": "最长一条 151496 字，超500字共 3642 条"
         },
         {
           "icon": "🤏",
@@ -261,7 +261,7 @@
           "g": "日常",
           "ok": true,
           "desc": "一字不差把同一句话再发一遍，共 5 次。再试一次，再试亿次",
-          "val": "118 次原句重发"
+          "val": "119 次原句重发"
         },
         {
           "icon": "🧭",
@@ -270,7 +270,7 @@
           "g": "日常",
           "ok": true,
           "desc": "甩了 50 个链接过去：\"你自己去看\"",
-          "val": "682 条带链接消息"
+          "val": "691 条带链接消息"
         },
         {
           "icon": "🪞",
@@ -352,7 +352,7 @@
           "g": "肝度",
           "ok": true,
           "desc": "同一小时 3 路会话并行：左手报错，右手\"你说得对\"",
-          "val": "最高并行 19 路"
+          "val": "最高并行 34 路"
         },
         {
           "icon": "🔁",
@@ -406,7 +406,7 @@
           "g": "钞能力",
           "ok": true,
           "desc": "缓存命中累计 10 亿 token，省下的都是赚的",
-          "val": "白嫖 333.6 亿"
+          "val": "白嫖 338.0 亿"
         },
         {
           "icon": "🚧",
@@ -424,7 +424,7 @@
           "g": "微操",
           "ok": true,
           "desc": "派出 100 个子代理，精通自己不干活的艺术",
-          "val": "已派 554 个分身"
+          "val": "已派 573 个分身"
         },
         {
           "icon": "🧨",
@@ -442,7 +442,7 @@
           "g": "微操",
           "ok": true,
           "desc": "被 AI 说过 50 次\"你说得对\"，而你确实说得对",
-          "val": "96 次"
+          "val": "97 次"
         },
         {
           "icon": "❓",
@@ -461,7 +461,7 @@
           "g": "微操",
           "ok": true,
           "desc": "按 20 次 Esc 打断输出。刹车是最后的尊严",
-          "val": "踩了 160 脚刹车"
+          "val": "踩了 164 脚刹车"
         },
         {
           "icon": "🚢",
@@ -498,7 +498,7 @@
           "g": "微操",
           "ok": true,
           "desc": "用过 3 种以上模型：有的干活，有的跑腿，有的背锅",
-          "val": "15 种模型"
+          "val": "16 种模型"
         },
         {
           "icon": "🙋",
@@ -507,7 +507,7 @@
           "g": "微操",
           "ok": true,
           "desc": "被 AI 反过来追问 20 次需求。谁写 PRD？不存在的，它猜不动了自然会问",
-          "val": "被追问 130 次"
+          "val": "被追问 133 次"
         },
         {
           "icon": "🙇",
@@ -525,7 +525,7 @@
           "g": "微操",
           "ok": true,
           "desc": "对 AI 说了 20 次谢谢。它记不住，但你是好人",
-          "val": "46 次感谢"
+          "val": "48 次感谢"
         },
         {
           "icon": "🤬",
@@ -543,13 +543,53 @@
           "g": "微操",
           "ok": true,
           "desc": "AI 答完干等你 2 小时起步，共 5 次。它不困，你先睡",
-          "val": "共 116 次，最长晾了 35.6 天"
+          "val": "共 119 次，最长晾了 35.6 天"
         }
       ],
       "note": "终身成就,vibe-trophy 从本地日志实算,只算人类会话;今日解锁有才显示"
     }
   },
   "heartbeats": [
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-20T09:14:55Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-20T09:14:13Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-20T09:14:13Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-20T09:11:05Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-20T09:08:08Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "Jarvis",
       "category": "管家",
@@ -3707,46 +3747,6 @@
       "category": "值守",
       "status": "running",
       "started_at": "2026-07-19T15:41:03Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-19T15:35:33Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-07-19T15:26:00Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-07-19T15:26:00Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-19T15:14:54Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-19T15:11:05Z",
       "duration_s": null,
       "title": null
     }
