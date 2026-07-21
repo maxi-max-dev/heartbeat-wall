@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-21T15:20:59Z",
+  "generated_at": "2026-07-21T15:36:05Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -12,7 +12,7 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-07-21T15:14:57Z",
+      "last_beat_at": "2026-07-21T15:35:35Z",
       "last_status": "done"
     },
     {
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-21T15:13:10Z",
+      "last_beat_at": "2026-07-21T15:28:12Z",
       "last_status": "running"
     },
     {
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-21T15:13:10Z",
+      "last_beat_at": "2026-07-21T15:28:12Z",
       "last_status": "running"
     }
   ],
   "stats": {
-    "beats_24h": 409,
+    "beats_24h": 408,
     "active_now": 3,
-    "last_beat_at": "2026-07-21T15:14:57Z",
+    "last_beat_at": "2026-07-21T15:35:35Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,12 +137,12 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "30 下"
+        "value": "33 下"
       },
       {
         "icon": "🔧",
         "label": "工作坊交付",
-        "value": "17 件活"
+        "value": "18 件活"
       },
       {
         "icon": "🛰️",
@@ -157,7 +157,7 @@
     ],
     "trophies": {
       "source": "vibe-trophy",
-      "scanned_at": "2026-07-21T09:28:24.871Z",
+      "scanned_at": "2026-07-21T15:36:26.239Z",
       "unlocked": 37,
       "total": 41,
       "today_new": [],
@@ -196,7 +196,7 @@
           "g": "日常",
           "ok": true,
           "desc": "同时撩 10 个以上项目，每一个都说过\"这是主线\"",
-          "val": "250 个项目"
+          "val": "253 个项目"
         },
         {
           "icon": "🧰",
@@ -205,7 +205,7 @@
           "g": "日常",
           "ok": true,
           "desc": "MCP 调用 500 次。工欲善其事，必先装一堆 MCP",
-          "val": "10061 次 MCP 调用"
+          "val": "10074 次 MCP 调用"
         },
         {
           "icon": "🖼️",
@@ -223,7 +223,7 @@
           "g": "日常",
           "ok": true,
           "desc": "单条消息 500 字起步，这不是 prompt 是需求文档",
-          "val": "最长一条 151496 字，超500字共 3857 条"
+          "val": "最长一条 151496 字，超500字共 3872 条"
         },
         {
           "icon": "🤏",
@@ -232,7 +232,7 @@
           "g": "日常",
           "ok": true,
           "desc": "两个字以内的指令发了 20 条，\"继续\"就是最强 prompt",
-          "val": "162 条极简指令"
+          "val": "161 条极简指令"
         },
         {
           "icon": "🔂",
@@ -241,7 +241,7 @@
           "g": "日常",
           "ok": true,
           "desc": "一字不差把同一句话再发一遍，共 5 次。再试一次，再试亿次",
-          "val": "120 次原句重发"
+          "val": "121 次原句重发"
         },
         {
           "icon": "🧭",
@@ -250,7 +250,7 @@
           "g": "日常",
           "ok": true,
           "desc": "甩了 50 个链接过去：\"你自己去看\"",
-          "val": "706 条带链接消息"
+          "val": "713 条带链接消息"
         },
         {
           "icon": "🪞",
@@ -350,7 +350,7 @@
           "g": "肝度",
           "ok": true,
           "desc": "午饭点和晚饭点都在线，共 10 天。外卖在门口凉透，代码在锅里翻滚",
-          "val": "53 天午晚连线"
+          "val": "54 天午晚连线"
         },
         {
           "icon": "🌤️",
@@ -386,7 +386,7 @@
           "g": "钞能力",
           "ok": true,
           "desc": "缓存命中累计 10 亿 token，省下的都是赚的",
-          "val": "白嫖 357.3 亿"
+          "val": "白嫖 358.6 亿"
         },
         {
           "icon": "🚧",
@@ -404,7 +404,7 @@
           "g": "微操",
           "ok": true,
           "desc": "派出 100 个子代理，精通自己不干活的艺术",
-          "val": "已派 573 个分身"
+          "val": "已派 576 个分身"
         },
         {
           "icon": "🧨",
@@ -450,7 +450,7 @@
           "g": "微操",
           "ok": true,
           "desc": "经手 100 个 commit，信息还都写得比你好",
-          "val": "347 个 commit"
+          "val": "353 个 commit"
         },
         {
           "icon": "💥",
@@ -487,7 +487,7 @@
           "g": "微操",
           "ok": true,
           "desc": "被 AI 反过来追问 20 次需求。谁写 PRD？不存在的，它猜不动了自然会问",
-          "val": "被追问 135 次"
+          "val": "被追问 136 次"
         },
         {
           "icon": "🙇",
@@ -523,13 +523,37 @@
           "g": "微操",
           "ok": true,
           "desc": "AI 答完干等你 2 小时起步，共 5 次。它不困，你先睡",
-          "val": "共 124 次，最长晾了 35.6 天"
+          "val": "共 125 次，最长晾了 35.6 天"
         }
       ],
       "note": "终身成就,vibe-trophy 从本地日志实算,只算人类会话;今日解锁有才显示"
     }
   },
   "heartbeats": [
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-21T15:35:35Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-21T15:28:12Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-21T15:28:12Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
@@ -3703,30 +3727,6 @@
       "category": "值守",
       "status": "running",
       "started_at": "2026-07-20T19:32:31Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-20T19:20:21Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-07-20T19:17:29Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-07-20T19:17:29Z",
       "duration_s": null,
       "title": null
     }
