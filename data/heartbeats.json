@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-22T17:12:15Z",
+  "generated_at": "2026-07-22T17:27:21Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -12,7 +12,7 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-07-22T17:05:35Z",
+      "last_beat_at": "2026-07-22T17:22:19Z",
       "last_status": "done"
     },
     {
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-22T17:12:12Z",
+      "last_beat_at": "2026-07-22T17:27:16Z",
       "last_status": "done"
     },
     {
@@ -76,22 +76,22 @@
       "emoji": "🐄",
       "role": "额度牧场",
       "category": "牧场",
-      "last_beat_at": "2026-07-21T10:31:34Z",
-      "last_status": "done"
+      "last_beat_at": "2026-07-22T17:22:09Z",
+      "last_status": "running"
     },
     {
       "agent": "门房",
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-22T17:07:06Z",
+      "last_beat_at": "2026-07-22T17:22:09Z",
       "last_status": "running"
     }
   ],
   "stats": {
     "beats_24h": 338,
-    "active_now": 4,
-    "last_beat_at": "2026-07-22T17:12:12Z",
+    "active_now": 5,
+    "last_beat_at": "2026-07-22T17:27:16Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -114,7 +114,7 @@
         {
           "agent": "Jarvis",
           "emoji": "🤵",
-          "tokens": 2933270,
+          "tokens": 6194078,
           "provider": "openclaw"
         },
         {
@@ -130,29 +130,29 @@
           "provider": "openclaw"
         }
       ],
-      "whole_house_tokens": 77140870,
+      "whole_house_tokens": 80401678,
       "scope_note_v2": "细分到各屋：泛音（工作坊，含它派出去的子代理）+管家/情报/外勤已接表，其余几间还没接上；跨模型 token 只是吞吐量，不等价电费"
     },
     "achievements_today": [
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "59 下"
+        "value": "64 下"
       },
       {
         "icon": "🔧",
         "label": "工作坊交付",
-        "value": "26 件活"
+        "value": "27 件活"
+      },
+      {
+        "icon": "🫖",
+        "label": "打理家务",
+        "value": "2 桩"
       },
       {
         "icon": "🛰️",
         "label": "巡夜瞭望",
         "value": "2 轮"
-      },
-      {
-        "icon": "🫖",
-        "label": "打理家务",
-        "value": "1 桩"
       },
       {
         "icon": "🌙",
@@ -535,6 +535,46 @@
     }
   },
   "heartbeats": [
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "done",
+      "started_at": "2026-07-22T17:27:16Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-22T17:22:19Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-22T17:22:09Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "牧场主",
+      "category": "牧场",
+      "status": "running",
+      "started_at": "2026-07-22T17:22:09Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-22T17:22:09Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "Jarvis",
       "category": "管家",
@@ -3692,46 +3732,6 @@
       "category": "瞭望",
       "status": "done",
       "started_at": "2026-07-21T14:08:57Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-21T14:07:54Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-21T14:06:49Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "running",
-      "started_at": "2026-07-21T14:05:00Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "running",
-      "started_at": "2026-07-21T14:04:23Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-21T14:01:37Z",
       "duration_s": null,
       "title": null
     }
