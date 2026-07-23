@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-23T16:38:17Z",
+  "generated_at": "2026-07-23T16:53:22Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-23T16:25:55Z",
+      "last_beat_at": "2026-07-23T16:40:56Z",
       "last_status": "running"
     },
     {
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-23T16:25:55Z",
+      "last_beat_at": "2026-07-23T16:40:56Z",
       "last_status": "running"
     }
   ],
   "stats": {
-    "beats_24h": 403,
-    "active_now": 4,
-    "last_beat_at": "2026-07-23T16:28:14Z",
+    "beats_24h": 402,
+    "active_now": 3,
+    "last_beat_at": "2026-07-23T16:40:56Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,7 +137,7 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "53 下"
+        "value": "55 下"
       },
       {
         "icon": "🔧",
@@ -530,6 +530,22 @@
     }
   },
   "heartbeats": [
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-23T16:40:56Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-23T16:40:56Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
@@ -3711,22 +3727,6 @@
       "category": "值守",
       "status": "running",
       "started_at": "2026-07-22T17:07:06Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-22T17:05:35Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "MiroFish",
-      "category": "占卜",
-      "status": "done",
-      "started_at": "2026-07-22T17:00:00Z",
       "duration_s": null,
       "title": null
     }
