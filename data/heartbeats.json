@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-23T15:22:31Z",
+  "generated_at": "2026-07-23T15:37:36Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -12,7 +12,7 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-07-23T15:22:20Z",
+      "last_beat_at": "2026-07-23T15:28:14Z",
       "last_status": "done"
     },
     {
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-23T15:10:44Z",
+      "last_beat_at": "2026-07-23T15:25:47Z",
       "last_status": "running"
     },
     {
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-23T15:10:44Z",
+      "last_beat_at": "2026-07-23T15:25:47Z",
       "last_status": "running"
     }
   ],
   "stats": {
-    "beats_24h": 407,
+    "beats_24h": 404,
     "active_now": 4,
-    "last_beat_at": "2026-07-23T15:22:20Z",
+    "last_beat_at": "2026-07-23T15:28:14Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,12 +137,12 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "37 下"
+        "value": "40 下"
       },
       {
         "icon": "🔧",
         "label": "工作坊交付",
-        "value": "18 件活"
+        "value": "19 件活"
       },
       {
         "icon": "🛰️",
@@ -530,6 +530,30 @@
     }
   },
   "heartbeats": [
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-23T15:28:14Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-23T15:25:47Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-23T15:25:47Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
@@ -3703,30 +3727,6 @@
       "category": "造物",
       "status": "done",
       "started_at": "2026-07-22T16:02:58Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-22T15:59:28Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-07-22T15:51:55Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-07-22T15:51:55Z",
       "duration_s": null,
       "title": null
     }
