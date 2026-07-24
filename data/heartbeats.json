@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-24T01:41:53Z",
+  "generated_at": "2026-07-24T01:56:59Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -12,15 +12,15 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-07-24T01:34:39Z",
-      "last_status": "done"
+      "last_beat_at": "2026-07-24T01:56:48Z",
+      "last_status": "running"
     },
     {
       "agent": "Jarvis",
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-24T01:27:17Z",
+      "last_beat_at": "2026-07-24T01:42:19Z",
       "last_status": "running"
     },
     {
@@ -84,31 +84,31 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-24T01:27:17Z",
+      "last_beat_at": "2026-07-24T01:42:19Z",
       "last_status": "running"
     }
   ],
   "stats": {
-    "beats_24h": 405,
+    "beats_24h": 404,
     "active_now": 4,
-    "last_beat_at": "2026-07-24T01:34:39Z",
+    "last_beat_at": "2026-07-24T01:56:48Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
       "scope_note": "电表暂时只装在工作坊(泛音·Claude Code)一支，管家和外勤那几支的电还没接进来",
       "day_start": "2026-07-23T14:00:00Z",
-      "tokens_today": 40146854,
-      "fresh_today": 1670040,
-      "input_today": 439,
-      "output_today": 167169,
-      "cache_creation_today": 1502432,
-      "cache_read_today": 38476814,
-      "sessions_today": 12,
+      "tokens_today": 46753212,
+      "fresh_today": 1719637,
+      "input_today": 493,
+      "output_today": 180351,
+      "cache_creation_today": 1538793,
+      "cache_read_today": 45033575,
+      "sessions_today": 13,
       "by_resident": [
         {
           "agent": "泛音",
           "emoji": "🎼",
-          "tokens": 74500212,
+          "tokens": 82903982,
           "provider": "claude"
         },
         {
@@ -130,19 +130,19 @@
           "provider": "openclaw"
         }
       ],
-      "whole_house_tokens": 81985268,
+      "whole_house_tokens": 90389038,
       "scope_note_v2": "细分到各屋：泛音（工作坊，含它派出去的子代理）+管家/情报/外勤已接表，其余几间还没接上；跨模型 token 只是吞吐量，不等价电费"
     },
     "achievements_today": [
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "200 下"
+        "value": "204 下"
       },
       {
         "icon": "🔧",
         "label": "工作坊交付",
-        "value": "76 件活"
+        "value": "77 件活"
       },
       {
         "icon": "🫖",
@@ -550,6 +550,38 @@
     }
   },
   "heartbeats": [
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "running",
+      "started_at": "2026-07-24T01:56:48Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-24T01:52:11Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-24T01:42:19Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-24T01:42:19Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
@@ -3715,38 +3747,6 @@
       "category": "管家",
       "status": "running",
       "started_at": "2026-07-23T02:23:38Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-07-23T02:23:38Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-23T02:22:19Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-23T02:16:10Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-07-23T02:08:35Z",
       "duration_s": null,
       "title": null
     }
