@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-26T20:28:54Z",
+  "generated_at": "2026-07-26T20:43:59Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-26T20:20:20Z",
+      "last_beat_at": "2026-07-26T20:35:22Z",
       "last_status": "running"
     }
   ],
   "stats": {
     "beats_24h": 134,
     "active_now": 3,
-    "last_beat_at": "2026-07-26T20:20:20Z",
+    "last_beat_at": "2026-07-26T20:35:22Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,7 +137,7 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "36 下"
+        "value": "37 下"
       },
       {
         "icon": "🔧",
@@ -530,6 +530,14 @@
     }
   },
   "heartbeats": [
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-26T20:35:22Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "门房",
       "category": "值守",
@@ -3719,14 +3727,6 @@
       "category": "造物",
       "status": "done",
       "started_at": "2026-07-24T23:41:28Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "running",
-      "started_at": "2026-07-24T23:38:19Z",
       "duration_s": null,
       "title": null
     }
