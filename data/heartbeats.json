@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-26T14:41:24Z",
+  "generated_at": "2026-07-26T14:56:28Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-26T14:34:37Z",
+      "last_beat_at": "2026-07-26T14:49:39Z",
       "last_status": "running"
     }
   ],
   "stats": {
-    "beats_24h": 165,
-    "active_now": 4,
-    "last_beat_at": "2026-07-26T14:34:37Z",
+    "beats_24h": 163,
+    "active_now": 3,
+    "last_beat_at": "2026-07-26T14:49:39Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,7 +137,7 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "11 下"
+        "value": "12 下"
       },
       {
         "icon": "🔧",
@@ -152,7 +152,7 @@
       {
         "icon": "🌙",
         "label": "凌晨还亮着灯",
-        "value": "11 次"
+        "value": "12 次"
       }
     ],
     "trophies": {
@@ -530,6 +530,14 @@
     }
   },
   "heartbeats": [
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-26T14:49:39Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "门房",
       "category": "值守",
@@ -3719,14 +3727,6 @@
       "category": "造物",
       "status": "done",
       "started_at": "2026-07-24T22:33:15Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "采集员",
-      "category": "采集",
-      "status": "running",
-      "started_at": "2026-07-24T22:31:32Z",
       "duration_s": null,
       "title": null
     }
