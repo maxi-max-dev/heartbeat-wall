@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-26T17:27:52Z",
+  "generated_at": "2026-07-26T17:42:57Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -12,7 +12,7 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-07-26T14:15:55Z",
+      "last_beat_at": "2026-07-26T17:31:43Z",
       "last_status": "done"
     },
     {
@@ -84,31 +84,31 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-26T17:19:58Z",
+      "last_beat_at": "2026-07-26T17:35:00Z",
       "last_status": "running"
     }
   ],
   "stats": {
-    "beats_24h": 149,
-    "active_now": 3,
-    "last_beat_at": "2026-07-26T17:19:58Z",
+    "beats_24h": 147,
+    "active_now": 4,
+    "last_beat_at": "2026-07-26T17:35:00Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
       "scope_note": "电表暂时只装在工作坊(泛音·Claude Code)一支，管家和外勤那几支的电还没接进来",
       "day_start": "2026-07-26T14:00:00Z",
-      "tokens_today": 125351,
-      "fresh_today": 125351,
-      "input_today": 30,
-      "output_today": 16432,
-      "cache_creation_today": 108889,
-      "cache_read_today": 0,
-      "sessions_today": 3,
+      "tokens_today": 151437,
+      "fresh_today": 133901,
+      "input_today": 40,
+      "output_today": 16508,
+      "cache_creation_today": 117353,
+      "cache_read_today": 17536,
+      "sessions_today": 4,
       "by_resident": [
         {
           "agent": "泛音",
           "emoji": "🎼",
-          "tokens": 125351,
+          "tokens": 151437,
           "provider": "claude"
         },
         {
@@ -130,19 +130,19 @@
           "provider": "openclaw"
         }
       ],
-      "whole_house_tokens": 125351,
+      "whole_house_tokens": 151437,
       "scope_note_v2": "细分到各屋：泛音（工作坊，含它派出去的子代理）+管家/情报/外勤已接表，其余几间还没接上；跨模型 token 只是吞吐量，不等价电费"
     },
     "achievements_today": [
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "22 下"
+        "value": "24 下"
       },
       {
         "icon": "🔧",
         "label": "工作坊交付",
-        "value": "3 件活"
+        "value": "4 件活"
       },
       {
         "icon": "🛰️",
@@ -530,6 +530,22 @@
     }
   },
   "heartbeats": [
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-26T17:35:00Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-07-26T17:31:43Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "门房",
       "category": "值守",
@@ -3711,22 +3727,6 @@
       "category": "造物",
       "status": "done",
       "started_at": "2026-07-24T23:15:10Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-24T23:05:37Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-07-24T23:02:18Z",
       "duration_s": null,
       "title": null
     }
