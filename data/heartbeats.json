@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-27T22:25:20Z",
+  "generated_at": "2026-07-27T22:40:26Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-27T22:24:01Z",
+      "last_beat_at": "2026-07-27T22:39:03Z",
       "last_status": "running"
     },
     {
@@ -68,8 +68,8 @@
       "emoji": "🗄️",
       "role": "档案馆",
       "category": "备份",
-      "last_beat_at": "2026-07-25T22:31:59Z",
-      "last_status": "running"
+      "last_beat_at": null,
+      "last_status": null
     },
     {
       "agent": "牧场主",
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-27T22:24:01Z",
+      "last_beat_at": "2026-07-27T22:39:03Z",
       "last_status": "running"
     }
   ],
   "stats": {
-    "beats_24h": 259,
-    "active_now": 4,
-    "last_beat_at": "2026-07-27T22:24:01Z",
+    "beats_24h": 258,
+    "active_now": 2,
+    "last_beat_at": "2026-07-27T22:39:03Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,7 +137,7 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "116 下"
+        "value": "118 下"
       },
       {
         "icon": "🔧",
@@ -540,6 +540,22 @@
     }
   },
   "heartbeats": [
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-27T22:39:03Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-27T22:39:03Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "Jarvis",
       "category": "管家",
@@ -3617,30 +3633,6 @@
       "category": "值守",
       "status": "running",
       "started_at": "2026-07-25T22:47:01Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "采集员",
-      "category": "采集",
-      "status": "running",
-      "started_at": "2026-07-25T22:31:59Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-07-25T22:31:59Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "备份员",
-      "category": "备份",
-      "status": "running",
-      "started_at": "2026-07-25T22:31:59Z",
       "duration_s": null,
       "title": null
     }
