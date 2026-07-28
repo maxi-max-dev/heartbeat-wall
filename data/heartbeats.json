@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-28T00:11:34Z",
+  "generated_at": "2026-07-28T00:26:39Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-28T00:09:17Z",
+      "last_beat_at": "2026-07-28T00:24:18Z",
       "last_status": "running"
     },
     {
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-28T00:09:17Z",
+      "last_beat_at": "2026-07-28T00:24:18Z",
       "last_status": "running"
     }
   ],
   "stats": {
-    "beats_24h": 257,
-    "active_now": 3,
-    "last_beat_at": "2026-07-28T00:09:17Z",
+    "beats_24h": 258,
+    "active_now": 2,
+    "last_beat_at": "2026-07-28T00:24:18Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,7 +137,7 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "132 下"
+        "value": "134 下"
       },
       {
         "icon": "🔧",
@@ -545,6 +545,22 @@
     }
   },
   "heartbeats": [
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-28T00:24:18Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-28T00:24:18Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "Jarvis",
       "category": "管家",
@@ -3614,14 +3630,6 @@
       "category": "值守",
       "status": "running",
       "started_at": "2026-07-26T00:32:33Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-07-26T00:17:30Z",
       "duration_s": null,
       "title": null
     }
