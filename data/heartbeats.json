@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-29T22:45:03Z",
+  "generated_at": "2026-07-29T23:00:09Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-29T22:31:20Z",
+      "last_beat_at": "2026-07-29T22:46:22Z",
       "last_status": "running"
     },
     {
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-29T22:31:20Z",
+      "last_beat_at": "2026-07-29T22:46:22Z",
       "last_status": "running"
     }
   ],
   "stats": {
     "beats_24h": 318,
     "active_now": 3,
-    "last_beat_at": "2026-07-29T22:31:20Z",
+    "last_beat_at": "2026-07-29T22:46:22Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,7 +137,7 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "103 下"
+        "value": "105 下"
       },
       {
         "icon": "🔧",
@@ -167,7 +167,7 @@
     ],
     "trophies": {
       "source": "vibe-trophy",
-      "scanned_at": "2026-07-29T16:57:46.099Z",
+      "scanned_at": "2026-07-29T23:00:44.525Z",
       "unlocked": 37,
       "total": 41,
       "today_new": [],
@@ -242,7 +242,7 @@
           "g": "日常",
           "ok": true,
           "desc": "两个字以内的指令发了 20 条，\"继续\"就是最强 prompt",
-          "val": "283 条极简指令"
+          "val": "284 条极简指令"
         },
         {
           "icon": "🔂",
@@ -278,7 +278,7 @@
           "g": "肝度",
           "ok": true,
           "desc": "02:00–06:00 还在 vibe，全世界只剩你和它的 loading",
-          "val": "49 个深夜"
+          "val": "50 个深夜"
         },
         {
           "icon": "🧛",
@@ -287,7 +287,7 @@
           "g": "肝度",
           "ok": true,
           "desc": "连续 3 天深夜营业，太阳升起前必须收工",
-          "val": "连续 25 天深夜在线"
+          "val": "连续 26 天深夜在线"
         },
         {
           "icon": "🌅",
@@ -305,7 +305,7 @@
           "g": "肝度",
           "ok": true,
           "desc": "连续 7 天有会话。休息？那是模型维护日干的事",
-          "val": "最长连勤 30 天"
+          "val": "最长连勤 31 天"
         },
         {
           "icon": "🏃",
@@ -540,6 +540,22 @@
     }
   },
   "heartbeats": [
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-29T22:46:22Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-29T22:46:22Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "Jarvis",
       "category": "管家",
@@ -3721,22 +3737,6 @@
       "category": "造物",
       "status": "done",
       "started_at": "2026-07-28T15:02:37Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-07-28T14:56:29Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-07-28T14:56:29Z",
       "duration_s": null,
       "title": null
     }
