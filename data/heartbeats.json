@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-31T20:11:00Z",
+  "generated_at": "2026-07-31T20:26:06Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-31T19:56:55Z",
+      "last_beat_at": "2026-07-31T20:11:59Z",
       "last_status": "running"
     },
     {
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-31T19:56:55Z",
+      "last_beat_at": "2026-07-31T20:11:59Z",
       "last_status": "running"
     }
   ],
   "stats": {
     "beats_24h": 273,
     "active_now": 4,
-    "last_beat_at": "2026-07-31T19:56:55Z",
+    "last_beat_at": "2026-07-31T20:11:59Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,7 +137,7 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "82 下"
+        "value": "84 下"
       },
       {
         "icon": "🫖",
@@ -173,6 +173,22 @@
     "trophies": null
   },
   "heartbeats": [
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-31T20:11:59Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-31T20:11:59Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "Jarvis",
       "category": "管家",
@@ -3354,22 +3370,6 @@
       "category": "管家",
       "status": "running",
       "started_at": "2026-07-30T08:48:05Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-07-30T08:48:05Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "done",
-      "started_at": "2026-07-30T08:47:04Z",
       "duration_s": null,
       "title": null
     }
