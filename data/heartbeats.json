@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-07-31T06:31:36Z",
+  "generated_at": "2026-07-31T06:46:41Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-07-31T06:24:41Z",
+      "last_beat_at": "2026-07-31T06:45:09Z",
       "last_status": "done"
     },
     {
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-07-31T06:22:05Z",
+      "last_beat_at": "2026-07-31T06:37:08Z",
       "last_status": "running"
     }
   ],
   "stats": {
-    "beats_24h": 266,
+    "beats_24h": 264,
     "active_now": 4,
-    "last_beat_at": "2026-07-31T06:24:41Z",
+    "last_beat_at": "2026-07-31T06:45:09Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,12 +137,12 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "170 下"
+        "value": "173 下"
       },
       {
         "icon": "🫖",
         "label": "打理家务",
-        "value": "22 桩"
+        "value": "23 桩"
       },
       {
         "icon": "🔧",
@@ -172,7 +172,7 @@
     ],
     "trophies": {
       "source": "vibe-trophy",
-      "scanned_at": "2026-07-31T00:44:25.011Z",
+      "scanned_at": "2026-07-31T06:47:56.649Z",
       "unlocked": 37,
       "total": 41,
       "today_new": [],
@@ -211,7 +211,7 @@
           "g": "日常",
           "ok": true,
           "desc": "同时撩 10 个以上项目，每一个都说过\"这是主线\"",
-          "val": "301 个项目"
+          "val": "302 个项目"
         },
         {
           "icon": "🧰",
@@ -238,7 +238,7 @@
           "g": "日常",
           "ok": true,
           "desc": "单条消息 500 字起步，这不是 prompt 是需求文档",
-          "val": "最长一条 213518 字，超500字共 4278 条"
+          "val": "最长一条 213518 字，超500字共 4290 条"
         },
         {
           "icon": "🤏",
@@ -247,7 +247,7 @@
           "g": "日常",
           "ok": true,
           "desc": "两个字以内的指令发了 20 条，\"继续\"就是最强 prompt",
-          "val": "287 条极简指令"
+          "val": "309 条极简指令"
         },
         {
           "icon": "🔂",
@@ -256,7 +256,7 @@
           "g": "日常",
           "ok": true,
           "desc": "一字不差把同一句话再发一遍，共 5 次。再试一次，再试亿次",
-          "val": "182 次原句重发"
+          "val": "203 次原句重发"
         },
         {
           "icon": "🧭",
@@ -401,7 +401,7 @@
           "g": "钞能力",
           "ok": true,
           "desc": "缓存命中累计 10 亿 token，省下的都是赚的",
-          "val": "白嫖 656.5 亿"
+          "val": "白嫖 744.9 亿"
         },
         {
           "icon": "🚧",
@@ -456,7 +456,7 @@
           "g": "微操",
           "ok": true,
           "desc": "按 20 次 Esc 打断输出。刹车是最后的尊严",
-          "val": "踩了 383 脚刹车"
+          "val": "踩了 406 脚刹车"
         },
         {
           "icon": "🚢",
@@ -545,6 +545,30 @@
     }
   },
   "heartbeats": [
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "done",
+      "started_at": "2026-07-31T06:45:09Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-07-31T06:37:08Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-07-31T06:37:08Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "Jarvis",
       "category": "管家",
@@ -3718,30 +3742,6 @@
       "category": "管家",
       "status": "running",
       "started_at": "2026-07-29T20:00:57Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-07-29T20:00:57Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-07-29T19:45:55Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-07-29T19:45:55Z",
       "duration_s": null,
       "title": null
     }
