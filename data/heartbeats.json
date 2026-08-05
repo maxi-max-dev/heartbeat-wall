@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-08-05T09:51:38Z",
+  "generated_at": "2026-08-05T10:06:45Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-08-05T09:47:34Z",
+      "last_beat_at": "2026-08-05T10:02:59Z",
       "last_status": "running"
     },
     {
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-08-05T09:47:34Z",
+      "last_beat_at": "2026-08-05T10:02:59Z",
       "last_status": "running"
     }
   ],
   "stats": {
-    "beats_24h": 358,
-    "active_now": 4,
-    "last_beat_at": "2026-08-05T09:47:34Z",
+    "beats_24h": 357,
+    "active_now": 3,
+    "last_beat_at": "2026-08-05T10:02:59Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,7 +137,7 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "298 下"
+        "value": "301 下"
       },
       {
         "icon": "🔧",
@@ -147,7 +147,7 @@
       {
         "icon": "🫖",
         "label": "打理家务",
-        "value": "16 桩"
+        "value": "17 桩"
       },
       {
         "icon": "📱",
@@ -188,6 +188,30 @@
     "trophies": null
   },
   "heartbeats": [
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-08-05T10:02:59Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-08-05T10:02:59Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "done",
+      "started_at": "2026-08-05T10:02:43Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "Jarvis",
       "category": "管家",
@@ -3361,30 +3385,6 @@
       "category": "值守",
       "status": "running",
       "started_at": "2026-08-04T08:25:57Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "running",
-      "started_at": "2026-08-04T08:25:28Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "running",
-      "started_at": "2026-08-04T08:24:59Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-08-04T08:18:15Z",
       "duration_s": null,
       "title": null
     }
