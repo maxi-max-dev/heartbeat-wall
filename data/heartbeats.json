@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-08-08T11:03:43Z",
+  "generated_at": "2026-08-08T11:18:49Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -20,15 +20,15 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-08-08T10:55:59Z",
-      "last_status": "running"
+      "last_beat_at": "2026-08-08T11:17:24Z",
+      "last_status": "done"
     },
     {
       "agent": "Watcher",
       "emoji": "📡",
       "role": "情报员",
       "category": "情报",
-      "last_beat_at": "2026-08-08T11:03:36Z",
+      "last_beat_at": "2026-08-08T11:09:06Z",
       "last_status": "done"
     },
     {
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-08-08T10:55:59Z",
+      "last_beat_at": "2026-08-08T11:11:21Z",
       "last_status": "running"
     }
   ],
   "stats": {
-    "beats_24h": 310,
+    "beats_24h": 309,
     "active_now": 4,
-    "last_beat_at": "2026-08-08T11:03:36Z",
+    "last_beat_at": "2026-08-08T11:17:24Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -114,7 +114,7 @@
         {
           "agent": "Jarvis",
           "emoji": "🤵",
-          "tokens": 5442445,
+          "tokens": 6816929,
           "provider": "openclaw"
         },
         {
@@ -130,14 +130,14 @@
           "provider": "openclaw"
         }
       ],
-      "whole_house_tokens": 114219737,
+      "whole_house_tokens": 115594221,
       "scope_note_v2": "细分到各屋：泛音（工作坊，含它派出去的子代理）+管家/情报/外勤已接表，其余几间还没接上；跨模型 token 只是吞吐量，不等价电费"
     },
     "achievements_today": [
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "269 下"
+        "value": "274 下"
       },
       {
         "icon": "🔧",
@@ -147,17 +147,17 @@
       {
         "icon": "🫖",
         "label": "打理家务",
-        "value": "26 桩"
+        "value": "28 桩"
+      },
+      {
+        "icon": "📡",
+        "label": "情报回传",
+        "value": "3 份"
       },
       {
         "icon": "🛰️",
         "label": "巡夜瞭望",
         "value": "3 轮"
-      },
-      {
-        "icon": "📡",
-        "label": "情报回传",
-        "value": "2 份"
       },
       {
         "icon": "📊",
@@ -183,6 +183,46 @@
     "trophies": null
   },
   "heartbeats": [
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "done",
+      "started_at": "2026-08-08T11:17:24Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-08-08T11:11:21Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-08-08T11:11:21Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "done",
+      "started_at": "2026-08-08T11:10:47Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Watcher",
+      "category": "情报",
+      "status": "done",
+      "started_at": "2026-08-08T11:09:06Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "Watcher",
       "category": "情报",
@@ -3340,46 +3380,6 @@
       "category": "造物",
       "status": "done",
       "started_at": "2026-08-07T02:18:57Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-08-07T02:09:28Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-08-07T02:09:28Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-08-07T02:01:29Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-08-07T01:54:06Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-08-07T01:54:06Z",
       "duration_s": null,
       "title": null
     }
