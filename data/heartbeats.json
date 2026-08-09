@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-08-09T02:41:23Z",
+  "generated_at": "2026-08-09T02:56:30Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -12,7 +12,7 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-08-09T02:39:22Z",
+      "last_beat_at": "2026-08-09T02:56:17Z",
       "last_status": "done"
     },
     {
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-08-09T02:34:49Z",
+      "last_beat_at": "2026-08-09T02:50:11Z",
       "last_status": "running"
     },
     {
@@ -84,31 +84,31 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-08-09T02:34:49Z",
+      "last_beat_at": "2026-08-09T02:50:11Z",
       "last_status": "running"
     }
   ],
   "stats": {
-    "beats_24h": 333,
+    "beats_24h": 335,
     "active_now": 5,
-    "last_beat_at": "2026-08-09T02:39:22Z",
+    "last_beat_at": "2026-08-09T02:56:17Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
       "scope_note": "电表暂时只装在工作坊(泛音·Claude Code)一支，管家和外勤那几支的电还没接进来",
       "day_start": "2026-08-08T14:00:00Z",
-      "tokens_today": 28151694,
-      "fresh_today": 1331008,
-      "input_today": 1695,
-      "output_today": 222173,
-      "cache_creation_today": 1107140,
-      "cache_read_today": 26820686,
+      "tokens_today": 29148502,
+      "fresh_today": 1367110,
+      "input_today": 1702,
+      "output_today": 233374,
+      "cache_creation_today": 1132034,
+      "cache_read_today": 27781392,
       "sessions_today": 14,
       "by_resident": [
         {
           "agent": "泛音",
           "emoji": "🎼",
-          "tokens": 77509017,
+          "tokens": 79183934,
           "provider": "claude"
         },
         {
@@ -130,19 +130,19 @@
           "provider": "openclaw"
         }
       ],
-      "whole_house_tokens": 80723117,
+      "whole_house_tokens": 82398034,
       "scope_note_v2": "细分到各屋：泛音（工作坊，含它派出去的子代理）+管家/情报/外勤已接表，其余几间还没接上；跨模型 token 只是吞吐量，不等价电费"
     },
     "achievements_today": [
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "163 下"
+        "value": "167 下"
       },
       {
         "icon": "🔧",
         "label": "工作坊交付",
-        "value": "26 件活"
+        "value": "28 件活"
       },
       {
         "icon": "🫖",
@@ -183,6 +183,38 @@
     "trophies": null
   },
   "heartbeats": [
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-08-09T02:56:17Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-08-09T02:54:14Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-08-09T02:50:11Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-08-09T02:50:11Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
@@ -3348,38 +3380,6 @@
       "category": "管家",
       "status": "running",
       "started_at": "2026-08-07T20:35:16Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-08-07T20:35:16Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-08-07T20:19:54Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-08-07T20:19:54Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-08-07T20:04:33Z",
       "duration_s": null,
       "title": null
     }
