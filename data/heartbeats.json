@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-08-11T13:33:00Z",
+  "generated_at": "2026-08-11T13:48:08Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -20,8 +20,8 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-08-11T13:32:45Z",
-      "last_status": "done"
+      "last_beat_at": "2026-08-11T13:44:30Z",
+      "last_status": "running"
     },
     {
       "agent": "Watcher",
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-08-11T13:29:09Z",
+      "last_beat_at": "2026-08-11T13:44:30Z",
       "last_status": "running"
     }
   ],
   "stats": {
     "beats_24h": 267,
     "active_now": 3,
-    "last_beat_at": "2026-08-11T13:32:45Z",
+    "last_beat_at": "2026-08-11T13:44:30Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,7 +137,7 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "260 下"
+        "value": "263 下"
       },
       {
         "icon": "🔧",
@@ -147,7 +147,7 @@
       {
         "icon": "🫖",
         "label": "打理家务",
-        "value": "21 桩"
+        "value": "22 桩"
       },
       {
         "icon": "📡",
@@ -186,6 +186,22 @@
     {
       "agent": "Jarvis",
       "category": "管家",
+      "status": "running",
+      "started_at": "2026-08-11T13:44:30Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-08-11T13:44:30Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
       "status": "done",
       "started_at": "2026-08-11T13:32:45Z",
       "duration_s": null,
@@ -196,6 +212,14 @@
       "category": "管家",
       "status": "done",
       "started_at": "2026-08-11T13:32:39Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "done",
+      "started_at": "2026-08-11T13:30:00Z",
       "duration_s": null,
       "title": null
     },
@@ -3356,30 +3380,6 @@
       "category": "造物",
       "status": "done",
       "started_at": "2026-08-10T04:44:35Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-08-10T04:37:28Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-08-10T04:36:49Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-08-10T04:33:32Z",
       "duration_s": null,
       "title": null
     }
