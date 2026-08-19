@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-08-19T14:52:44Z",
+  "generated_at": "2026-08-19T15:07:50Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-08-19T14:49:07Z",
+      "last_beat_at": "2026-08-19T15:04:09Z",
       "last_status": "running"
     },
     {
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-08-19T14:49:07Z",
+      "last_beat_at": "2026-08-19T15:04:09Z",
       "last_status": "running"
     }
   ],
   "stats": {
-    "beats_24h": 395,
+    "beats_24h": 389,
     "active_now": 4,
-    "last_beat_at": "2026-08-19T14:51:47Z",
+    "last_beat_at": "2026-08-19T15:04:09Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,7 +137,7 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "16 下"
+        "value": "18 下"
       },
       {
         "icon": "🔧",
@@ -151,13 +151,29 @@
       },
       {
         "icon": "🌙",
-        "label": "凌晨还亮着灯",
-        "value": "16 次"
+        "label": "夜班时长",
+        "value": "1 小时"
       }
     ],
     "trophies": null
   },
   "heartbeats": [
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-08-19T15:04:09Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-08-19T15:04:09Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
@@ -3337,22 +3353,6 @@
     {
       "agent": "Jarvis",
       "category": "管家",
-      "status": "running",
-      "started_at": "2026-08-18T14:45:09Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "牧场主",
-      "category": "牧场",
-      "status": "running",
-      "started_at": "2026-08-18T14:45:09Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
       "status": "running",
       "started_at": "2026-08-18T14:45:09Z",
       "duration_s": null,
