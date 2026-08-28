@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-08-28T14:45:08Z",
+  "generated_at": "2026-08-28T15:00:14Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-08-28T14:40:01Z",
+      "last_beat_at": "2026-08-28T14:55:22Z",
       "last_status": "running"
     },
     {
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-08-28T14:40:01Z",
+      "last_beat_at": "2026-08-28T14:55:22Z",
       "last_status": "running"
     }
   ],
   "stats": {
     "beats_24h": 305,
     "active_now": 4,
-    "last_beat_at": "2026-08-28T14:41:31Z",
+    "last_beat_at": "2026-08-28T14:55:22Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,7 +137,7 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "9 下"
+        "value": "11 下"
       },
       {
         "icon": "🔧",
@@ -152,12 +152,28 @@
       {
         "icon": "🌙",
         "label": "凌晨还亮着灯",
-        "value": "9 次"
+        "value": "11 次"
       }
     ],
     "trophies": null
   },
   "heartbeats": [
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-08-28T14:55:22Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-08-28T14:55:22Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
@@ -3339,22 +3355,6 @@
       "category": "值守",
       "status": "running",
       "started_at": "2026-08-27T08:59:44Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-08-27T08:44:23Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-08-27T08:44:23Z",
       "duration_s": null,
       "title": null
     }
