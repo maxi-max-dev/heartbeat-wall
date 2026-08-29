@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-08-29T18:55:11Z",
+  "generated_at": "2026-08-29T19:10:16Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -20,8 +20,8 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-08-29T18:48:51Z",
-      "last_status": "running"
+      "last_beat_at": "2026-08-29T19:04:45Z",
+      "last_status": "done"
     },
     {
       "agent": "Watcher",
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-08-29T18:48:51Z",
+      "last_beat_at": "2026-08-29T19:04:13Z",
       "last_status": "running"
     }
   ],
   "stats": {
-    "beats_24h": 230,
+    "beats_24h": 229,
     "active_now": 3,
-    "last_beat_at": "2026-08-29T18:48:51Z",
+    "last_beat_at": "2026-08-29T19:04:45Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -114,7 +114,7 @@
         {
           "agent": "Jarvis",
           "emoji": "🤵",
-          "tokens": 116397,
+          "tokens": 224820,
           "provider": "openclaw"
         },
         {
@@ -130,24 +130,24 @@
           "provider": "openclaw"
         }
       ],
-      "whole_house_tokens": 1653963,
+      "whole_house_tokens": 1762386,
       "scope_note_v2": "细分到各屋：泛音（工作坊，含它派出去的子代理）+管家/情报/外勤已接表，其余几间还没接上；跨模型 token 只是吞吐量，不等价电费"
     },
     "achievements_today": [
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "46 下"
+        "value": "51 下"
+      },
+      {
+        "icon": "🫖",
+        "label": "打理家务",
+        "value": "5 桩"
       },
       {
         "icon": "🔧",
         "label": "工作坊交付",
         "value": "4 件活"
-      },
-      {
-        "icon": "🫖",
-        "label": "打理家务",
-        "value": "2 桩"
       },
       {
         "icon": "🛰️",
@@ -157,7 +157,7 @@
       {
         "icon": "🌙",
         "label": "夜班时长",
-        "value": "4 小时"
+        "value": "5 小时"
       },
       {
         "icon": "🛠️",
@@ -168,6 +168,46 @@
     "trophies": null
   },
   "heartbeats": [
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "done",
+      "started_at": "2026-08-29T19:04:45Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "done",
+      "started_at": "2026-08-29T19:04:44Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "done",
+      "started_at": "2026-08-29T19:04:20Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-08-29T19:04:13Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-08-29T19:04:13Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "Jarvis",
       "category": "管家",
@@ -3325,46 +3365,6 @@
       "category": "值守",
       "status": "running",
       "started_at": "2026-08-28T02:39:56Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-08-28T02:36:35Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-08-28T02:34:20Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-08-28T02:32:37Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-08-28T02:24:35Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-08-28T02:24:35Z",
       "duration_s": null,
       "title": null
     }
