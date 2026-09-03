@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-09-03T11:03:06Z",
+  "generated_at": "2026-09-03T11:18:12Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-09-03T10:48:40Z",
+      "last_beat_at": "2026-09-03T11:04:02Z",
       "last_status": "running"
     },
     {
@@ -28,7 +28,7 @@
       "emoji": "📡",
       "role": "情报员",
       "category": "情报",
-      "last_beat_at": "2026-09-03T11:02:57Z",
+      "last_beat_at": "2026-09-03T11:05:41Z",
       "last_status": "done"
     },
     {
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-09-03T10:48:40Z",
+      "last_beat_at": "2026-09-03T11:04:02Z",
       "last_status": "running"
     }
   ],
   "stats": {
     "beats_24h": 238,
     "active_now": 4,
-    "last_beat_at": "2026-09-03T11:02:57Z",
+    "last_beat_at": "2026-09-03T11:05:41Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,7 +137,7 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "211 下"
+        "value": "214 下"
       },
       {
         "icon": "🔧",
@@ -152,7 +152,7 @@
       {
         "icon": "📡",
         "label": "情报回传",
-        "value": "2 份"
+        "value": "3 份"
       },
       {
         "icon": "🛰️",
@@ -183,6 +183,30 @@
     "trophies": null
   },
   "heartbeats": [
+    {
+      "agent": "Watcher",
+      "category": "情报",
+      "status": "done",
+      "started_at": "2026-09-03T11:05:41Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-09-03T11:04:02Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-09-03T11:04:02Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "Watcher",
       "category": "情报",
@@ -3356,30 +3380,6 @@
       "category": "管家",
       "status": "running",
       "started_at": "2026-09-01T18:38:05Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-09-01T18:38:05Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-09-01T18:36:58Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-09-01T18:22:44Z",
       "duration_s": null,
       "title": null
     }
