@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-09-04T23:46:33Z",
+  "generated_at": "2026-09-05T00:01:39Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-09-04T23:39:49Z",
+      "last_beat_at": "2026-09-04T23:55:11Z",
       "last_status": "running"
     },
     {
@@ -28,7 +28,7 @@
       "emoji": "📡",
       "role": "情报员",
       "category": "情报",
-      "last_beat_at": "2026-09-04T12:01:18Z",
+      "last_beat_at": "2026-09-05T00:01:26Z",
       "last_status": "done"
     },
     {
@@ -60,8 +60,8 @@
       "emoji": "📊",
       "role": "雷达",
       "category": "采集",
-      "last_beat_at": "2026-09-04T23:39:49Z",
-      "last_status": "running"
+      "last_beat_at": "2026-09-04T23:57:01Z",
+      "last_status": "done"
     },
     {
       "agent": "备份员",
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-09-04T23:39:49Z",
+      "last_beat_at": "2026-09-04T23:55:11Z",
       "last_status": "running"
     }
   ],
   "stats": {
-    "beats_24h": 248,
-    "active_now": 4,
-    "last_beat_at": "2026-09-04T23:39:49Z",
+    "beats_24h": 249,
+    "active_now": 5,
+    "last_beat_at": "2026-09-05T00:01:26Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,12 +137,22 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "94 下"
+        "value": "99 下"
       },
       {
         "icon": "🔧",
         "label": "工作坊交付",
         "value": "8 件活"
+      },
+      {
+        "icon": "📡",
+        "label": "情报回传",
+        "value": "1 份"
+      },
+      {
+        "icon": "📊",
+        "label": "数据入库",
+        "value": "1 网"
       },
       {
         "icon": "🗄️",
@@ -178,6 +188,46 @@
     "trophies": null
   },
   "heartbeats": [
+    {
+      "agent": "Watcher",
+      "category": "情报",
+      "status": "done",
+      "started_at": "2026-09-05T00:01:26Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "采集员",
+      "category": "采集",
+      "status": "done",
+      "started_at": "2026-09-04T23:57:01Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "采集员",
+      "category": "采集",
+      "status": "running",
+      "started_at": "2026-09-04T23:55:11Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-09-04T23:55:11Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-09-04T23:55:11Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "采集员",
       "category": "采集",
@@ -3335,46 +3385,6 @@
       "category": "管家",
       "status": "running",
       "started_at": "2026-09-03T09:01:10Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-09-03T09:01:10Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-09-03T08:45:49Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-09-03T08:45:49Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-09-03T08:30:27Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-09-03T08:30:27Z",
       "duration_s": null,
       "title": null
     }
