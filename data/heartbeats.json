@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-09-08T09:01:14Z",
+  "generated_at": "2026-09-08T09:16:20Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -12,15 +12,15 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-09-08T09:00:57Z",
-      "last_status": "running"
+      "last_beat_at": "2026-09-08T09:07:20Z",
+      "last_status": "done"
     },
     {
       "agent": "Jarvis",
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-09-08T08:48:37Z",
+      "last_beat_at": "2026-09-08T09:03:59Z",
       "last_status": "running"
     },
     {
@@ -84,31 +84,31 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-09-08T08:48:37Z",
+      "last_beat_at": "2026-09-08T09:03:59Z",
       "last_status": "running"
     }
   ],
   "stats": {
-    "beats_24h": 241,
+    "beats_24h": 240,
     "active_now": 4,
-    "last_beat_at": "2026-09-08T09:00:57Z",
+    "last_beat_at": "2026-09-08T09:07:20Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
       "scope_note": "电表暂时只装在工作坊(泛音·Claude Code)一支，管家和外勤那几支的电还没接进来",
       "day_start": "2026-09-07T14:00:00Z",
-      "tokens_today": 3972398,
-      "fresh_today": 333200,
-      "input_today": 100,
-      "output_today": 60196,
-      "cache_creation_today": 272904,
-      "cache_read_today": 3639198,
+      "tokens_today": 5313493,
+      "fresh_today": 376900,
+      "input_today": 122,
+      "output_today": 76017,
+      "cache_creation_today": 300761,
+      "cache_read_today": 4936593,
       "sessions_today": 11,
       "by_resident": [
         {
           "agent": "泛音",
           "emoji": "🎼",
-          "tokens": 3972398,
+          "tokens": 5313493,
           "provider": "claude"
         },
         {
@@ -130,19 +130,19 @@
           "provider": "openclaw"
         }
       ],
-      "whole_house_tokens": 4016547,
+      "whole_house_tokens": 5357642,
       "scope_note_v2": "细分到各屋：泛音（工作坊，含它派出去的子代理）+管家/情报/外勤已接表，其余几间还没接上；跨模型 token 只是吞吐量，不等价电费"
     },
     "achievements_today": [
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "189 下"
+        "value": "192 下"
       },
       {
         "icon": "🔧",
         "label": "工作坊交付",
-        "value": "25 件活"
+        "value": "26 件活"
       },
       {
         "icon": "🛰️",
@@ -188,6 +188,30 @@
     "trophies": null
   },
   "heartbeats": [
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-09-08T09:07:20Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-09-08T09:03:59Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-09-08T09:03:59Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
@@ -3361,30 +3385,6 @@
       "category": "值守",
       "status": "running",
       "started_at": "2026-09-06T18:09:19Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-09-06T18:08:26Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-09-06T17:53:58Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-09-06T17:53:58Z",
       "duration_s": null,
       "title": null
     }
