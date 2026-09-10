@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-09-10T19:09:04Z",
+  "generated_at": "2026-09-10T19:24:10Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-09-10T18:54:57Z",
+      "last_beat_at": "2026-09-10T19:10:19Z",
       "last_status": "running"
     },
     {
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-09-10T18:54:57Z",
+      "last_beat_at": "2026-09-10T19:10:19Z",
       "last_status": "running"
     }
   ],
   "stats": {
-    "beats_24h": 228,
-    "active_now": 4,
-    "last_beat_at": "2026-09-10T19:03:44Z",
+    "beats_24h": 229,
+    "active_now": 3,
+    "last_beat_at": "2026-09-10T19:10:19Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,7 +137,7 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "48 下"
+        "value": "51 下"
       },
       {
         "icon": "🔧",
@@ -158,16 +158,45 @@
         "icon": "🌙",
         "label": "夜班时长",
         "value": "5 小时"
+      },
+      {
+        "icon": "🛠️",
+        "label": "翻车又爬起",
+        "value": "1 次"
       }
     ],
     "trophies": null
   },
   "heartbeats": [
     {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-09-10T19:10:19Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-09-10T19:10:19Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
       "agent": "泛音",
       "category": "造物",
       "status": "done",
       "started_at": "2026-09-10T19:03:44Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "failed",
+      "started_at": "2026-09-10T19:03:29Z",
       "duration_s": null,
       "title": null
     },
@@ -3336,30 +3365,6 @@
       "category": "值守",
       "status": "running",
       "started_at": "2026-09-09T01:42:18Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-09-09T01:26:57Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-09-09T01:26:57Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-09-09T01:11:36Z",
       "duration_s": null,
       "title": null
     }
