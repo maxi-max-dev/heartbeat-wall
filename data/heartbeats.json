@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-09-22T16:27:32Z",
+  "generated_at": "2026-09-22T16:42:33Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-09-22T16:23:30Z",
+      "last_beat_at": "2026-09-22T16:38:51Z",
       "last_status": "running"
     },
     {
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-09-22T16:23:30Z",
+      "last_beat_at": "2026-09-22T16:38:51Z",
       "last_status": "running"
     }
   ],
   "stats": {
     "beats_24h": 189,
     "active_now": 2,
-    "last_beat_at": "2026-09-22T16:23:30Z",
+    "last_beat_at": "2026-09-22T16:38:51Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,7 +137,7 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "21 下"
+        "value": "23 下"
       },
       {
         "icon": "🛰️",
@@ -153,6 +153,22 @@
     "trophies": null
   },
   "heartbeats": [
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-09-22T16:38:51Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-09-22T16:38:51Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "Jarvis",
       "category": "管家",
@@ -3262,22 +3278,6 @@
       "category": "值守",
       "status": "running",
       "started_at": "2026-09-20T16:57:17Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-09-20T16:41:56Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-09-20T16:41:56Z",
       "duration_s": null,
       "title": null
     }
