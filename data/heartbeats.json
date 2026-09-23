@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-09-23T00:27:47Z",
+  "generated_at": "2026-09-23T00:42:48Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-09-23T00:19:22Z",
+      "last_beat_at": "2026-09-23T00:34:43Z",
       "last_status": "running"
     },
     {
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-09-23T00:19:22Z",
+      "last_beat_at": "2026-09-23T00:34:43Z",
       "last_status": "running"
     }
   ],
   "stats": {
-    "beats_24h": 181,
+    "beats_24h": 183,
     "active_now": 2,
-    "last_beat_at": "2026-09-23T00:19:22Z",
+    "last_beat_at": "2026-09-23T00:34:43Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,7 +137,7 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "90 下"
+        "value": "92 下"
       },
       {
         "icon": "🛰️",
@@ -173,6 +173,22 @@
     "trophies": null
   },
   "heartbeats": [
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-09-23T00:34:43Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-09-23T00:34:43Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "Jarvis",
       "category": "管家",
@@ -3274,30 +3290,6 @@
       "category": "值守",
       "status": "running",
       "started_at": "2026-09-21T00:53:16Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-09-21T00:37:55Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-09-21T00:37:55Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-09-21T00:28:04Z",
       "duration_s": null,
       "title": null
     }
