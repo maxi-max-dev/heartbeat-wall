@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-10-01T14:17:37Z",
+  "generated_at": "2026-10-01T14:32:42Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-10-01T14:03:23Z",
+      "last_beat_at": "2026-10-01T14:18:44Z",
       "last_status": "running"
     },
     {
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-10-01T14:03:23Z",
+      "last_beat_at": "2026-10-01T14:18:44Z",
       "last_status": "running"
     }
   ],
   "stats": {
     "beats_24h": 209,
-    "active_now": 3,
-    "last_beat_at": "2026-10-01T14:08:11Z",
+    "active_now": 2,
+    "last_beat_at": "2026-10-01T14:18:44Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,7 +137,7 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "4 下"
+        "value": "6 下"
       },
       {
         "icon": "🛰️",
@@ -147,12 +147,28 @@
       {
         "icon": "🌙",
         "label": "凌晨还亮着灯",
-        "value": "4 次"
+        "value": "6 次"
       }
     ],
     "trophies": null
   },
   "heartbeats": [
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-10-01T14:18:44Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-10-01T14:18:44Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "哨兵",
       "category": "瞭望",
@@ -3334,22 +3350,6 @@
       "category": "占卜",
       "status": "failed",
       "started_at": "2026-09-29T17:00:00Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-09-29T16:46:00Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-09-29T16:46:00Z",
       "duration_s": null,
       "title": null
     }
