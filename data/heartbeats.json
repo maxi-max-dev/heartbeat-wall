@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-11-08T14:23:06Z",
+  "generated_at": "2026-11-08T14:38:11Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -20,7 +20,7 @@
       "emoji": "🤵",
       "role": "管家",
       "category": "管家",
-      "last_beat_at": "2026-11-08T14:18:30Z",
+      "last_beat_at": "2026-11-08T14:33:52Z",
       "last_status": "running"
     },
     {
@@ -84,14 +84,14 @@
       "emoji": "🔔",
       "role": "访客与提醒",
       "category": "值守",
-      "last_beat_at": "2026-11-08T14:18:30Z",
+      "last_beat_at": "2026-11-08T14:33:52Z",
       "last_status": "running"
     }
   ],
   "stats": {
     "beats_24h": 208,
-    "active_now": 3,
-    "last_beat_at": "2026-11-08T14:18:30Z",
+    "active_now": 2,
+    "last_beat_at": "2026-11-08T14:33:52Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,7 +137,7 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "7 下"
+        "value": "9 下"
       },
       {
         "icon": "🛰️",
@@ -147,7 +147,7 @@
       {
         "icon": "🌙",
         "label": "凌晨还亮着灯",
-        "value": "7 次"
+        "value": "9 次"
       },
       {
         "icon": "🛠️",
@@ -158,6 +158,22 @@
     "trophies": null
   },
   "heartbeats": [
+    {
+      "agent": "Jarvis",
+      "category": "管家",
+      "status": "running",
+      "started_at": "2026-11-08T14:33:52Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "门房",
+      "category": "值守",
+      "status": "running",
+      "started_at": "2026-11-08T14:33:52Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "Jarvis",
       "category": "管家",
@@ -3339,22 +3355,6 @@
       "category": "值守",
       "status": "running",
       "started_at": "2026-11-06T18:00:27Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-11-06T17:48:30Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-11-06T17:45:05Z",
       "duration_s": null,
       "title": null
     }
