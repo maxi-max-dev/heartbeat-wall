@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-11-14T15:17:48Z",
+  "generated_at": "2026-11-14T15:32:53Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -12,7 +12,7 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-11-14T14:59:22Z",
+      "last_beat_at": "2026-11-14T15:25:24Z",
       "last_status": "done"
     },
     {
@@ -89,26 +89,26 @@
     }
   ],
   "stats": {
-    "beats_24h": 152,
+    "beats_24h": 151,
     "active_now": 3,
-    "last_beat_at": "2026-11-14T14:59:22Z",
+    "last_beat_at": "2026-11-14T15:25:24Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
       "scope_note": "电表暂时只装在工作坊(泛音·Claude Code)一支，管家和外勤那几支的电还没接进来",
       "day_start": "2026-11-14T14:00:00Z",
-      "tokens_today": 3066754,
-      "fresh_today": 65000,
-      "input_today": 24,
-      "output_today": 6438,
-      "cache_creation_today": 58538,
-      "cache_read_today": 3001754,
+      "tokens_today": 4273877,
+      "fresh_today": 71143,
+      "input_today": 32,
+      "output_today": 8542,
+      "cache_creation_today": 62569,
+      "cache_read_today": 4202734,
       "sessions_today": 2,
       "by_resident": [
         {
           "agent": "泛音",
           "emoji": "🎼",
-          "tokens": 3066754,
+          "tokens": 4273877,
           "provider": "claude"
         },
         {
@@ -130,19 +130,19 @@
           "provider": "openclaw"
         }
       ],
-      "whole_house_tokens": 3066754,
+      "whole_house_tokens": 4273877,
       "scope_note_v2": "细分到各屋：泛音（工作坊，含它派出去的子代理）+管家/情报/外勤已接表，其余几间还没接上；跨模型 token 只是吞吐量，不等价电费"
     },
     "achievements_today": [
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "4 下"
+        "value": "5 下"
       },
       {
         "icon": "🔧",
         "label": "工作坊交付",
-        "value": "3 件活"
+        "value": "4 件活"
       },
       {
         "icon": "🛰️",
@@ -151,13 +151,21 @@
       },
       {
         "icon": "🌙",
-        "label": "凌晨还亮着灯",
-        "value": "4 次"
+        "label": "夜班时长",
+        "value": "1 小时"
       }
     ],
     "trophies": null
   },
   "heartbeats": [
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-11-14T15:25:24Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
@@ -3251,22 +3259,6 @@
       "category": "值守",
       "status": "running",
       "started_at": "2026-11-12T15:37:16Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-11-12T15:21:54Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-11-12T15:21:54Z",
       "duration_s": null,
       "title": null
     }
