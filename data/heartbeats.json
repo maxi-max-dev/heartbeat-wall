@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-11-15T02:36:35Z",
+  "generated_at": "2026-11-15T02:51:40Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -2464,22 +2464,6 @@
       "category": "值守",
       "status": "running",
       "started_at": "2026-11-13T02:53:10Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-11-13T02:37:48Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-11-13T02:37:48Z",
       "duration_s": null,
       "title": null
     }
