@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-11-15T12:09:50Z",
+  "generated_at": "2026-11-15T12:24:55Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -89,7 +89,7 @@
     }
   ],
   "stats": {
-    "beats_24h": 35,
+    "beats_24h": 34,
     "active_now": 2,
     "last_beat_at": "2026-11-15T01:47:58Z",
     "energy": {
@@ -1752,54 +1752,6 @@
       "category": "造物",
       "status": "done",
       "started_at": "2026-11-13T12:29:24Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-11-13T12:23:08Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-11-13T12:22:08Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "Jarvis",
-      "category": "管家",
-      "status": "running",
-      "started_at": "2026-11-13T12:22:03Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "门房",
-      "category": "值守",
-      "status": "running",
-      "started_at": "2026-11-13T12:22:03Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-11-13T12:20:28Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-11-13T12:18:16Z",
       "duration_s": null,
       "title": null
     }
