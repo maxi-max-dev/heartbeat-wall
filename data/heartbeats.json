@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-11-18T11:22:50Z",
+  "generated_at": "2026-11-18T11:37:56Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -12,8 +12,8 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-11-18T10:24:11Z",
-      "last_status": "done"
+      "last_beat_at": "2026-11-18T11:37:47Z",
+      "last_status": "running"
     },
     {
       "agent": "Jarvis",
@@ -89,26 +89,26 @@
     }
   ],
   "stats": {
-    "beats_24h": 85,
-    "active_now": 0,
-    "last_beat_at": "2026-11-18T10:24:11Z",
+    "beats_24h": 90,
+    "active_now": 1,
+    "last_beat_at": "2026-11-18T11:37:47Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
       "scope_note": "电表暂时只装在工作坊(泛音·Claude Code)一支，管家和外勤那几支的电还没接进来",
       "day_start": "2026-11-17T14:00:00Z",
-      "tokens_today": 46203835,
-      "fresh_today": 1184529,
-      "input_today": 524,
-      "output_today": 94476,
-      "cache_creation_today": 1089529,
-      "cache_read_today": 45019306,
-      "sessions_today": 9,
+      "tokens_today": 54587072,
+      "fresh_today": 1399444,
+      "input_today": 648,
+      "output_today": 127624,
+      "cache_creation_today": 1271172,
+      "cache_read_today": 53187628,
+      "sessions_today": 11,
       "by_resident": [
         {
           "agent": "泛音",
           "emoji": "🎼",
-          "tokens": 51503397,
+          "tokens": 59886634,
           "provider": "claude"
         },
         {
@@ -130,19 +130,19 @@
           "provider": "openclaw"
         }
       ],
-      "whole_house_tokens": 51503397,
+      "whole_house_tokens": 59886634,
       "scope_note_v2": "细分到各屋：泛音（工作坊，含它派出去的子代理）+管家/情报/外勤已接表，其余几间还没接上；跨模型 token 只是吞吐量，不等价电费"
     },
     "achievements_today": [
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "51 下"
+        "value": "58 下"
       },
       {
         "icon": "🔧",
         "label": "工作坊交付",
-        "value": "45 件活"
+        "value": "51 件活"
       },
       {
         "icon": "🛰️",
@@ -163,6 +163,62 @@
     "trophies": null
   },
   "heartbeats": [
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "running",
+      "started_at": "2026-11-18T11:37:47Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-11-18T11:37:16Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-11-18T11:32:25Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-11-18T11:25:55Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-11-18T11:24:39Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-11-18T11:24:21Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-11-18T11:24:08Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
