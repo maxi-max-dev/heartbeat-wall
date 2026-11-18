@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-11-18T13:53:56Z",
+  "generated_at": "2026-11-18T14:09:02Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -52,7 +52,7 @@
       "emoji": "🛰️",
       "role": "瞭望员",
       "category": "瞭望",
-      "last_beat_at": "2026-11-18T00:00:05Z",
+      "last_beat_at": "2026-11-18T14:00:07Z",
       "last_status": "done"
     },
     {
@@ -90,25 +90,25 @@
   ],
   "stats": {
     "beats_24h": 75,
-    "active_now": 0,
-    "last_beat_at": "2026-11-18T13:31:08Z",
+    "active_now": 1,
+    "last_beat_at": "2026-11-18T14:00:07Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
       "scope_note": "电表暂时只装在工作坊(泛音·Claude Code)一支，管家和外勤那几支的电还没接进来",
-      "day_start": "2026-11-17T14:00:00Z",
-      "tokens_today": 83934043,
-      "fresh_today": 1818319,
-      "input_today": 970,
-      "output_today": 203966,
-      "cache_creation_today": 1613383,
-      "cache_read_today": 82115724,
-      "sessions_today": 13,
+      "day_start": "2026-11-18T14:00:00Z",
+      "tokens_today": 0,
+      "fresh_today": 0,
+      "input_today": 0,
+      "output_today": 0,
+      "cache_creation_today": 0,
+      "cache_read_today": 0,
+      "sessions_today": 0,
       "by_resident": [
         {
           "agent": "泛音",
           "emoji": "🎼",
-          "tokens": 89233605,
+          "tokens": 0,
           "provider": "claude"
         },
         {
@@ -130,39 +130,37 @@
           "provider": "openclaw"
         }
       ],
-      "whole_house_tokens": 89233605,
+      "whole_house_tokens": 0,
       "scope_note_v2": "细分到各屋：泛音（工作坊，含它派出去的子代理）+管家/情报/外勤已接表，其余几间还没接上；跨模型 token 只是吞吐量，不等价电费"
     },
     "achievements_today": [
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "75 下"
-      },
-      {
-        "icon": "🔧",
-        "label": "工作坊交付",
-        "value": "68 件活"
+        "value": "1 下"
       },
       {
         "icon": "🛰️",
         "label": "巡夜瞭望",
-        "value": "2 轮"
-      },
-      {
-        "icon": "🗄️",
-        "label": "记忆归档",
-        "value": "1 次"
+        "value": "1 轮"
       },
       {
         "icon": "🌙",
-        "label": "夜班时长",
-        "value": "2 小时"
+        "label": "凌晨还亮着灯",
+        "value": "1 次"
       }
     ],
     "trophies": null
   },
   "heartbeats": [
+    {
+      "agent": "哨兵",
+      "category": "瞭望",
+      "status": "done",
+      "started_at": "2026-11-18T14:00:07Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
@@ -1240,14 +1238,6 @@
       "category": "备份",
       "status": "done",
       "started_at": "2026-11-16T21:30:47Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "哨兵",
-      "category": "瞭望",
-      "status": "done",
-      "started_at": "2026-11-16T14:00:02Z",
       "duration_s": null,
       "title": null
     }
