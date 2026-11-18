@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-11-18T21:26:52Z",
+  "generated_at": "2026-11-18T21:41:58Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -68,7 +68,7 @@
       "emoji": "🗄️",
       "role": "档案馆",
       "category": "备份",
-      "last_beat_at": "2026-11-17T21:30:45Z",
+      "last_beat_at": "2026-11-18T21:30:51Z",
       "last_status": "done"
     },
     {
@@ -91,7 +91,7 @@
   "stats": {
     "beats_24h": 76,
     "active_now": 1,
-    "last_beat_at": "2026-11-18T21:16:42Z",
+    "last_beat_at": "2026-11-18T21:30:51Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,12 +137,17 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "5 下"
+        "value": "6 下"
       },
       {
         "icon": "🔧",
         "label": "工作坊交付",
         "value": "4 件活"
+      },
+      {
+        "icon": "🗄️",
+        "label": "记忆归档",
+        "value": "1 次"
       },
       {
         "icon": "🛰️",
@@ -158,6 +163,14 @@
     "trophies": null
   },
   "heartbeats": [
+    {
+      "agent": "备份员",
+      "category": "备份",
+      "status": "done",
+      "started_at": "2026-11-18T21:30:51Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
@@ -1267,14 +1280,6 @@
       "category": "造物",
       "status": "done",
       "started_at": "2026-11-16T23:05:53Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "备份员",
-      "category": "备份",
-      "status": "done",
-      "started_at": "2026-11-16T21:30:47Z",
       "duration_s": null,
       "title": null
     }
