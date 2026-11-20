@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-11-19T23:52:51Z",
+  "generated_at": "2026-11-20T00:07:57Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -52,7 +52,7 @@
       "emoji": "🛰️",
       "role": "瞭望员",
       "category": "瞭望",
-      "last_beat_at": "2026-11-19T14:00:02Z",
+      "last_beat_at": "2026-11-20T00:00:10Z",
       "last_status": "done"
     },
     {
@@ -91,7 +91,7 @@
   "stats": {
     "beats_24h": 121,
     "active_now": 1,
-    "last_beat_at": "2026-11-19T23:35:52Z",
+    "last_beat_at": "2026-11-20T00:00:10Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,7 +137,7 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "22 下"
+        "value": "23 下"
       },
       {
         "icon": "🔧",
@@ -145,14 +145,14 @@
         "value": "18 件活"
       },
       {
+        "icon": "🛰️",
+        "label": "巡夜瞭望",
+        "value": "2 轮"
+      },
+      {
         "icon": "🗄️",
         "label": "记忆归档",
         "value": "1 次"
-      },
-      {
-        "icon": "🛰️",
-        "label": "巡夜瞭望",
-        "value": "1 轮"
       },
       {
         "icon": "🌙",
@@ -163,6 +163,14 @@
     "trophies": null
   },
   "heartbeats": [
+    {
+      "agent": "哨兵",
+      "category": "瞭望",
+      "status": "done",
+      "started_at": "2026-11-20T00:00:10Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
@@ -1720,14 +1728,6 @@
       "category": "造物",
       "status": "done",
       "started_at": "2026-11-18T01:03:43Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "哨兵",
-      "category": "瞭望",
-      "status": "done",
-      "started_at": "2026-11-18T00:00:05Z",
       "duration_s": null,
       "title": null
     }
