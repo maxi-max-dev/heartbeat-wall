@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-11-21T04:34:32Z",
+  "generated_at": "2026-11-21T04:49:38Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -12,7 +12,7 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-11-21T04:34:26Z",
+      "last_beat_at": "2026-11-21T04:47:29Z",
       "last_status": "done"
     },
     {
@@ -89,26 +89,26 @@
     }
   ],
   "stats": {
-    "beats_24h": 93,
+    "beats_24h": 98,
     "active_now": 1,
-    "last_beat_at": "2026-11-21T04:34:26Z",
+    "last_beat_at": "2026-11-21T04:47:29Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
       "scope_note": "电表暂时只装在工作坊(泛音·Claude Code)一支，管家和外勤那几支的电还没接进来",
       "day_start": "2026-11-20T14:00:00Z",
-      "tokens_today": 77876673,
-      "fresh_today": 2238312,
-      "input_today": 924,
-      "output_today": 242208,
-      "cache_creation_today": 1995180,
-      "cache_read_today": 75638361,
-      "sessions_today": 12,
+      "tokens_today": 83591067,
+      "fresh_today": 2370722,
+      "input_today": 1012,
+      "output_today": 273746,
+      "cache_creation_today": 2095964,
+      "cache_read_today": 81220345,
+      "sessions_today": 14,
       "by_resident": [
         {
           "agent": "泛音",
           "emoji": "🎼",
-          "tokens": 77876673,
+          "tokens": 83591067,
           "provider": "claude"
         },
         {
@@ -130,19 +130,19 @@
           "provider": "openclaw"
         }
       ],
-      "whole_house_tokens": 77876673,
+      "whole_house_tokens": 83591067,
       "scope_note_v2": "细分到各屋：泛音（工作坊，含它派出去的子代理）+管家/情报/外勤已接表，其余几间还没接上；跨模型 token 只是吞吐量，不等价电费"
     },
     "achievements_today": [
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "52 下"
+        "value": "57 下"
       },
       {
         "icon": "🔧",
         "label": "工作坊交付",
-        "value": "45 件活"
+        "value": "50 件活"
       },
       {
         "icon": "🛰️",
@@ -163,6 +163,46 @@
     "trophies": null
   },
   "heartbeats": [
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-11-21T04:47:29Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-11-21T04:43:01Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-11-21T04:42:56Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-11-21T04:38:05Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-11-21T04:37:30Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
@@ -1880,14 +1920,6 @@
       "category": "造物",
       "status": "done",
       "started_at": "2026-11-19T05:29:12Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-11-19T04:41:35Z",
       "duration_s": null,
       "title": null
     }
