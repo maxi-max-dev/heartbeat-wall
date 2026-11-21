@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-11-21T06:20:12Z",
+  "generated_at": "2026-11-21T06:35:18Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -89,8 +89,8 @@
     }
   ],
   "stats": {
-    "beats_24h": 95,
-    "active_now": 1,
+    "beats_24h": 94,
+    "active_now": 0,
     "last_beat_at": "2026-11-21T06:06:52Z",
     "energy": {
       "source": "cc",
@@ -1904,78 +1904,6 @@
       "category": "造物",
       "status": "done",
       "started_at": "2026-11-19T06:36:20Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-11-19T06:31:20Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-11-19T06:30:53Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-11-19T06:30:24Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-11-19T06:30:17Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-11-19T06:30:14Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-11-19T06:30:13Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-11-19T06:30:09Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-11-19T06:30:06Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-11-19T06:24:05Z",
       "duration_s": null,
       "title": null
     }
