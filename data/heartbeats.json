@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-11-23T15:42:18Z",
+  "generated_at": "2026-11-23T15:57:24Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -571,14 +571,6 @@
       "category": "造物",
       "status": "done",
       "started_at": "2026-11-21T16:04:06Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-11-21T15:46:55Z",
       "duration_s": null,
       "title": null
     }
