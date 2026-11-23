@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-11-23T01:21:58Z",
+  "generated_at": "2026-11-23T01:37:03Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -90,7 +90,7 @@
   ],
   "stats": {
     "beats_24h": 27,
-    "active_now": 1,
+    "active_now": 0,
     "last_beat_at": "2026-11-23T01:02:26Z",
     "energy": {
       "source": "cc",
@@ -1072,14 +1072,6 @@
       "category": "造物",
       "status": "done",
       "started_at": "2026-11-21T01:43:24Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "running",
-      "started_at": "2026-11-21T01:33:15Z",
       "duration_s": null,
       "title": null
     }
