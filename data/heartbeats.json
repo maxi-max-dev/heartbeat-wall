@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-11-25T03:42:24Z",
+  "generated_at": "2026-11-25T03:57:31Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -12,8 +12,8 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-11-25T03:42:20Z",
-      "last_status": "running"
+      "last_beat_at": "2026-11-25T03:56:33Z",
+      "last_status": "done"
     },
     {
       "agent": "Jarvis",
@@ -91,24 +91,24 @@
   "stats": {
     "beats_24h": 72,
     "active_now": 1,
-    "last_beat_at": "2026-11-25T03:42:20Z",
+    "last_beat_at": "2026-11-25T03:56:33Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
       "scope_note": "电表暂时只装在工作坊(泛音·Claude Code)一支，管家和外勤那几支的电还没接进来",
       "day_start": "2026-11-24T14:00:00Z",
-      "tokens_today": 68212543,
-      "fresh_today": 1661461,
-      "input_today": 342,
-      "output_today": 103412,
-      "cache_creation_today": 1557707,
-      "cache_read_today": 66551082,
+      "tokens_today": 84373362,
+      "fresh_today": 1733266,
+      "input_today": 412,
+      "output_today": 123464,
+      "cache_creation_today": 1609390,
+      "cache_read_today": 82640096,
       "sessions_today": 4,
       "by_resident": [
         {
           "agent": "泛音",
           "emoji": "🎼",
-          "tokens": 88184959,
+          "tokens": 112283059,
           "provider": "claude"
         },
         {
@@ -130,19 +130,19 @@
           "provider": "openclaw"
         }
       ],
-      "whole_house_tokens": 88184959,
+      "whole_house_tokens": 112283059,
       "scope_note_v2": "细分到各屋：泛音（工作坊，含它派出去的子代理）+管家/情报/外勤已接表，其余几间还没接上；跨模型 token 只是吞吐量，不等价电费"
     },
     "achievements_today": [
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "25 下"
+        "value": "26 下"
       },
       {
         "icon": "🔧",
         "label": "工作坊交付",
-        "value": "20 件活"
+        "value": "21 件活"
       },
       {
         "icon": "🛰️",
@@ -163,6 +163,14 @@
     "trophies": null
   },
   "heartbeats": [
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-11-25T03:56:33Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
