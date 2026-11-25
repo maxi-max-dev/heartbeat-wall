@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-11-25T16:17:54Z",
+  "generated_at": "2026-11-25T16:33:02Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -12,7 +12,7 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-11-25T16:03:55Z",
+      "last_beat_at": "2026-11-25T16:18:22Z",
       "last_status": "done"
     },
     {
@@ -91,7 +91,7 @@
   "stats": {
     "beats_24h": 87,
     "active_now": 1,
-    "last_beat_at": "2026-11-25T16:03:55Z",
+    "last_beat_at": "2026-11-25T16:18:22Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
@@ -137,12 +137,12 @@
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "5 下"
+        "value": "6 下"
       },
       {
         "icon": "🔧",
         "label": "工作坊交付",
-        "value": "4 件活"
+        "value": "5 件活"
       },
       {
         "icon": "🛰️",
@@ -158,6 +158,14 @@
     "trophies": null
   },
   "heartbeats": [
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-11-25T16:18:22Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
@@ -1483,14 +1491,6 @@
       "category": "造物",
       "status": "done",
       "started_at": "2026-11-23T17:02:26Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-11-23T16:18:02Z",
       "duration_s": null,
       "title": null
     }
