@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-11-26T09:52:37Z",
+  "generated_at": "2026-11-26T10:07:44Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -12,7 +12,7 @@
       "emoji": "🎼",
       "role": "总工程师",
       "category": "造物",
-      "last_beat_at": "2026-11-26T09:36:44Z",
+      "last_beat_at": "2026-11-26T10:04:10Z",
       "last_status": "done"
     },
     {
@@ -89,26 +89,26 @@
     }
   ],
   "stats": {
-    "beats_24h": 100,
+    "beats_24h": 98,
     "active_now": 1,
-    "last_beat_at": "2026-11-26T09:36:44Z",
+    "last_beat_at": "2026-11-26T10:04:10Z",
     "energy": {
       "source": "cc",
       "scope": "workshop",
       "scope_note": "电表暂时只装在工作坊(泛音·Claude Code)一支，管家和外勤那几支的电还没接进来",
       "day_start": "2026-11-25T14:00:00Z",
-      "tokens_today": 178087920,
-      "fresh_today": 4783555,
-      "input_today": 1482,
-      "output_today": 432236,
-      "cache_creation_today": 4349837,
-      "cache_read_today": 173304365,
-      "sessions_today": 15,
+      "tokens_today": 178164741,
+      "fresh_today": 4817456,
+      "input_today": 1484,
+      "output_today": 432240,
+      "cache_creation_today": 4383732,
+      "cache_read_today": 173347285,
+      "sessions_today": 16,
       "by_resident": [
         {
           "agent": "泛音",
           "emoji": "🎼",
-          "tokens": 184719634,
+          "tokens": 184796455,
           "provider": "claude"
         },
         {
@@ -130,19 +130,19 @@
           "provider": "openclaw"
         }
       ],
-      "whole_house_tokens": 184719634,
+      "whole_house_tokens": 184796455,
       "scope_note_v2": "细分到各屋：泛音（工作坊，含它派出去的子代理）+管家/情报/外勤已接表，其余几间还没接上；跨模型 token 只是吞吐量，不等价电费"
     },
     "achievements_today": [
       {
         "icon": "❤️",
         "label": "今日心跳",
-        "value": "59 下"
+        "value": "61 下"
       },
       {
         "icon": "🔧",
         "label": "工作坊交付",
-        "value": "43 件活"
+        "value": "45 件活"
       },
       {
         "icon": "🗄️",
@@ -163,6 +163,22 @@
     "trophies": null
   },
   "heartbeats": [
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-11-26T10:04:10Z",
+      "duration_s": null,
+      "title": null
+    },
+    {
+      "agent": "泛音",
+      "category": "造物",
+      "status": "done",
+      "started_at": "2026-11-26T10:03:12Z",
+      "duration_s": null,
+      "title": null
+    },
     {
       "agent": "泛音",
       "category": "造物",
@@ -1496,14 +1512,6 @@
       "category": "造物",
       "status": "done",
       "started_at": "2026-11-24T10:18:03Z",
-      "duration_s": null,
-      "title": null
-    },
-    {
-      "agent": "泛音",
-      "category": "造物",
-      "status": "done",
-      "started_at": "2026-11-24T10:03:02Z",
       "duration_s": null,
       "title": null
     }
