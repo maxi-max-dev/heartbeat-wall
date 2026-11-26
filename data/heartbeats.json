@@ -1,6 +1,6 @@
 {
   "v": 0,
-  "generated_at": "2026-11-26T16:25:19Z",
+  "generated_at": "2026-11-26T16:40:24Z",
   "home": {
     "id": "home",
     "name": "一屋硅基",
@@ -90,7 +90,7 @@
   ],
   "stats": {
     "beats_24h": 59,
-    "active_now": 1,
+    "active_now": 0,
     "last_beat_at": "2026-11-26T16:18:15Z",
     "energy": {
       "source": "cc",
